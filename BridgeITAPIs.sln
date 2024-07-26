@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.10.35013.160
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BridgeITAPIs", "BridgeITAPIs\BridgeITAPIs.csproj", "{FFFB17ED-A907-4CEB-886F-A472C650160D}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{FFFB17ED-A907-4CEB-886F-A472C650160D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FFFB17ED-A907-4CEB-886F-A472C650160D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FFFB17ED-A907-4CEB-886F-A472C650160D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FFFB17ED-A907-4CEB-886F-A472C650160D}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {FAA9F305-AE21-48AD-B4E8-B3AE9DCE2832}
+	EndGlobalSection
+EndGlobal
