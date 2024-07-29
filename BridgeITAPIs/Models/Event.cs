@@ -1,0 +1,19 @@
+﻿using System;
+using System.Collections.Generic;
+
+namespace BridgeITAPIs.Models;
+
+public partial class Event
+{
+    public Guid Id { get; set; }
+
+    public string? Title { get; set; }
+
+    public string? SpeakerName { get; set; }
+
+    public DateTime? EventDate { get; set; }
+
+    public Guid? FacultyId { get; set; }
+
+    public virtual Faculty? Faculty { get; set; }
+}
