@@ -1,5 +1,5 @@
-These are APIs for BridgeIT project <br>
-    **Our Final Year Project**
+**These are APIs for BridgeIT project** <br>
+    <h1> Our Final Year Project </h1>
 
 
 <h2> Instructions to run the project</h2>
