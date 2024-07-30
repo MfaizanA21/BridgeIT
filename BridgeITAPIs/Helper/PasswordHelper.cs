@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 
-namespace BridgeITAPIs.PasswordHelper;
+namespace BridgeITAPIs.Helper;
 
 public class PasswordHelper
 {
