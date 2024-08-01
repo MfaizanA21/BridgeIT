@@ -50,6 +50,11 @@ public class GetFacultyController : ControllerBase
             .Include(f => f.Uni)
             .ToListAsync();
 
+        if (faculties == null)
+        {
+            return NotFound("Faculty not found.");
+        }
+
             var dtoList = faculties.Select(f => new GetFacultyDTO
             {
                 FirstName = f.User?.FirstName ?? string.Empty,
