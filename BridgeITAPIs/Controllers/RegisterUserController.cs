@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BridgeITAPIs.Controllers;
 
-[Route("api/[controller]")]
+[Route("api/register-user")]
 [ApiController]
 public class RegisterUserController : ControllerBase
 {
