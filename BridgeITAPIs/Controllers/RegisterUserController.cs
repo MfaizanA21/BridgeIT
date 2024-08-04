@@ -57,6 +57,14 @@ public class RegisterUserController : ControllerBase
         await _dbContext.Set<Student>().AddAsync(student);
         await _dbContext.SaveChangesAsync();
 
+        var studentSkills = new Skill
+        {
+            Id = Guid.NewGuid(),
+            CreatedBy = user.Id,
+            CreatedAt = DateTime.Now,
+            Skill1 = string.Join(",", registerStudentDTO.Skills)
+        };
+
         return Ok("Student Registered Successfully.");
 
     }
