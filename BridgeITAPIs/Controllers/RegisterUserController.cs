@@ -39,6 +39,7 @@ public class RegisterUserController : ControllerBase
             LastName = registerStudentDTO.LastName,
             Email = registerStudentDTO.Email,
             Role = registerStudentDTO.Role,
+            //ImageData = registerStudentDTO.ImageData,
             Hash = passwordHash,
             Salt = passwordSalt
         };
@@ -64,6 +65,9 @@ public class RegisterUserController : ControllerBase
             CreatedAt = DateTime.Now,
             Skill1 = string.Join(",", registerStudentDTO.Skills)
         };
+
+        await _dbContext.Set<Skill>().AddAsync(studentSkills);
+        await _dbContext.SaveChangesAsync();
 
         return Ok("Student Registered Successfully.");
 

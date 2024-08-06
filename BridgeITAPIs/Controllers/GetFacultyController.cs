@@ -101,4 +101,39 @@ public class GetFacultyController : ControllerBase
 
         return Ok(dtoList);
     }
+
+    [HttpGet("faculty-by-name/{name}")]
+    public async Task<IActionResult> GetFacultyByName(string name)
+    {
+        var faculty = await _dbContext.Faculties
+            .Include(f => f.User)
+            .Include(f => f.Uni)
+            .Where(f => f.User != null &&
+                    (f.User.FirstName != null && f.User.FirstName.ToLower().Contains(name.ToLower()) ||
+                     f.User.LastName != null && f.User.LastName.ToLower().Contains(name.ToLower())))
+            .ToListAsync();
+
+        if (faculty == null || !faculty.Any())
+        {
+            return BadRequest("User Not found");
+        }
+
+        var dtoList = faculty.Select(f => new GetFacultyDTO
+        {
+            FirstName = f.User?.FirstName ?? string.Empty,
+            LastName = f.User?.LastName ?? string.Empty,
+            Email = f.User?.Email ?? string.Empty,
+            ImageData = f.User?.ImageData ?? string.Empty,
+            Interest = f.Interest != null ? new List<string> { f.Interest } : new List<string>(),
+            Post = f.Post ?? string.Empty,
+            UniversityName = f.Uni?.Name ?? string.Empty,
+            Address = f.Uni?.Address ?? string.Empty
+        })
+            .ToList();
+
+        return Ok(dtoList);
+
+    }
+
+
 }
