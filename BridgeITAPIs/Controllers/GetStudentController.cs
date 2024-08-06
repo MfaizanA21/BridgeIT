@@ -67,7 +67,9 @@ public class GetStudentController : ControllerBase
             ImageData = s.User?.ImageData ?? string.Empty,
             UniversityName = s.University?.Name ?? string.Empty,
             Address = s.University?.Address ?? string.Empty,
-            RollNumber = s?.RollNumber.ToString() ?? string.Empty
+            RollNumber = s?.RollNumber.ToString() ?? string.Empty,
+            userId = s.User.Id,
+            Id = s.Id
 
         }).ToList();
 
