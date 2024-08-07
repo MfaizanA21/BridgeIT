@@ -4,6 +4,7 @@ public class GetStudentDTO
 {
     public Guid userId { get; set; }
     public Guid Id { get; set; }
+    public Guid universityId { get; set; }
     public string FirstName { get; set; } = string.Empty;
     public string LastName { get; set; } = string.Empty;
     public string Email { get; set; } = string.Empty;
