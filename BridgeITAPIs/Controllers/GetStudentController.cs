@@ -22,7 +22,7 @@ public class GetStudentController : ControllerBase
             .Include(s => s.User)
             .Include(s => s.University)
             //.Include(s => s.Skills)
-            .FirstOrDefaultAsync(s => s.Id == userId);
+            .FirstOrDefaultAsync(s => s.UserId == userId);
 
         if (student == null)
         {
