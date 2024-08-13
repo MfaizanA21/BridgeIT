@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using BridgeITAPIs.Auth;
 namespace BridgeITAPIs.Controllers;
 
-[Route("api/[controller]")]
+[Route("api/auth")]
 [ApiController]
 public class AuthController : ControllerBase
 {
