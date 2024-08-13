@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore.SqlServer.Query.Internal;
 
 namespace BridgeITAPIs.Controllers;
 
-[Route("api/[controller]")]
+[Route("api/students")]
 [ApiController]
 public class StudentsController : ControllerBase
 {

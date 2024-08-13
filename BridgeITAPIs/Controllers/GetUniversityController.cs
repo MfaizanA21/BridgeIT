@@ -6,7 +6,7 @@ using BridgeITAPIs.Models;
 
 namespace BridgeITAPIs.Controllers;
 
-[Route("api/[controller]")]
+[Route("api/get-university")]
 [ApiController]
 public class GetUniversityController : ControllerBase
 {

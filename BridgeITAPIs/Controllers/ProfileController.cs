@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace BridgeITAPIs.Controllers;
 
-[Route("api/[controller]")]
+[Route("api/user-profile")]
 [ApiController]
 [Authorize]
 public class ProfileController : ControllerBase

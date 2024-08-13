@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BridgeITAPIs.Controllers;
 
-[Route("api/[controller]")]
+[Route("api/faculties")]
 [ApiController]
 public class FacultiesController : ControllerBase
 {
