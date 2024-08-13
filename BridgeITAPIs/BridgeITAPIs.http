@@ -1,6 +1,7 @@
-@BridgeITAPIs_HostAddress = http://localhost:7053
+@BridgeITAPIs_HostAddress = https://localhost:3000
 
 GET {{BridgeITAPIs_HostAddress}}/weatherforecast/
 Accept: application/json
 
-###
+
+
