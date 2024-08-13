@@ -2,11 +2,11 @@ global using BridgeITAPIs.Models;
 global using BridgeITAPIs.DTOs;
 global using BridgeITAPIs.Helper;
 global using BridgeITAPIs.Middlewares;
+global using BridgeITAPIs.Auth;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
-using BridgeITAPIs.Auth;
 using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 
