@@ -29,6 +29,9 @@ public class GetFacultyController : ControllerBase
 
         var dto = new GetFacultyDTO
         {
+            Id = faculty.Id,
+            UserId = faculty.UserId,
+            uniId = faculty.UniId,
             FirstName = faculty.User?.FirstName ?? string.Empty,
             LastName = faculty.User?.LastName ?? string.Empty,
             Email = faculty.User?.Email ?? string.Empty,
@@ -57,6 +60,9 @@ public class GetFacultyController : ControllerBase
 
             var dtoList = faculties.Select(f => new GetFacultyDTO
             {
+                Id = f.Id,
+                UserId = f.UserId,
+                uniId = f.UniId,
                 FirstName = f.User?.FirstName ?? string.Empty,
                 LastName = f.User?.LastName ?? string.Empty,
                 Email = f.User?.Email ?? string.Empty,
@@ -88,6 +94,9 @@ public class GetFacultyController : ControllerBase
 
         var dtoList = faculties.Select(f => new GetFacultyDTO
         {
+            Id = f.Id,
+            UserId = f.UserId,
+            uniId = f.UniId,
             FirstName = f.User?.FirstName ?? string.Empty,
             LastName = f.User?.LastName ?? string.Empty,
             Email = f.User?.Email ?? string.Empty,
@@ -120,6 +129,9 @@ public class GetFacultyController : ControllerBase
 
         var dtoList = faculty.Select(f => new GetFacultyDTO
         {
+            Id = f.Id,
+            UserId = f.UserId,
+            uniId = f.UniId,
             FirstName = f.User?.FirstName ?? string.Empty,
             LastName = f.User?.LastName ?? string.Empty,
             Email = f.User?.Email ?? string.Empty,
