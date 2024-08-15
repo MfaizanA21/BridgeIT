@@ -2,10 +2,11 @@
 using BridgeITAPIs.DTOs;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace BridgeITAPIs.Controllers;
 
-[Route("api/[controller]")]
+[Route("api/projects")]
 [ApiController]
 public class ProjectsController : ControllerBase
 {
@@ -16,7 +17,7 @@ public class ProjectsController : ControllerBase
         _dbContext = dbContext;
     }
 
-    [HttpPost("projects")]
+    [HttpPost("create-projects")]
     public async Task<IActionResult> AddProject([FromBody] AddProjectDTO dto)
     {
         if (dto == null)
@@ -48,4 +49,37 @@ public class ProjectsController : ControllerBase
 
         return Ok("Project added successfully.");
     }
+
+    [HttpGet("get-all-projects")]
+    public async Task<IActionResult> GetProjectTiles()
+    {
+        var projects = await _dbContext.Projects
+            .Include(p => p.Student)
+            .Include(p => p.IndExpert)
+            .ToListAsync();
+
+        if (projects == null)
+        {
+            return BadRequest("No projects found");
+        }
+
+        var projectDto = projects.Select(project => new ProjectTileDTO
+        {
+            Id = project.Id,
+            Title = project?.Title ?? string.Empty,
+            Description = project?.Description ?? string.Empty,
+            Stack = project?.Stack ?? string.Empty,
+            Status = project?.CurrentStatus ?? string.Empty,
+            StudentId = project.StudentId,
+            IndExpertId = project.IndExpertId,
+            studentName = project.Student.User.FirstName ?? string.Empty,
+            IndExpertName = project.IndExpert.User.FirstName ?? string.Empty
+
+        }).ToList();
+
+        return Ok(projectDto);
+
+    }
+
+    
 }

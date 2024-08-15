@@ -207,4 +207,12 @@ public class RegisterUserController : ControllerBase
 
         return Ok("University Admin Registered Successfully.");
     }
+
+    [HttpGet("get-all-emails")]
+    public async Task<IActionResult> GetAllEmails()
+    {
+        var emails = await _dbContext.Users.Select(u => u.Email).ToListAsync();
+        return Ok(emails);
+    }
+
 }
