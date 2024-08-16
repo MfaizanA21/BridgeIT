@@ -9,9 +9,12 @@ public class AuthController : ControllerBase
 {
     private readonly IAuthService _authService;
 
-    public AuthController(IAuthService authService)
+    private readonly UserService _userService;
+
+    public AuthController(IAuthService authService, UserService userService)
     {
         _authService = authService;
+        _userService = userService;
     }
 
     [HttpPost("login")]
@@ -26,5 +29,15 @@ public class AuthController : ControllerBase
         {
             return Unauthorized(ex.Message);
         }
+    }
+
+    [HttpGet("authorized-user-info")]
+    public IActionResult GetProfile()
+    {
+        var userId = _userService.GetCurrentUserId();
+        var role = _userService.GetCurrentRole();
+
+
+        return Ok(new { UserId = userId, Role = role });
     }
 }
