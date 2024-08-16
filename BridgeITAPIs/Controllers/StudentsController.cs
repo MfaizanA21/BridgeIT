@@ -138,34 +138,5 @@ public class StudentsController : ControllerBase
         return Ok("Student deleted successfully.");
     }
 
-    [HttpPut("set-profile-image/{Id}")]
-    public async Task<IActionResult> SetProfileImage(Guid Id, string  base64ImageData)
-    {
-        var student = await _dbContext.Students
-            .Include(s => s.User)
-            .FirstOrDefaultAsync(s => s.Id == Id);
-
-        if (student == null)
-        {
-            return NotFound("Student not found.");
-        }
-
-        if (student.User != null)
-        {
-            try
-            {
-                if (!string.IsNullOrEmpty(base64ImageData))
-                {
-                   student.User.ImageData = Convert.FromBase64String(base64ImageData);
-                }
-            } catch( FormatException ex)
-            {
-                return BadRequest("Invaid base64 string");
-            }
-        }
-
-        await _dbContext.SaveChangesAsync();
-
-        return Ok("Profile image updated successfully.");
-    }
+    
 }
