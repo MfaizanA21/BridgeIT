@@ -668,7 +668,8 @@ public partial class BridgeItContext : DbContext
                 .HasMaxLength(255)
                 .HasColumnName("hash");
             entity.Property(e => e.ImageData)
-                .HasMaxLength(255)
+                //.HasMaxLength(255)
+                .HasColumnType("varbinary(max)")
                 .HasColumnName("imageData");
             entity.Property(e => e.LastName)
                 .HasMaxLength(255)
