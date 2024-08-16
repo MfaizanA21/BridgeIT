@@ -19,7 +19,7 @@ public partial class User
 
     public string? Salt { get; set; }
 
-    public string? ImageData { get; set; }
+    public byte[]? ImageData { get; set; }
 
     public virtual ICollection<Faculty> Faculties { get; set; } = new List<Faculty>();
 

@@ -31,11 +31,14 @@ public class GetStudentController : ControllerBase
 
         var dto = new GetStudentDTO
         {
+            Id = student.Id,
+            userId = student.UserId,
+            universityId = student.UniversityId,
             FirstName = student.User?.FirstName ?? string.Empty,
             LastName = student.User?.LastName ?? string.Empty,
             Email = student.User?.Email ?? string.Empty,
             //Skills = student.Skills.Select(s => s.Skill1).ToList(),
-            ImageData = student.User?.ImageData ?? string.Empty,
+            ImageData = student.User?.ImageData ?? Array.Empty<byte>(),
             UniversityName = student.University?.Name ?? string.Empty,
             Address = student.University?.Address ?? string.Empty,
             RollNumber = student?.RollNumber.ToString() ?? string.Empty
@@ -60,17 +63,20 @@ public class GetStudentController : ControllerBase
 
         var dtoList = students.Select(s => new GetStudentDTO
         {
+            Id = s.Id,
+            userId = s.UserId,
+            universityId = s.UniversityId,
             FirstName = s.User?.FirstName ?? string.Empty,
             LastName = s.User?.LastName ?? string.Empty,
             Email = s.User?.Email ?? string.Empty,
             Skills = s.Skills.Select(s => s.Skill1).ToList(),
-            ImageData = s.User?.ImageData ?? string.Empty,
-            universityId = s.University?.Id ?? Guid.Empty,
+            ImageData = s.User?.ImageData ?? Array.Empty<byte>(),
+            //universityId = s.University?.Id ?? Guid.Empty,
             UniversityName = s.University?.Name ?? string.Empty,
             Address = s.University?.Address ?? string.Empty,
             RollNumber = s?.RollNumber.ToString() ?? string.Empty,
-            userId = s.User.Id,
-            Id = s.Id
+            //userId = s.User.Id,
+            //Id = s.Id
 
         }).ToList();
 
@@ -97,11 +103,14 @@ public class GetStudentController : ControllerBase
 
         var dtoList = student.Select(s => new GetStudentDTO
         {
+            Id = s.Id,
+            userId = s.UserId,
+            universityId = s.UniversityId,
             FirstName = s.User?.FirstName ?? string.Empty,
             LastName = s.User?.LastName ?? string.Empty,
             Email = s.User?.Email ?? string.Empty,
             //Skills = s.Skills.Select(s => s.Skill1).ToList(),
-            ImageData = s.User?.ImageData ?? string.Empty,
+            ImageData = s.User?.ImageData ?? Array.Empty<byte>(),
             UniversityName = s.University?.Name ?? string.Empty,
             Address = s.University?.Address ?? string.Empty,
             RollNumber = s?.RollNumber.ToString() ?? string.Empty
@@ -131,7 +140,7 @@ public class GetStudentController : ControllerBase
             LastName = s.User?.LastName ?? string.Empty,
             Email = s.User?.Email ?? string.Empty,
             //Skills = s.Skills.Select(s => s.Skill1).ToList(),
-            ImageData = s.User?.ImageData ?? string.Empty,
+            ImageData = s.User?.ImageData ?? Array.Empty<byte>(),
             UniversityName = s.University?.Name ?? string.Empty,
             Address = s.University?.Address ?? string.Empty,
             RollNumber = s?.RollNumber.ToString() ?? string.Empty
