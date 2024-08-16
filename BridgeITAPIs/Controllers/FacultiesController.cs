@@ -99,7 +99,7 @@ public class FacultiesController : ControllerBase
             if (!string.IsNullOrEmpty(dto.Email))
                 faculty.User.Email = dto.Email;
 
-            if (!string.IsNullOrEmpty(dto.ImageData))
+            if (dto.ImageData != null && dto.ImageData.Length > 0)
                 faculty.User.ImageData = dto.ImageData;
         }
 
@@ -119,4 +119,5 @@ public class FacultiesController : ControllerBase
 
         return Ok("Faculty updated successfully.");
     }
+
 }
