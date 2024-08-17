@@ -6,18 +6,18 @@ using BridgeITAPIs.Models;
 
 namespace BridgeITAPIs.Controllers;
 
-[Route("api/get-university")]
+[Route("api/universities")]
 [ApiController]
-public class GetUniversityController : ControllerBase
+public class UniversitiesController : ControllerBase
 {
     private readonly BridgeItContext _dbContext;
 
-    public GetUniversityController(BridgeItContext dbContext)
+    public UniversitiesController(BridgeItContext dbContext)
     {
         _dbContext = dbContext;
     }
 
-    [HttpGet("university-by-id/{universityId}")]
+    [HttpGet("get-university-by-id/{universityId}")]
     public async Task<IActionResult> GetUniversity(Guid universityId)
     {
         var university = await _dbContext.Universities
@@ -39,7 +39,7 @@ public class GetUniversityController : ControllerBase
         return Ok(dto);
     }
 
-    [HttpGet("all-universities")]
+    [HttpGet("get-all-universities")]
     public async Task<IActionResult> GetUniversities()
     {
         var universities = await _dbContext.Universities.ToListAsync();
@@ -60,7 +60,7 @@ public class GetUniversityController : ControllerBase
         return Ok(dtoList);
     }
 
-    [HttpGet("university-by-name/{name}")]
+    [HttpGet("get-university-by-name/{name}")]
     public async Task<IActionResult> GetUniversityByName(string name)
     {
         var university = await _dbContext.Universities
@@ -81,4 +81,39 @@ public class GetUniversityController : ControllerBase
 
         return Ok(dto);
     }
+
+    [HttpPost("add-university")]
+    public async Task<IActionResult> AddUniversity([FromBody] AddUniversityDTO dto)
+    {
+        var university = new University
+        {
+            Id = Guid.NewGuid(),
+            Name = dto.Name,
+            Address = dto.Address,
+            EstYear = dto.EstYear
+        };
+
+        await _dbContext.Universities.AddAsync(university);
+        await _dbContext.SaveChangesAsync();
+
+        return Ok("University added successfully.");
+    }
+
+    [HttpDelete("delete-university/{universityId}")]
+    public async Task<IActionResult> DeleteUniversity(Guid universityId)
+    {
+        var university = await _dbContext.Universities
+            .FirstOrDefaultAsync(u => u.Id == universityId);
+
+        if (university == null)
+        {
+            return NotFound("University not found.");
+        }
+
+        _dbContext.Universities.Remove(university);
+        await _dbContext.SaveChangesAsync();
+
+        return Ok("University deleted successfully.");
+    }
+
 }
