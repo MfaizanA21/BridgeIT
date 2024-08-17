@@ -3,90 +3,86 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using BridgeITAPIs.Helper;
 
-namespace BridgeITAPIs.Controllers;
-
-[Route("api/edit-user-profile")]
-[ApiController]
-public class EditUserProfileController : ControllerBase
+namespace BridgeITAPIs.Controllers
 {
-    private readonly BridgeItContext _dbContext;
-
-    public EditUserProfileController(BridgeItContext dbContext)
+    [Route("api/edit-user-profile")]
+    [ApiController]
+    public class EditUserProfileController : ControllerBase
     {
-        _dbContext = dbContext;
-    }
+        private readonly BridgeItContext _dbContext;
 
-
-    [HttpPut("set-profile-image/{Id}")]
-    public async Task<IActionResult> SetProfileImage(Guid Id, string base64ImageData)
-    {
-        var user = await _dbContext.Users
-            .FirstOrDefaultAsync(u => u.Id == Id);
-
-        if (user == null)
+        public EditUserProfileController(BridgeItContext dbContext)
         {
-            return NotFound("Student not found.");
+            _dbContext = dbContext;
         }
 
-        if (user != null)
+        [HttpPut("set-profile-image/{Id}")]
+        public async Task<IActionResult> SetProfileImage(Guid Id, [FromBody] string base64ImageData)
         {
+            var user = await _dbContext.Users
+                .FirstOrDefaultAsync(u => u.Id == Id);
+
+            if (user == null)
+            {
+                return NotFound("User not found.");
+            }
+
             try
             {
                 if (!string.IsNullOrEmpty(base64ImageData))
                 {
                     user.ImageData = Convert.FromBase64String(base64ImageData);
+                    await _dbContext.SaveChangesAsync();
+                    return Ok("Profile image uploaded successfully.");
+                }
+                else
+                {
+                    return BadRequest("Image data is empty.");
                 }
             }
             catch (FormatException ex)
             {
-                return BadRequest("Invaid base64 string");
+                return BadRequest("Invalid base64 string.");
             }
         }
 
-        await _dbContext.SaveChangesAsync();
-
-        return Ok("Profile image uploaded successfully.");
-    }
-
-    [HttpPut("change-password/{Id}")]
-    public async Task<IActionResult> ChangeUserPassword(Guid Id, string password)
-    {
-        var user = await _dbContext.Users
-            .FirstOrDefaultAsync(u => u.Id == Id);
-
-        if (user == null)
+        [HttpPut("change-password/{Id}")]
+        public async Task<IActionResult> ChangeUserPassword(Guid Id, [FromBody] string password)
         {
-            return NotFound("User not found.");
-        }
+            var user = await _dbContext.Users
+                .FirstOrDefaultAsync(u => u.Id == Id);
 
-        var (passwordHash, passwordSalt) = PasswordHelper.HashPassword(password);
+            if (user == null)
+            {
+                return NotFound("User not found.");
+            }
 
-        if (user != null)
-        {
+            var (passwordHash, passwordSalt) = PasswordHelper.HashPassword(password);
+
             user.Hash = passwordHash;
             user.Salt = passwordSalt;
+
+            await _dbContext.SaveChangesAsync();
+            return Ok("Password changed successfully.");
         }
 
-        await _dbContext.SaveChangesAsync();
-        return Ok("Password Changed Successfully");
-    }
-
-    [HttpGet("confirm-current-password/{Id}")]
-    public async Task<IActionResult> GetCurrentPassword(Guid Id, string previousPassword)
-    {
-        var user = await _dbContext.Users
-            .FirstOrDefaultAsync(u => u.Id == Id);
-
-        if (user == null)
+        [HttpPost("confirm-current-password/{Id}")]
+        public async Task<IActionResult> GetCurrentPassword(Guid Id, [FromBody] string previousPassword)
         {
-            return NotFound("User not found.");
-        }
+            var user = await _dbContext.Users
+                .FirstOrDefaultAsync(u => u.Id == Id);
 
-        if (!PasswordHelper.VerifyPassword(previousPassword, user.Hash, user.Salt))
-        {
-            return BadRequest("Invalid Password");
-        }
+            if (user == null)
+            {
+                return NotFound("User not found.");
+            }
 
-        return Ok("Password Confirmed");
+            if (!PasswordHelper.VerifyPassword(previousPassword, user.Hash, user.Salt))
+            {
+                return BadRequest("Invalid Password");
+            }
+
+            return Ok("Password confirmed.");
+        }
     }
 }
