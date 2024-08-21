@@ -30,6 +30,9 @@ public class GetIndustryExpertController : ControllerBase
 
         var dtoList = new GetIndustryExpertDTO
         {
+            UserId = industryExpert.UserId,
+            IndExptId = industryExpert.Id,
+            CompanyId = industryExpert.CompanyId,
             FirstName = industryExpert.User?.FirstName ?? string.Empty,
             LastName = industryExpert.User?.LastName ?? string.Empty,
             Email = industryExpert.User?.Email ?? string.Empty,
@@ -58,6 +61,9 @@ public class GetIndustryExpertController : ControllerBase
 
         var dtoList = industryExperts.Select(f => new GetIndustryExpertDTO
         {
+            IndExptId = f.Id,
+            UserId = f.UserId,
+            CompanyId = f.CompanyId,
             FirstName = f.User?.FirstName ?? string.Empty,
             LastName = f.User?.LastName ?? string.Empty,
             Email = f.User?.Email ?? string.Empty,
@@ -90,6 +96,9 @@ public class GetIndustryExpertController : ControllerBase
 
         var dtoList = industryExpert.Select(f => new GetIndustryExpertDTO
         {
+            IndExptId = f.Id,
+            UserId = f.UserId,
+            CompanyId = f.CompanyId,
             FirstName = f.User?.FirstName ?? string.Empty,
             LastName = f.User?.LastName ?? string.Empty,
             Email = f.User?.Email ?? string.Empty,
