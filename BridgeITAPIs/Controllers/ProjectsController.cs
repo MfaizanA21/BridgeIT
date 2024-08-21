@@ -17,17 +17,17 @@ public class ProjectsController : ControllerBase
         _dbContext = dbContext;
     }
 
-    [HttpPost("create-projects")]
-    public async Task<IActionResult> AddProject([FromBody] AddProjectDTO dto)
+    [HttpPost("student-add-projects")]
+    public async Task<IActionResult> AddProject([FromBody] StudentAddProjectDTO dto)
     {
         if (dto == null)
         {
             return BadRequest("Project Data is null.");
         }
 
-        if (dto.StudentId == null && dto.IndExpertId == null)
+        if (dto.StudentId == null)
         {
-            return BadRequest("Either StudentId or IndExpertId must be provided");
+            return BadRequest("Either StudentId must be provided");
         }
 
         var project = new Project
@@ -41,7 +41,6 @@ public class ProjectsController : ControllerBase
             StartDate = DateOnly.Parse(dto.StartDate),
             EndDate = DateOnly.Parse(dto.EndDate),
             StudentId = dto.StudentId,
-            IndExpertId = dto.IndExpertId
         };
 
         await _dbContext.Projects.AddAsync(project);
@@ -50,12 +49,14 @@ public class ProjectsController : ControllerBase
         return Ok("Project added successfully.");
     }
 
-    [HttpGet("get-all-projects")]
+    [HttpGet("get-student-projects")]
     public async Task<IActionResult> GetProjectTiles()
     {
         var projects = await _dbContext.Projects
             .Include(p => p.Student)
+                .ThenInclude(s => s.User)
             .Include(p => p.IndExpert)
+            .Where(p => p.StudentId != null)
             .ToListAsync();
 
         if (projects == null)
@@ -63,23 +64,75 @@ public class ProjectsController : ControllerBase
             return BadRequest("No projects found");
         }
 
-        var projectDto = projects.Select(project => new ProjectTileDTO
+        var projectDto = projects.Select(project => new StudentProjectTileDTO
         {
             Id = project.Id,
             Title = project?.Title ?? string.Empty,
             Description = project?.Description ?? string.Empty,
             Stack = project?.Stack ?? string.Empty,
             Status = project?.CurrentStatus ?? string.Empty,
-            StudentId = project.StudentId,
-            IndExpertId = project.IndExpertId,
-            studentName = project.Student.User.FirstName ?? string.Empty,
-            IndExpertName = project.IndExpert.User.FirstName ?? string.Empty
-
+            StudentId = project?.StudentId,
+            studentName = project?.Student?.User?.FirstName ?? string.Empty,
         }).ToList();
 
         return Ok(projectDto);
 
     }
 
-    
+    [HttpPost("expert-post-project")]
+    public async Task<IActionResult> PostProject([FromBody] IndExptAddProjectDTO dto)
+    {
+        if (dto == null)
+        {
+            return BadRequest("Project Data is null.");
+        }
+
+        if (dto.IndExpertId == null)
+        {
+            return BadRequest("IndExpertId must be provided");
+        }
+
+        var project = new Project
+        {
+            Id = Guid.NewGuid(),
+            Title = dto.Title,
+            Description = dto.Description,
+            /*Team = dto.Team,
+            Stack = dto.Stack,
+            CurrentStatus = dto.CurrentStatus,
+            StartDate = DateOnly.Parse(dto.StartDate),*/
+            EndDate = DateOnly.Parse(dto.EndDate),
+            IndExpertId = dto.IndExpertId,
+        };
+
+        await _dbContext.Projects.AddAsync(project);
+        await _dbContext.SaveChangesAsync();
+
+        return Ok("Project added successfully.");
+    }
+
+    [HttpGet("get-expert-projects")]
+    public async Task<IActionResult> GetExpertProjects()
+    {
+        var projects = await _dbContext.Projects
+            .Include(p => p.IndExpert)
+            .Where(p => p.IndExpertId != null)
+            .ToListAsync();
+
+        if (projects == null)
+        {
+            return BadRequest("No projects found");
+        }
+
+        var projectDto = projects.Select(project => new IndExptProjectTileDTO
+        {
+            Id = project.Id,
+            Title = project?.Title ?? string.Empty,
+            Description = project?.Description ?? string.Empty,
+            EndDate = project?.EndDate.ToString() ?? string.Empty,
+            IndExpertId = project?.IndExpertId,
+        }).ToList();
+
+        return Ok(projectDto);
+    }
 }
