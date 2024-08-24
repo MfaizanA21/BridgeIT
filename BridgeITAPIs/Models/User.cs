@@ -27,7 +27,7 @@ public partial class User
 
     public virtual ICollection<Review> Reviews { get; set; } = new List<Review>();
 
-    public virtual ICollection<Skill> Skills { get; set; } = new List<Skill>();
+    //public virtual ICollection<Skill> Skills { get; set; } = new List<Skill>();
 
     public virtual ICollection<Student> Students { get; set; } = new List<Student>();
 
