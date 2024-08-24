@@ -14,6 +14,7 @@ public class RegisterStudentDTO
     public string Password { get; set; } = string.Empty;
     //public string ImageData { get; set; } = string.Empty;
     public string Department { get; set; } = string.Empty;
+    //public string Skills { get; set; } = string.Empty;
 
     public int? RollNumber { get; set; } = null;
 
