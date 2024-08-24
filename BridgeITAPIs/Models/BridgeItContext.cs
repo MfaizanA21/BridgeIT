@@ -507,17 +507,12 @@ public partial class BridgeItContext : DbContext
             entity.Property(e => e.Id)
                 .ValueGeneratedNever()
                 .HasColumnName("id");
-            entity.Property(e => e.CreatedAt)
-                .HasColumnType("datetime")
-                .HasColumnName("created_at");
-            entity.Property(e => e.CreatedBy).HasColumnName("created_by");
+            
             entity.Property(e => e.Skill1)
                 .HasMaxLength(255)
                 .HasColumnName("skill");
 
-            entity.HasOne(d => d.CreatedByNavigation).WithMany(p => p.Skills)
-                .HasForeignKey(d => d.CreatedBy)
-                .HasConstraintName("FK__Skill__created_b__778AC167");
+            
         });
 
         modelBuilder.Entity<SponsoredFyp>(entity =>
@@ -553,9 +548,12 @@ public partial class BridgeItContext : DbContext
             entity.Property(e => e.Id)
                 .ValueGeneratedNever()
                 .HasColumnName("id");
-            entity.Property(e => e.Role)
-                .HasMaxLength(255)
-                .HasColumnName("role");
+            entity.Property(e => e.skills)
+                .HasColumnName("Skills")
+                .HasColumnType("nvarchar(max)");
+            entity.Property(e => e.department)
+                .HasColumnType("nvarchar(max)")
+                .HasColumnName("department");
             entity.Property(e => e.RollNumber).HasColumnName("rollNumber");
             entity.Property(e => e.UniversityId).HasColumnName("university_id");
             entity.Property(e => e.UserId).HasColumnName("user_id");
@@ -587,7 +585,7 @@ public partial class BridgeItContext : DbContext
                         j.IndexerProperty<Guid>("FypId").HasColumnName("fyp_id");
                     });
 
-            entity.HasMany(d => d.Skills).WithMany(p => p.Students)
+           /* entity.HasMany(d => d.Skills).WithMany(p => p.Students)
                 .UsingEntity<Dictionary<string, object>>(
                     "StudentSkill",
                     r => r.HasOne<Skill>().WithMany()
@@ -604,7 +602,7 @@ public partial class BridgeItContext : DbContext
                         j.ToTable("StudentSkill");
                         j.IndexerProperty<Guid>("StudentId").HasColumnName("student_id");
                         j.IndexerProperty<Guid>("SkillId").HasColumnName("skill_id");
-                    });
+                    }); */
         });
 
         modelBuilder.Entity<University>(entity =>

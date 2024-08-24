@@ -7,9 +7,11 @@ public partial class Student
 {
     public Guid Id { get; set; }
 
-    public string? Role { get; set; }
+    public string? skills { get; set; }
 
     public int? RollNumber { get; set; }
+
+    public string? department { get; set; }
 
     public Guid? UserId { get; set; }
 
@@ -25,5 +27,5 @@ public partial class Student
 
     public virtual ICollection<Fyp> Fyps { get; set; } = new List<Fyp>();
 
-    public virtual ICollection<Skill> Skills { get; set; } = new List<Skill>();
+    //public virtual ICollection<Skill> Skills { get; set; } = new List<Skill>();
 }

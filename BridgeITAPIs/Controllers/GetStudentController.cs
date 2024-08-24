@@ -37,6 +37,8 @@ public class GetStudentController : ControllerBase
             FirstName = student.User?.FirstName ?? string.Empty,
             LastName = student.User?.LastName ?? string.Empty,
             Email = student.User?.Email ?? string.Empty,
+            Skills = student.skills != null ? student.skills.Split(',').ToList() : new List<string>(),
+            Department = student.department ?? string.Empty,
             //Skills = student.Skills.Select(s => s.Skill1).ToList(),
             ImageData = student.User?.ImageData ?? Array.Empty<byte>(),
             UniversityName = student.University?.Name ?? string.Empty,
@@ -69,8 +71,10 @@ public class GetStudentController : ControllerBase
             FirstName = s.User?.FirstName ?? string.Empty,
             LastName = s.User?.LastName ?? string.Empty,
             Email = s.User?.Email ?? string.Empty,
-            Skills = s.Skills.Select(s => s.Skill1).ToList(),
+            //Skills = s.Skills.Select(s => s.Skill1).ToList(),
+            Skills = s.skills != null ? s.skills.Split(',').ToList() : new List<string>(),
             ImageData = s.User?.ImageData ?? Array.Empty<byte>(),
+            Department = s.department ?? string.Empty,
             //universityId = s.University?.Id ?? Guid.Empty,
             UniversityName = s.University?.Name ?? string.Empty,
             Address = s.University?.Address ?? string.Empty,
@@ -109,6 +113,8 @@ public class GetStudentController : ControllerBase
             FirstName = s.User?.FirstName ?? string.Empty,
             LastName = s.User?.LastName ?? string.Empty,
             Email = s.User?.Email ?? string.Empty,
+            Skills = s.skills != null ? s.skills.Split(',').ToList() : new List<string>(),
+            Department = s.department ?? string.Empty,
             //Skills = s.Skills.Select(s => s.Skill1).ToList(),
             ImageData = s.User?.ImageData ?? Array.Empty<byte>(),
             UniversityName = s.University?.Name ?? string.Empty,
@@ -126,7 +132,7 @@ public class GetStudentController : ControllerBase
             .Include(s => s.User)
             .Include(s => s.University)
             //.Include(s => s.Skills)
-            .Where(s => s.University != null && s.University.Name == uniName)
+            .Where(s => s.University != null && s.University.Name.ToLower().Contains(uniName.ToLower()))
             .ToListAsync();
 
         if (students == null)
@@ -136,6 +142,9 @@ public class GetStudentController : ControllerBase
 
         var dtoList = students.Select(s => new GetStudentDTO
         {
+            Id = s.Id,
+            userId = s.UserId,
+            universityId = s.UniversityId,
             FirstName = s.User?.FirstName ?? string.Empty,
             LastName = s.User?.LastName ?? string.Empty,
             Email = s.User?.Email ?? string.Empty,
@@ -143,6 +152,8 @@ public class GetStudentController : ControllerBase
             ImageData = s.User?.ImageData ?? Array.Empty<byte>(),
             UniversityName = s.University?.Name ?? string.Empty,
             Address = s.University?.Address ?? string.Empty,
+            Skills = s.skills != null ? s.skills.Split(',').ToList() : new List<string>(),
+            Department = s.department ?? string.Empty,
             RollNumber = s?.RollNumber.ToString() ?? string.Empty
         }).ToList();
 

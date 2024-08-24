@@ -52,13 +52,15 @@ public class RegisterUserController : ControllerBase
             Id = Guid.NewGuid(),
             RollNumber = registerStudentDTO.RollNumber,
             UserId = user.Id,
-            UniversityId = registerStudentDTO.UniversityId
+            UniversityId = registerStudentDTO.UniversityId,
+            department = registerStudentDTO.Department,
+            skills = string.Join(",", registerStudentDTO.Skills)
         };
 
         await _dbContext.Set<Student>().AddAsync(student);
         await _dbContext.SaveChangesAsync();
 
-        var studentSkills = new Skill
+        /*var studentSkills = new Skill
         {
             Id = Guid.NewGuid(),
             CreatedBy = user.Id,
@@ -67,7 +69,7 @@ public class RegisterUserController : ControllerBase
         };
 
         await _dbContext.Set<Skill>().AddAsync(studentSkills);
-        await _dbContext.SaveChangesAsync();
+        await _dbContext.SaveChangesAsync();*/
 
         return Ok("Student Registered Successfully.");
 

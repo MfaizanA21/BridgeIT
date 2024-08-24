@@ -9,11 +9,11 @@ public partial class Skill
 
     public string? Skill1 { get; set; }
 
-    public DateTime? CreatedAt { get; set; }
+    //public DateTime? CreatedAt { get; set; }
 
-    public Guid? CreatedBy { get; set; }
+    //public Guid? CreatedBy { get; set; }
 
-    public virtual User? CreatedByNavigation { get; set; }
+    //public virtual User? CreatedByNavigation { get; set; }
 
-    public virtual ICollection<Student> Students { get; set; } = new List<Student>();
+   // public virtual ICollection<Student> Students { get; set; } = new List<Student>();
 }
