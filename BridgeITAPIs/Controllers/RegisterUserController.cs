@@ -109,6 +109,7 @@ public class RegisterUserController : ControllerBase
             Id = Guid.NewGuid(),
             UserId = user.Id,
             Interest = string.Join(",", registerFacultyDTO.Interest),
+            Department = registerFacultyDTO.Department,
             Post = registerFacultyDTO.Post,
             UniId = registerFacultyDTO.UniversityId
         };

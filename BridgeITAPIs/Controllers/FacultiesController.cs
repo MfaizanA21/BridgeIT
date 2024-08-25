@@ -120,4 +120,5 @@ public class FacultiesController : ControllerBase
         return Ok("Faculty updated successfully.");
     }
 
+
 }

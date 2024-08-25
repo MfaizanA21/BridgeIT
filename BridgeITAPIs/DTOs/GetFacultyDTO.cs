@@ -9,6 +9,8 @@ public class GetFacultyDTO
     public string LastName { get; set; } = string.Empty;
     public string Email { get; set; } = string.Empty;
     public byte[] ImageData { get; set; } = Array.Empty<byte>();
+    public string Description { get; set; } = string.Empty;
+    public string Department { get; set; } = string.Empty;
     public List<string> Interest { get; set; } = new List<string>();
     public string Post { get; set; } = string.Empty;
     public string UniversityName { get; set; } = string.Empty;

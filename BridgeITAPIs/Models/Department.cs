@@ -9,5 +9,5 @@ public partial class Department
 
     public string? Department1 { get; set; }
 
-    public virtual ICollection<Faculty> Faculties { get; set; } = new List<Faculty>();
+    //public virtual ICollection<Faculty> Faculties { get; set; } = new List<Faculty>();
 }

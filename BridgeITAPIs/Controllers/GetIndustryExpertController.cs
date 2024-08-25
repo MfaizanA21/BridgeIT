@@ -37,6 +37,7 @@ public class GetIndustryExpertController : ControllerBase
             LastName = industryExpert.User?.LastName ?? string.Empty,
             Email = industryExpert.User?.Email ?? string.Empty,
             ImageData = industryExpert.User?.ImageData ?? Array.Empty<byte>(),
+            Description = industryExpert.User?.description ?? string.Empty,
             CompanyName = industryExpert.Company?.Name ?? string.Empty,
             Address = industryExpert.Company?.Address ?? string.Empty,
             //Interest = industryExpert.Interest != null ? new List<string> { industryExpert.Interest } : new List<string>()
@@ -68,6 +69,7 @@ public class GetIndustryExpertController : ControllerBase
             LastName = f.User?.LastName ?? string.Empty,
             Email = f.User?.Email ?? string.Empty,
             ImageData = f.User?.ImageData ?? Array.Empty<byte>(),
+            Description = f.User?.description ?? string.Empty,
             CompanyName = f.Company?.Name ?? string.Empty,
             Address = f.Company?.Address ?? string.Empty,
             //Interest = f.Interest != null ? new List<string> { f.Interest } : new List<string>()
@@ -103,6 +105,7 @@ public class GetIndustryExpertController : ControllerBase
             LastName = f.User?.LastName ?? string.Empty,
             Email = f.User?.Email ?? string.Empty,
             ImageData = f.User?.ImageData ?? Array.Empty<byte>(),
+            Description = f.User?.description ?? string.Empty,
             CompanyName = f.Company?.Name ?? string.Empty,
             Address = f.Company?.Address ?? string.Empty,
             //Interest = f.Interest != null ? new List<string> { f.Interest } : new List<string>()

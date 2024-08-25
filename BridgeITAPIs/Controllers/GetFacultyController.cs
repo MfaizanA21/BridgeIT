@@ -36,6 +36,8 @@ public class GetFacultyController : ControllerBase
             LastName = faculty.User?.LastName ?? string.Empty,
             Email = faculty.User?.Email ?? string.Empty,
             ImageData = faculty.User?.ImageData,
+            Description = faculty.User?.description ?? string.Empty,
+            Department = faculty.Department ?? string.Empty,
             Interest = faculty.Interest != null ? new List<string> { faculty.Interest } : new List<string>(),
             Post = faculty.Post ?? string.Empty,
             UniversityName = faculty.Uni?.Name ?? string.Empty,
@@ -67,6 +69,8 @@ public class GetFacultyController : ControllerBase
                 LastName = f.User?.LastName ?? string.Empty,
                 Email = f.User?.Email ?? string.Empty,
                 ImageData = f.User?.ImageData,
+                Description = f.User?.description ?? string.Empty,
+                Department = f.Department ?? string.Empty,
                 Interest = f.Interest != null ? new List<string> { f.Interest } : new List<string>(),
                 Post = f.Post ?? string.Empty,
                 UniversityName = f.Uni?.Name ?? string.Empty,
@@ -84,7 +88,7 @@ public class GetFacultyController : ControllerBase
         var faculties = await _dbContext.Faculties
             .Include(f => f.User)
             .Include(f => f.Uni)
-            .Where(f => f.Uni != null && f.Uni.Name == uniName)
+            .Where(f => f.Uni != null && f.Uni.Name.ToLower().Contains(uniName.ToLower()))
             .ToListAsync();
 
         if (faculties == null)
@@ -101,6 +105,8 @@ public class GetFacultyController : ControllerBase
             LastName = f.User?.LastName ?? string.Empty,
             Email = f.User?.Email ?? string.Empty,
             ImageData = f.User?.ImageData,
+            Description = f.User?.description ?? string.Empty,
+            Department = f.Department ?? string.Empty,
             Interest = f.Interest != null ? new List<string> { f.Interest } : new List<string>(),
             Post = f.Post ?? string.Empty,
             UniversityName = f.Uni?.Name ?? string.Empty,
@@ -136,6 +142,8 @@ public class GetFacultyController : ControllerBase
             LastName = f.User?.LastName ?? string.Empty,
             Email = f.User?.Email ?? string.Empty,
             ImageData = f.User?.ImageData,
+            Description = f.User?.description ?? string.Empty,
+            Department = f.Department ?? string.Empty,
             Interest = f.Interest != null ? new List<string> { f.Interest } : new List<string>(),
             Post = f.Post ?? string.Empty,
             UniversityName = f.Uni?.Name ?? string.Empty,

@@ -192,6 +192,9 @@ public partial class BridgeItContext : DbContext
             entity.Property(e => e.Post)
                 .HasMaxLength(255)
                 .HasColumnName("post");
+            entity.Property(e => e.Department)
+                .HasColumnType("nvarchar(max)")
+                .HasColumnName("department");
             entity.Property(e => e.UniId).HasColumnName("uni_id");
             entity.Property(e => e.UserId).HasColumnName("user_id");
 
@@ -203,7 +206,7 @@ public partial class BridgeItContext : DbContext
                 .HasForeignKey(d => d.UserId)
                 .HasConstraintName("FK__Faculty__user_id__02084FDA");
 
-            entity.HasMany(d => d.Departments).WithMany(p => p.Faculties)
+           /* entity.HasMany(d => d.Departments).WithMany(p => p.Faculties)
                 .UsingEntity<Dictionary<string, object>>(
                     "FacultyDepartment",
                     r => r.HasOne<Department>().WithMany()
@@ -220,9 +223,9 @@ public partial class BridgeItContext : DbContext
                         j.ToTable("FacultyDepartment");
                         j.IndexerProperty<Guid>("FacultyId").HasColumnName("faculty_id");
                         j.IndexerProperty<Guid>("DepartmentId").HasColumnName("department_id");
-                    });
+                    });*/
 
-            entity.HasMany(d => d.FieldOfInterests).WithMany(p => p.Faculties)
+            /*entity.HasMany(d => d.FieldOfInterests).WithMany(p => p.Faculties)
                 .UsingEntity<Dictionary<string, object>>(
                     "FacultyInterest",
                     r => r.HasOne<FieldOfInterest>().WithMany()
@@ -239,7 +242,7 @@ public partial class BridgeItContext : DbContext
                         j.ToTable("FacultyInterest");
                         j.IndexerProperty<Guid>("FacultyId").HasColumnName("faculty_id");
                         j.IndexerProperty<Guid>("FieldOfInterestId").HasColumnName("field_of_interest_id");
-                    });
+                    });*/
         });
 
         modelBuilder.Entity<FacultyExperience>(entity =>
@@ -666,7 +669,6 @@ public partial class BridgeItContext : DbContext
                 .HasMaxLength(255)
                 .HasColumnName("hash");
             entity.Property(e => e.ImageData)
-                //.HasMaxLength(255)
                 .HasColumnType("varbinary(max)")
                 .HasColumnName("imageData");
             entity.Property(e => e.LastName)
@@ -678,6 +680,9 @@ public partial class BridgeItContext : DbContext
             entity.Property(e => e.Salt)
                 .HasMaxLength(255)
                 .HasColumnName("salt");
+            entity.Property(e => e.description)
+                .HasColumnType("nvarchar(max)")
+                .HasColumnName("description");
         });
 
         OnModelCreatingPartial(modelBuilder);

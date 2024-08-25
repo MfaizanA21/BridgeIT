@@ -84,4 +84,20 @@ public class EditUserProfileController : ControllerBase
 
         return Ok("Password confirmed.");
     }
+
+    [HttpPut("update-user-description/{Id}")]
+    public async Task<IActionResult> UpdateUserDescription(Guid Id, [FromBody] string description)
+    {
+        var user = await _dbContext.Users
+            .FirstOrDefaultAsync(u => u.Id == Id);
+
+        if (user == null)
+        {
+            return NotFound("User not found.");
+        }
+
+        user.description = description;
+        await _dbContext.SaveChangesAsync();
+        return Ok("Description updated successfully.");
+    }
 }
