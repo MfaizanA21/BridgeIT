@@ -13,6 +13,7 @@ public class GetStudentDTO
     public List<string> Skills { get; set; } = new List<string>();
     public string Department { get; set; } = string.Empty;
     public byte[] ImageData { get; set; } = Array.Empty<byte>();
+    public string Description { get; set; } = string.Empty;
     public string UniversityName { get; set; } = string.Empty;
     public string Address { get; set; } = string.Empty;
     public string RollNumber { get; set; } = string.Empty;

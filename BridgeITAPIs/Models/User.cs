@@ -21,6 +21,8 @@ public partial class User
 
     public byte[]? ImageData { get; set; }
 
+    public string? description { get; set; }
+
     public virtual ICollection<Faculty> Faculties { get; set; } = new List<Faculty>();
 
     public virtual ICollection<IndustryExpert> IndustryExperts { get; set; } = new List<IndustryExpert>();

@@ -11,7 +11,7 @@ public class GetIndustryExpertDTO
     public string LastName { get; set; } = string.Empty;
     public string Email { get; set; } = string.Empty;
     public byte[] ImageData { get; set; } = Array.Empty<byte>();
-    //public List<string> Interest { get; set; } = new List<string>();
+    public string Description { get; set; } = string.Empty;
     public string Contact { get; set; } = string.Empty;
     public string Post { get; set; } = string.Empty;
     public string CompanyName { get; set; } = string.Empty;

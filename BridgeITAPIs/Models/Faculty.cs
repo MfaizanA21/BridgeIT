@@ -12,6 +12,8 @@ public partial class Faculty
     public string? Interest { get; set; }
 
     public string? Post { get; set; }
+    
+    public string? Department { get; set; }
 
     public Guid? UniId { get; set; }
 
@@ -29,7 +31,7 @@ public partial class Faculty
 
     public virtual User? User { get; set; }
 
-    public virtual ICollection<Department> Departments { get; set; } = new List<Department>();
+    //public virtual ICollection<Department> Departments { get; set; } = new List<Department>();
 
-    public virtual ICollection<FieldOfInterest> FieldOfInterests { get; set; } = new List<FieldOfInterest>();
+    //public virtual ICollection<FieldOfInterest> FieldOfInterests { get; set; } = new List<FieldOfInterest>();
 }
