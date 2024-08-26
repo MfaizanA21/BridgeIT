@@ -19,5 +19,7 @@ public partial class ResearchWork
 
     public Guid? FacultyId { get; set; }
 
+    public string? Link { get; set; }
+
     public virtual Faculty? Faculty { get; set; }
 }
