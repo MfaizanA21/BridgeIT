@@ -13,6 +13,10 @@ public partial class Event
 
     public DateTime? EventDate { get; set; }
 
+    public string? Venue { get; set; }
+
+    public string? Description { get; set; }
+
     public Guid? FacultyId { get; set; }
 
     public virtual Faculty? Faculty { get; set; }

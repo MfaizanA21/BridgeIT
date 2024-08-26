@@ -171,6 +171,12 @@ public partial class BridgeItContext : DbContext
             entity.Property(e => e.Title)
                 .HasMaxLength(255)
                 .HasColumnName("title");
+            entity.Property(e => e.Venue)
+                .HasColumnType("nvarchar(max)")
+                .HasColumnName("venue");
+            entity.Property(e => e.Description)
+                .HasColumnType("nvarchar(max)")
+                .HasColumnName("description");
 
             entity.HasOne(d => d.Faculty).WithMany(p => p.Events)
                 .HasForeignKey(d => d.FacultyId)
@@ -466,6 +472,9 @@ public partial class BridgeItContext : DbContext
             entity.Property(e => e.PublishChannel)
                 .HasMaxLength(255)
                 .HasColumnName("publish_channel");
+            entity.Property(e => e.Link)
+                .HasColumnType("nvarchar(max)")
+                .HasColumnName("link");
             entity.Property(e => e.YearOfPublish).HasColumnName("year_of_publish");
 
             entity.HasOne(d => d.Faculty).WithMany(p => p.ResearchWorks)
