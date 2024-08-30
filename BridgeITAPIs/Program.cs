@@ -9,9 +9,9 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
+using AspNetCoreRateLimit;
 
 var builder = WebApplication.CreateBuilder(args);
-
 
 
 builder.Services.AddControllers();
@@ -27,18 +27,26 @@ builder.Services.AddCors(options =>
         });
 });
 
+// Rate Limiting
+builder.Services.AddMemoryCache();
+builder.Services.Configure<IpRateLimitOptions>(builder.Configuration.GetSection("IpRateLimiting"));
+builder.Services.AddInMemoryRateLimiting();
+builder.Services.AddSingleton<IRateLimitConfiguration, RateLimitConfiguration>();
+
+// JWT Settings
 builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection("JwtSettings"));
 builder.Services.AddSingleton(resolver => resolver.GetRequiredService<IOptions<JwtSettings>>().Value);
 
+// Authentication Settings
 builder.Services.AddScoped<IAuthService, AuthService>();
-
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<UserService>();
 
+// EF Core configuration with SQL Server
 builder.Services.AddDbContext<BridgeItContext>( options => 
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-
+//JWT Authentication
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
@@ -96,6 +104,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseIpRateLimiting();
 
 app.UseHttpsRedirection();
 app.UseCors("AllowSpecificOrigin");
