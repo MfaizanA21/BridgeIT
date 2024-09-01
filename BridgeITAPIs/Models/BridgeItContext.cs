@@ -382,6 +382,7 @@ public partial class BridgeItContext : DbContext
                 .HasColumnName("stack");
             entity.Property(e => e.StartDate).HasColumnName("start_date");
             entity.Property(e => e.StudentId).HasColumnName("student_id");
+            entity.Property(e => e.FacultyId).HasColumnName("faculty_id");
             entity.Property(e => e.Team).HasColumnName("team");
             entity.Property(e => e.Title)
                 .HasMaxLength(255)

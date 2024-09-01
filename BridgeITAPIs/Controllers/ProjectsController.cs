@@ -159,10 +159,36 @@ public class ProjectsController : ControllerBase
             Stack = project?.Stack ?? string.Empty,
             Status = project?.CurrentStatus ?? string.Empty,
             StudentId = project?.StudentId,
-            studentName = project?.Student?.User?.FirstName ?? string.Empty,
+            studentName = project?.Student?.User?.FirstName + " " + project?.Student?.User?.LastName ?? string.Empty,
         }).ToList();
 
         return Ok(projectDto);
     }
 
+    [HttpGet("get-expert-projects-by-id/{Expertid}")]
+    public async Task<IActionResult> GetExpertProjectsById(Guid Expertid)
+    {
+        var projects = await _dbContext.Projects
+            .Include(i => i.IndExpert)
+                .ThenInclude(u => u.User)
+            .Where(p => p.IndExpertId == Expertid).ToListAsync();
+
+        if (projects == null)
+        {
+            return BadRequest("No Projects Found");        
+        }
+
+        var list = projects.Select(project => new IndExptProjectTileDTO
+        {
+            Id = project.Id,
+            Title = project?.Title ?? string.Empty,
+            Description = project?.Description ?? string.Empty,
+            IndExpertId = project?.IndExpertId,
+            EndDate = project?.EndDate.ToString(),
+            Name = project?.IndExpert?.User?.FirstName +" " + project?.IndExpert?.User?.LastName ?? string.Empty,
+
+        }).ToList();
+
+        return Ok(list);
+    }
 }
