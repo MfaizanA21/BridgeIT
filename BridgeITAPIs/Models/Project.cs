@@ -25,6 +25,8 @@ public partial class Project
 
     public Guid? IndExpertId { get; set; }
 
+    public Guid? FacultyId { get; set; }
+
     public virtual IndustryExpert? IndExpert { get; set; }
 
     public virtual ICollection<MileStone> MileStones { get; set; } = new List<MileStone>();
@@ -34,4 +36,6 @@ public partial class Project
     public virtual ICollection<Review> Reviews { get; set; } = new List<Review>();
 
     public virtual Student? Student { get; set; }
+
+    public virtual Faculty? Faculty { get; set; }
 }

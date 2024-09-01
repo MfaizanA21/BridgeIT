@@ -1,4 +1,7 @@
-﻿using BridgeITAPIs.DTOs;
+﻿using BridgeITAPIs.DTOs.FacultyDTOs;
+using BridgeITAPIs.DTOs.IndustryExpertDTOs;
+using BridgeITAPIs.DTOs.StudentDTOs;
+using BridgeITAPIs.DTOs.UniAdminDTOs;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -59,17 +62,6 @@ public class RegisterUserController : ControllerBase
 
         await _dbContext.Set<Student>().AddAsync(student);
         await _dbContext.SaveChangesAsync();
-
-        /*var studentSkills = new Skill
-        {
-            Id = Guid.NewGuid(),
-            CreatedBy = user.Id,
-            CreatedAt = DateTime.Now,
-            Skill1 = string.Join(",", registerStudentDTO.Skills)
-        };
-
-        await _dbContext.Set<Skill>().AddAsync(studentSkills);
-        await _dbContext.SaveChangesAsync();*/
 
         return Ok("Student Registered Successfully.");
 

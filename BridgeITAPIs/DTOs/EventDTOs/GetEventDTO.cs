@@ -1,12 +1,12 @@
-﻿namespace BridgeITAPIs.DTOs
+﻿namespace BridgeITAPIs.DTOs.EventDTOs
 {
-    public class RegisterEventDTO
+    public class GetEventDTO
     {
-        //public Guid Id { get; set; }
+        public Guid Id { get; set; }
         public string Title { get; set; } = string.Empty;
         public string Description { get; set; } = string.Empty;
         public string SpeakerName { get; set; } = string.Empty;
-        public DateTime EventDate { get; set; }
+        public DateTime? EventDate { get; set; }
         public string Venue { get; set; } = string.Empty;
         public Guid? FacultyId { get; set; }
     }

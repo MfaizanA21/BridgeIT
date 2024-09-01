@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.Diagnostics.HealthChecks;
 
-namespace BridgeITAPIs.DTOs;
+namespace BridgeITAPIs.DTOs.StudentDTOs;
 
 public class GetStudentDTO
 {

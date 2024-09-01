@@ -212,43 +212,6 @@ public partial class BridgeItContext : DbContext
                 .HasForeignKey(d => d.UserId)
                 .HasConstraintName("FK__Faculty__user_id__02084FDA");
 
-           /* entity.HasMany(d => d.Departments).WithMany(p => p.Faculties)
-                .UsingEntity<Dictionary<string, object>>(
-                    "FacultyDepartment",
-                    r => r.HasOne<Department>().WithMany()
-                        .HasForeignKey("DepartmentId")
-                        .OnDelete(DeleteBehavior.ClientSetNull)
-                        .HasConstraintName("FK__FacultyDe__depar__7B5B524B"),
-                    l => l.HasOne<Faculty>().WithMany()
-                        .HasForeignKey("FacultyId")
-                        .OnDelete(DeleteBehavior.ClientSetNull)
-                        .HasConstraintName("FK__FacultyDe__facul__7A672E12"),
-                    j =>
-                    {
-                        j.HasKey("FacultyId", "DepartmentId").HasName("PK__FacultyD__4722737E1AC9C5C7");
-                        j.ToTable("FacultyDepartment");
-                        j.IndexerProperty<Guid>("FacultyId").HasColumnName("faculty_id");
-                        j.IndexerProperty<Guid>("DepartmentId").HasColumnName("department_id");
-                    });*/
-
-            /*entity.HasMany(d => d.FieldOfInterests).WithMany(p => p.Faculties)
-                .UsingEntity<Dictionary<string, object>>(
-                    "FacultyInterest",
-                    r => r.HasOne<FieldOfInterest>().WithMany()
-                        .HasForeignKey("FieldOfInterestId")
-                        .OnDelete(DeleteBehavior.ClientSetNull)
-                        .HasConstraintName("FK__FacultyIn__field__7D439ABD"),
-                    l => l.HasOne<Faculty>().WithMany()
-                        .HasForeignKey("FacultyId")
-                        .OnDelete(DeleteBehavior.ClientSetNull)
-                        .HasConstraintName("FK__FacultyIn__facul__7C4F7684"),
-                    j =>
-                    {
-                        j.HasKey("FacultyId", "FieldOfInterestId").HasName("PK__FacultyI__D7D17A8A769335BC");
-                        j.ToTable("FacultyInterest");
-                        j.IndexerProperty<Guid>("FacultyId").HasColumnName("faculty_id");
-                        j.IndexerProperty<Guid>("FieldOfInterestId").HasColumnName("field_of_interest_id");
-                    });*/
         });
 
         modelBuilder.Entity<FacultyExperience>(entity =>
@@ -431,6 +394,10 @@ public partial class BridgeItContext : DbContext
             entity.HasOne(d => d.Student).WithMany(p => p.Projects)
                 .HasForeignKey(d => d.StudentId)
                 .HasConstraintName("FK__Project__student__0B91BA14");
+
+            entity.HasOne(d => d.Faculty).WithMany(p => p.Projects)
+                .HasForeignKey(d => d.FacultyId)
+                .HasConstraintName("FK_Project_Faculty");
         });
 
         modelBuilder.Entity<ProjectImage>(entity =>

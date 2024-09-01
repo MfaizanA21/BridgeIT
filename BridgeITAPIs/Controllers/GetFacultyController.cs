@@ -1,4 +1,4 @@
-﻿using BridgeITAPIs.DTOs;
+﻿using BridgeITAPIs.DTOs.FacultyDTOs;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;

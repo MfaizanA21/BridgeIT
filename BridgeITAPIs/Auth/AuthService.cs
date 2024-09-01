@@ -1,10 +1,10 @@
-﻿using BridgeITAPIs.DTOs;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using BridgeITAPIs.Helper;
 using System.IdentityModel.Tokens.Jwt;
 using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
 using System.Text;
+using BridgeITAPIs.DTOs.AuthDTOs;
 
 
 namespace BridgeITAPIs.Auth;
