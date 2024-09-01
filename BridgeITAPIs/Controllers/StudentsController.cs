@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using BridgeITAPIs.DTOs;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.SqlServer.Query.Internal;
+using BridgeITAPIs.DTOs.StudentDTOs;
 
 
 namespace BridgeITAPIs.Controllers;

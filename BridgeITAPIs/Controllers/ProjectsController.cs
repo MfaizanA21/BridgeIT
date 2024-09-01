@@ -1,8 +1,8 @@
 ﻿using BridgeITAPIs.Models;
-using BridgeITAPIs.DTOs;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using BridgeITAPIs.DTOs.ProjectDTOs;
 
 namespace BridgeITAPIs.Controllers;
 

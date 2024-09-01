@@ -1,4 +1,4 @@
-﻿namespace BridgeITAPIs.DTOs;
+﻿namespace BridgeITAPIs.DTOs.FacultyDTOs;
 
 public class EditFacultyDTO
 {

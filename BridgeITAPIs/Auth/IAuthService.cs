@@ -1,4 +1,4 @@
-﻿using BridgeITAPIs.DTOs;
+﻿using BridgeITAPIs.DTOs.AuthDTOs;
 
 namespace BridgeITAPIs.Auth;
 

@@ -1,4 +1,4 @@
-﻿namespace BridgeITAPIs.DTOs
+﻿namespace BridgeITAPIs.DTOs.CompanyDTOs
 {
     public class GetCompanyDTO
     {

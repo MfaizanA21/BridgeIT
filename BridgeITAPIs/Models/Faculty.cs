@@ -31,6 +31,8 @@ public partial class Faculty
 
     public virtual User? User { get; set; }
 
+    public virtual ICollection<Project> Projects { get; set; } = new List<Project>();
+
     //public virtual ICollection<Department> Departments { get; set; } = new List<Department>();
 
     //public virtual ICollection<FieldOfInterest> FieldOfInterests { get; set; } = new List<FieldOfInterest>();
