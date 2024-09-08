@@ -41,6 +41,8 @@ public partial class BridgeItContext : DbContext
 
     public virtual DbSet<Project> Projects { get; set; }
 
+    public virtual DbSet<ProjectProposal> Proposals { get; set; }
+
     public virtual DbSet<ProjectImage> ProjectImages { get; set; }
 
     public virtual DbSet<ResearchWork> ResearchWorks { get; set; }
@@ -399,6 +401,34 @@ public partial class BridgeItContext : DbContext
             entity.HasOne(d => d.Faculty).WithMany(p => p.Projects)
                 .HasForeignKey(d => d.FacultyId)
                 .HasConstraintName("FK_Project_Faculty");
+        });
+
+        modelBuilder.Entity<ProjectProposal>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK_ProjectProposal");
+
+            entity.ToTable("ProjectProposal");
+
+            entity.Property(e => e.Id)
+                .ValueGeneratedNever()
+                .HasColumnName("id");
+            entity.Property(e => e.Proposal)
+                .HasColumnName("proposal")
+                .HasColumnType("nvarchar(max)");
+            entity.Property(e => e.Status)
+                .HasMaxLength(255)
+                .HasColumnName("status");
+            entity.Property(e => e.ProjectId).HasColumnName("project_id");
+            entity.Property(e => e.StudentId).HasColumnName("student_id");
+
+            entity.HasOne(d => d.Project).WithMany(p => p.Proposals)
+                .HasForeignKey(d => d.ProjectId)
+                .HasConstraintName("FK__ProjectProposal_Project");
+
+            entity.HasOne(d => d.Student).WithMany(p => p.Proposals)
+                .HasForeignKey(d => d.StudentId)
+                .HasConstraintName("FK__ProjectProposal_Student");
+                
         });
 
         modelBuilder.Entity<ProjectImage>(entity =>

@@ -72,7 +72,7 @@ public class ProjectsController : ControllerBase
             Stack = project?.Stack ?? string.Empty,
             Status = project?.CurrentStatus ?? string.Empty,
             StudentId = project?.StudentId,
-            studentName = project?.Student?.User?.FirstName ?? string.Empty,
+            studentName = project?.Student?.User?.FirstName + " " + project?.Student?.User?.LastName ?? string.Empty,
         }).ToList();
 
         return Ok(projectDto);
@@ -117,7 +117,7 @@ public class ProjectsController : ControllerBase
         var projects = await _dbContext.Projects
             .Include(p => p.IndExpert)
             .Where(p => p.IndExpertId != null)
-            .ToListAsync();
+            .ToListAsync(); 
 
         if (projects == null)
         {
@@ -127,10 +127,11 @@ public class ProjectsController : ControllerBase
         var projectDto = projects.Select(project => new IndExptProjectTileDTO
         {
             Id = project.Id,
+            IndExpertId = project?.IndExpertId,
             Title = project?.Title ?? string.Empty,
             Description = project?.Description ?? string.Empty,
             EndDate = project?.EndDate.ToString() ?? string.Empty,
-            IndExpertId = project?.IndExpertId,
+            Name = project?.IndExpert?.User?.FirstName + " " + project?.IndExpert?.User?.LastName ?? string.Empty,
         }).ToList();
 
         return Ok(projectDto);
