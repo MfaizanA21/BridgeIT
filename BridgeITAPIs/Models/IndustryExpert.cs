@@ -23,5 +23,7 @@ public partial class IndustryExpert
 
     public virtual ICollection<SponsoredFyp> SponsoredFyps { get; set; } = new List<SponsoredFyp>();
 
+    //public virtual ICollection<ProjectProposal> Proposals { get; set; } = new List<ProjectProposal>();
+
     public virtual User? User { get; set; }
 }

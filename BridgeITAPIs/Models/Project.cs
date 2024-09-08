@@ -35,6 +35,8 @@ public partial class Project
 
     public virtual ICollection<Review> Reviews { get; set; } = new List<Review>();
 
+    public virtual ICollection<ProjectProposal> Proposals { get; set; } = new List<ProjectProposal>();
+
     public virtual Student? Student { get; set; }
 
     public virtual Faculty? Faculty { get; set; }

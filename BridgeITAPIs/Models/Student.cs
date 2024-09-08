@@ -27,5 +27,7 @@ public partial class Student
 
     public virtual ICollection<Fyp> Fyps { get; set; } = new List<Fyp>();
 
+    public virtual ICollection<ProjectProposal> Proposals { get; set; } = new List<ProjectProposal>();
+
     //public virtual ICollection<Skill> Skills { get; set; } = new List<Skill>();
 }
