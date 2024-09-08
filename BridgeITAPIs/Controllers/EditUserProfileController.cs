@@ -31,9 +31,27 @@ public class EditUserProfileController : ControllerBase
         {
             if (!string.IsNullOrEmpty(base64ImageData))
             {
-                user.ImageData = Convert.FromBase64String(base64ImageData);
-                await _dbContext.SaveChangesAsync();
-                return Ok("Profile image uploaded successfully.");
+                byte[] newImageData = Convert.FromBase64String(base64ImageData);
+
+                if (user.ImageData == null)
+                {
+                    user.ImageData = newImageData;
+                    _dbContext.Entry(user).Property(u => u.ImageData).IsModified = true;
+                    await _dbContext.SaveChangesAsync();
+                    return Ok("Profile image uploaded for the first time.");
+                }
+
+                if (!user.ImageData.SequenceEqual(newImageData))
+                {
+                    user.ImageData = newImageData;
+                    _dbContext.Entry(user).Property(u => u.ImageData).IsModified = true;
+                    await _dbContext.SaveChangesAsync();
+                    return Ok("Profile image updated successfully.");
+                }
+                else
+                {
+                    return BadRequest("The new image is identical to the existing one.");
+                }
             }
             else
             {
@@ -42,6 +60,7 @@ public class EditUserProfileController : ControllerBase
         }
         catch (FormatException ex)
         {
+            Console.WriteLine(ex.Message);
             return BadRequest("Invalid base64 string.");
         }
     }
