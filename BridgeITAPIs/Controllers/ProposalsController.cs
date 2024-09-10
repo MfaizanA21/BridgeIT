@@ -29,7 +29,7 @@ public class ProposalsController : ControllerBase
         {
             Id = Guid.NewGuid(),
             Proposal = dto.proposal,
-            Status = dto.status,
+            Status = "Pending",
             StudentId = dto.studentId,
             ProjectId = dto.projectId,
         };
@@ -40,7 +40,7 @@ public class ProposalsController : ControllerBase
         return Ok("Proposal sent successfully.");
     }
 
-    [HttpGet("get-proposals")]
+    [HttpGet("get-all-proposals")]
     public async Task<IActionResult> GetProposals()
     {
         var proposals = await _dbContext.Proposals
@@ -74,5 +74,51 @@ public class ProposalsController : ControllerBase
         return Ok(proposalDTOs);
 
     }
+
+    [HttpGet("get-proposal-for-expert/{ExpertId}")]
+    public async Task<IActionResult> GetProposalForExperts(Guid ExpertId)
+    {
+        var expert_proposals = await _dbContext.Proposals
+            .Include(p => p.Student)
+                .ThenInclude(p => p.University)
+            .Include(p => p.Student)
+                .ThenInclude(p => p.User)
+            .Include(p => p.Project)
+                .ThenInclude(p => p.IndExpert)
+            .Where(p => p.Project.IndExpert.Id == ExpertId  && p.Status == "Pending")
+            .ToListAsync();
+
+        if (expert_proposals == null)
+        {
+            return BadRequest("No Proposals for your projects yet");
+        }
+
+        if (expert_proposals.Count == 0)
+        {
+            return BadRequest("No Proposals for your projects yet");
+        }
+
+        var proposalsList = expert_proposals.Select(p => new GetAllProposalDTO
+        {
+            Id = p.Id,
+            ProjectId = p.ProjectId,
+            StudentId = p.StudentId,
+            ExpertId = p.Project?.IndExpert?.Id,
+            StudentName = p?.Student?.User?.FirstName + " " + p?.Student?.User?.LastName ?? string.Empty,
+            email = p?.Student?.User?.Email ?? string.Empty,
+            Proposal = p.Proposal,
+            Status = p.Status,
+            skills = p.Student?.skills != null ? p.Student.skills.Split(',').ToList() : new List<string>(),
+            university = p?.Student?.University?.Name ?? string.Empty,
+            department = p?.Student?.department ?? string.Empty,
+            description = p?.Student?.User?.description ?? string.Empty,
+            ProjectTitle = p?.Project?.Title ?? string.Empty,
+            ProjectDescription = p?.Project?.Description ?? string.Empty,
+        }).ToList();
+
+        return Ok(proposalsList);
+
+    }
+
     
 }
