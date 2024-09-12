@@ -6,7 +6,7 @@ using BridgeITAPIs.Models;
 
 namespace BridgeITAPIs.Controllers;
 
-[Route("api/Project-proposals")]
+[Route("api/project-proposals")]
 [ApiController]
 public class ProposalsController : ControllerBase
 {
@@ -38,6 +38,44 @@ public class ProposalsController : ControllerBase
         await _dbContext.SaveChangesAsync();
 
         return Ok("Proposal sent successfully.");
+    }
+
+    [HttpPut("reject-proposal/{ProposalId}")]
+    public async Task<IActionResult> UpdateProposalStatus(Guid ProposalId)
+    {
+        var proposal = await _dbContext.Proposals
+            .FirstOrDefaultAsync(p => p.Id == ProposalId);
+
+        if (proposal == null)
+        {
+            return BadRequest("Proposal not found.");
+        }
+
+        proposal.Status = "Rejected";
+
+        _dbContext.Proposals.Update(proposal);
+        await _dbContext.SaveChangesAsync();
+
+        return Ok("Proposal status Set To Rejected successfully.");
+    }
+
+    [HttpPut("accept-proposal/{ProposalId}")]
+    public async Task<IActionResult> AcceptProposal(Guid ProposalId)
+    {
+        var proposal = await _dbContext.Proposals
+            .FirstOrDefaultAsync(p => p.Id == ProposalId);
+
+        if (proposal == null)
+        {
+            return BadRequest("Proposal not found.");
+        }
+
+        proposal.Status = "Accepted";
+
+        _dbContext.Proposals.Update(proposal);
+        await _dbContext.SaveChangesAsync();
+
+        return Ok("Proposal status Set To Accepted successfully.");
     }
 
     [HttpGet("get-all-proposals")]
@@ -120,5 +158,45 @@ public class ProposalsController : ControllerBase
 
     }
 
+
+    [HttpGet("get-proposal-for-student/{StudentId}")]
+    public async Task<IActionResult> GetProposalForStudent(Guid StudentId)
+    {
+        var student_proposals = await _dbContext.Proposals
+            .Include(p => p.Student)
+                .ThenInclude(p => p.University)
+            .Include(p => p.Student)
+                .ThenInclude(p => p.User)
+            .Include(p => p.Project)
+                .ThenInclude(p => p.IndExpert)
+            .Where(p => p.StudentId == StudentId)
+            .ToListAsync();
+
+        if (student_proposals == null)
+        {
+            return BadRequest("No Proposals for your projects yet");
+        }
+
+        if (student_proposals.Count == 0)
+        {
+            return BadRequest("No Proposals for your projects yet");
+        }
+
+        var proposalsList = student_proposals.Select(p => new GetProposalsForStudentsDTO
+        {
+            Id = p.Id,
+            ProjectId = p.ProjectId,
+            StudentId = p.StudentId,
+            ExpertId = p.Project?.IndExpert?.Id,
+            StudentName = p?.Student?.User?.FirstName + " " + p?.Student?.User?.LastName ?? string.Empty,
+            Proposal = p.Proposal,
+            Status = p.Status,
+            ProjectTitle = p?.Project?.Title ?? string.Empty,
+            ProjectDescription = p?.Project?.Description ?? string.Empty,
+        }).ToList();
+
+        return Ok(proposalsList);
+
+    }
     
 }
