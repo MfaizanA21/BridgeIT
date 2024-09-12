@@ -192,4 +192,38 @@ public class ProjectsController : ControllerBase
 
         return Ok(list);
     }
+
+    [HttpGet("get-project-by-id/{id}")]
+    public async Task<IActionResult> GetProjectById(Guid id)
+    {
+        var project = await _dbContext.Projects
+            .Include(p => p.Student)
+                .ThenInclude(s => s.User)
+            .Include(p => p.IndExpert)
+                .ThenInclude(i => i.User)
+            .Where(p => p.Id == id)
+            .FirstOrDefaultAsync();
+
+        if (project == null)
+        {
+            return BadRequest("No project found");
+        }
+
+        var projectDto = new ProjectDTO
+        {
+            Id = project.Id,
+            IndExpertId = project?.IndExpertId,
+            StudentId = project?.StudentId,
+            Title = project?.Title ?? string.Empty,
+            Description = project?.Description ?? string.Empty,
+            Stack = project?.Stack ?? string.Empty,
+            Status = project?.CurrentStatus ?? string.Empty,
+            StartDate = project?.StartDate.ToString() ?? string.Empty,
+            EndDate = project?.EndDate.ToString() ?? string.Empty,
+            studentName = project?.Student?.User?.FirstName + " " + project?.Student?.User?.LastName ?? string.Empty,
+            expertName = project?.IndExpert?.User?.FirstName + " " + project?.IndExpert?.User?.LastName ?? string.Empty,
+        };
+
+        return Ok(projectDto);
+    }
 }
