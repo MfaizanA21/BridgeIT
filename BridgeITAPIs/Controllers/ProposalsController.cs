@@ -158,6 +158,45 @@ public class ProposalsController : ControllerBase
 
     }
 
+    [HttpGet("get-proposal-by-id/{ProposalId}")]
+    public async Task<IActionResult> GetProposalById(Guid ProposalId)
+    {
+        var proposal = await _dbContext.Proposals
+            .Include(p => p.Student)
+                .ThenInclude(s => s.University)
+            .Include(p => p.Student)
+                .ThenInclude(s => s.User)
+            .Include(p => p.Project)
+                .ThenInclude(i => i.IndExpert)
+            .FirstOrDefaultAsync(p => p.Id == ProposalId);
+
+        if (proposal == null)
+        {
+            return BadRequest("Proposal not found.");
+        }
+
+        var proposalDTO = new GetAllProposalDTO
+        {
+            Id = proposal.Id,
+            ProjectId = proposal.ProjectId,
+            StudentId = proposal.StudentId,
+            ExpertId = proposal.Project?.IndExpert?.Id,
+            StudentName = proposal?.Student?.User?.FirstName + " " + proposal?.Student?.User?.LastName ?? string.Empty,
+            email = proposal?.Student?.User?.Email ?? string.Empty,
+            Proposal = proposal.Proposal,
+            Status = proposal.Status,
+            skills = proposal.Student?.skills != null ? proposal.Student.skills.Split(',').ToList() : new List<string>(),
+            university = proposal?.Student?.University?.Name ?? string.Empty,
+            department = proposal?.Student?.department ?? string.Empty,
+            description = proposal?.Student?.User?.description ?? string.Empty,
+            ProjectTitle = proposal?.Project?.Title ?? string.Empty,
+            ProjectDescription = proposal?.Project?.Description ?? string.Empty,
+        };
+
+        return Ok(proposalDTO);
+
+    }
+
 
     [HttpGet("get-proposal-for-student/{StudentId}")]
     public async Task<IActionResult> GetProposalForStudent(Guid StudentId)
