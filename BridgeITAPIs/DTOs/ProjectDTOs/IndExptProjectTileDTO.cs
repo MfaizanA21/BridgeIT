@@ -6,6 +6,7 @@ public class IndExptProjectTileDTO
     public string Title { get; set; } = string.Empty;
     public string Description { get; set; } = string.Empty;
     public string? EndDate { get; set; } = string.Empty;
+    public string CurrentStatus { get; set; } = string.Empty;
     public string? Name {  get; set; } = string.Empty;
     public Guid? IndExpertId { get; set; }
 }
