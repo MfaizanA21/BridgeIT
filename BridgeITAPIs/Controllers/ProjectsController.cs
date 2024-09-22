@@ -99,8 +99,8 @@ public class ProjectsController : ControllerBase
             Description = dto.Description,
             /*Team = dto.Team,
             Stack = dto.Stack,
-            CurrentStatus = dto.CurrentStatus,
             StartDate = DateOnly.Parse(dto.StartDate),*/
+            CurrentStatus = "Pending",
             EndDate = DateOnly.Parse(dto.EndDate),
             IndExpertId = dto.IndExpertId,
         };
@@ -116,6 +116,7 @@ public class ProjectsController : ControllerBase
     {
         var projects = await _dbContext.Projects
             .Include(p => p.IndExpert)
+                .ThenInclude(p => p.User)
             .Where(p => p.IndExpertId != null)
             .ToListAsync(); 
 
@@ -129,6 +130,7 @@ public class ProjectsController : ControllerBase
             Id = project.Id,
             IndExpertId = project?.IndExpertId,
             Title = project?.Title ?? string.Empty,
+            CurrentStatus = project?.CurrentStatus ?? string.Empty,
             Description = project?.Description ?? string.Empty,
             EndDate = project?.EndDate.ToString() ?? string.Empty,
             Name = project?.IndExpert?.User?.FirstName + " " + project?.IndExpert?.User?.LastName ?? string.Empty,
