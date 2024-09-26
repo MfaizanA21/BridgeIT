@@ -33,7 +33,8 @@ public class UniversitiesController : ControllerBase
             Id = university.Id,
             Name = university.Name,
             Address = university.Address,
-            EstYear = university.EstYear
+            EstYear = university.EstYear,
+            uniImage = university.uniImage
         };
 
         return Ok(dto);
@@ -54,7 +55,8 @@ public class UniversitiesController : ControllerBase
             Id = u.Id,
             Name = u.Name,
             Address = u.Address,
-            EstYear = u.EstYear
+            EstYear = u.EstYear,
+            uniImage = u.uniImage
         }).ToList();
 
         return Ok(dtoList);
@@ -76,7 +78,8 @@ public class UniversitiesController : ControllerBase
             Id = university.Id,
             Name = university.Name,
             Address = university.Address,
-            EstYear = university.EstYear
+            EstYear = university.EstYear,
+            uniImage = university.uniImage
         };
 
         return Ok(dto);
@@ -85,18 +88,40 @@ public class UniversitiesController : ControllerBase
     [HttpPost("add-university")]
     public async Task<IActionResult> AddUniversity([FromBody] AddUniversityDTO dto)
     {
-        var university = new University
+        if (dto == null)
         {
-            Id = Guid.NewGuid(),
-            Name = dto.Name,
-            Address = dto.Address,
-            EstYear = dto.EstYear
-        };
+            return BadRequest("University data is required.");
+        }
+        
+        if(!string.IsNullOrEmpty(dto.uniImage))
+        {
+            byte[] ImageBytes = Convert.FromBase64String(dto.uniImage);
 
-        await _dbContext.Universities.AddAsync(university);
-        await _dbContext.SaveChangesAsync();
+            if (ImageBytes == null)
+            {
+                return BadRequest("Invalid image data.");
+            }
+            else
+            {
+                var university = new University
+                {
+                    Id = Guid.NewGuid(),
+                    Name = dto.Name,
+                    Address = dto.Address,
+                    EstYear = dto.EstYear,
+                    uniImage = ImageBytes
+                };
+                await _dbContext.Universities.AddAsync(university);
+                await _dbContext.SaveChangesAsync();
+                return Ok("University added successfully.");
+            }
+        }
+        else
+        {
+            return BadRequest("University image is required.");
+        }
 
-        return Ok("University added successfully.");
+
     }
 
     [HttpDelete("delete-university/{universityId}")]

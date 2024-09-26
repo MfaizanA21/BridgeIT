@@ -12,6 +12,8 @@ public partial class University
     public string? Address { get; set; }
 
     public int? EstYear { get; set; }
+    
+    public byte[]? uniImage { get; set; }
 
     public virtual ICollection<Faculty> Faculties { get; set; } = new List<Faculty>();
 

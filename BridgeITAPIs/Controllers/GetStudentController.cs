@@ -44,6 +44,7 @@ public class GetStudentController : ControllerBase
             ImageData = student.User?.ImageData ?? Array.Empty<byte>(),
             UniversityName = student.University?.Name ?? string.Empty,
             Address = student.University?.Address ?? string.Empty,
+            UniImage = student.University?.uniImage ?? Array.Empty<byte>(),
             RollNumber = student?.RollNumber.ToString() ?? string.Empty
         };
 
@@ -78,6 +79,7 @@ public class GetStudentController : ControllerBase
             Description = s.User?.description ?? string.Empty,
             UniversityName = s.University?.Name ?? string.Empty,
             Address = s.University?.Address ?? string.Empty,
+            UniImage = s.University?.uniImage ?? Array.Empty<byte>(),
             RollNumber = s?.RollNumber.ToString() ?? string.Empty,
             
 
@@ -117,6 +119,7 @@ public class GetStudentController : ControllerBase
             ImageData = s.User?.ImageData ?? Array.Empty<byte>(),
             UniversityName = s.University?.Name ?? string.Empty,
             Address = s.University?.Address ?? string.Empty,
+            UniImage = s.University?.uniImage ?? Array.Empty<byte>(),
             RollNumber = s?.RollNumber.ToString() ?? string.Empty
         }).ToList();
 
@@ -149,6 +152,7 @@ public class GetStudentController : ControllerBase
             Description = s.User?.description ?? string.Empty,
             UniversityName = s.University?.Name ?? string.Empty,
             Address = s.University?.Address ?? string.Empty,
+            UniImage = s.University?.uniImage ?? Array.Empty<byte>(),
             Skills = s.skills != null ? s.skills.Split(',').ToList() : new List<string>(),
             Department = s.department ?? string.Empty,
             RollNumber = s?.RollNumber.ToString() ?? string.Empty

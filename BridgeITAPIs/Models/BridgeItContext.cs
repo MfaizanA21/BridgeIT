@@ -628,6 +628,9 @@ public partial class BridgeItContext : DbContext
             entity.Property(e => e.Name)
                 .HasMaxLength(255)
                 .HasColumnName("name");
+            entity.Property(e => e.uniImage)
+                .HasColumnType("varbinary(max)")
+                .HasColumnName("uniImage");
         });
 
         modelBuilder.Entity<UniversityAdmin>(entity =>

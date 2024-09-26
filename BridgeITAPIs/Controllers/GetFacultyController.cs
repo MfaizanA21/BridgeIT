@@ -41,7 +41,8 @@ public class GetFacultyController : ControllerBase
             Interest = faculty.Interest != null ? new List<string> { faculty.Interest } : new List<string>(),
             Post = faculty.Post ?? string.Empty,
             UniversityName = faculty.Uni?.Name ?? string.Empty,
-            Address = faculty.Uni?.Address ?? string.Empty
+            Address = faculty.Uni?.Address ?? string.Empty,
+            UniImage = faculty.Uni?.uniImage ?? Array.Empty<byte>()
         };
 
         return Ok(dto);
@@ -74,7 +75,8 @@ public class GetFacultyController : ControllerBase
                 Interest = f.Interest != null ? new List<string> { f.Interest } : new List<string>(),
                 Post = f.Post ?? string.Empty,
                 UniversityName = f.Uni?.Name ?? string.Empty,
-                Address = f.Uni?.Address ?? string.Empty
+                Address = f.Uni?.Address ?? string.Empty,
+                UniImage = f.Uni?.uniImage ?? Array.Empty<byte>()
             })
             .ToList();
 
@@ -110,7 +112,8 @@ public class GetFacultyController : ControllerBase
             Interest = f.Interest != null ? new List<string> { f.Interest } : new List<string>(),
             Post = f.Post ?? string.Empty,
             UniversityName = f.Uni?.Name ?? string.Empty,
-            Address = f.Uni?.Address ?? string.Empty
+            Address = f.Uni?.Address ?? string.Empty,
+            UniImage = f.Uni?.uniImage ?? Array.Empty<byte>()
         })
         .ToList();
 
@@ -147,7 +150,8 @@ public class GetFacultyController : ControllerBase
             Interest = f.Interest != null ? new List<string> { f.Interest } : new List<string>(),
             Post = f.Post ?? string.Empty,
             UniversityName = f.Uni?.Name ?? string.Empty,
-            Address = f.Uni?.Address ?? string.Empty
+            Address = f.Uni?.Address ?? string.Empty,
+            UniImage = f.Uni?.uniImage ?? Array.Empty<byte>()
         })
             .ToList();
 
