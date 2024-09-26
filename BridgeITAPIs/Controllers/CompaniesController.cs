@@ -66,23 +66,24 @@ public class CompaniesController : ControllerBase
     public async Task<IActionResult> GetCompanyByName(string name)
     {
         var company = await _dbContext.Companies
-            .FirstOrDefaultAsync(c => c.Name.ToLower().Contains(name.ToLower()));
+            .Where(c => c.Name.ToLower().Contains(name.ToLower()))
+            .ToListAsync();
 
         if (company == null)
         {
             return NotFound("Company not found.");
         }
 
-        var dto = new GetCompanyDTO
+        var dtoList = company.Select( c =>  new GetCompanyDTO
         {
-            Id = company.Id,
-            Name = company.Name,
-            Address = company.Address,
-            Business = company.Business,
-            Description = company.Description,
-        };
+            Id = c.Id,
+            Name = c.Name,
+            Address = c.Address,
+            Business = c.Business,
+            Description = c.Description,
+        }).ToList();
 
-        return Ok(dto);
+        return Ok(dtoList);
     }
 
     [HttpPost("add-company")]

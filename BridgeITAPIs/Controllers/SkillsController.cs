@@ -55,4 +55,25 @@ public class SkillsController : ControllerBase
         return Ok(dtoList);
 
     }
+
+    [HttpGet("get-skill-name/{name}")]
+    public async Task<IActionResult> GetSkillsByName(string name)
+    {
+        var skills = await _dbContext.Skills
+            .Where(s => s.Skill1 != null && s.Skill1.ToLower().Contains(name.ToLower()))
+            .ToListAsync();
+
+        if (skills == null)
+        {
+            return NotFound("Skills not found.");
+        }
+
+        var dtoList = skills.Select(s => new SkillsDTO
+        {
+            Id = s.Id,
+            Skill = s.Skill1 ?? string.Empty
+        }).ToList();
+
+        return Ok(dtoList);
+    }
 }
