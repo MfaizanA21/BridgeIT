@@ -16,5 +16,6 @@ public class GetStudentDTO
     public string Description { get; set; } = string.Empty;
     public string UniversityName { get; set; } = string.Empty;
     public string Address { get; set; } = string.Empty;
+    public byte[] UniImage { get; set; } = Array.Empty<byte>();
     public string RollNumber { get; set; } = string.Empty;
 }

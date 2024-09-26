@@ -15,5 +15,6 @@ public class GetFacultyDTO
     public string Post { get; set; } = string.Empty;
     public string UniversityName { get; set; } = string.Empty;
     public string Address { get; set; } = string.Empty;
+    public byte[] UniImage { get; set; } = Array.Empty<byte>();
 
 }
