@@ -63,13 +63,14 @@ public partial class BridgeItContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer("Data Source=THICCPAD\\SQLEXPRESS;Initial Catalog=BridgeIT;Integrated Security=True;Trust Server Certificate=True");
-
+        => optionsBuilder.UseSqlServer("Server=tcp:bridge-it-server.database.windows.net,1433;Initial Catalog=BridgeIT-db;Persist Security Info = False;User ID=br-it-adm; Password=MfaizanA21; MultipleActiveResultSets=False; Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;");
+    //"Server=tcp:your_server.database.windows.net,1433;Initial Catalog=your_database;Persist Security Info=False;User ID=your_user;Password=your_password;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;"
+    //Server=tcp:bridge-it-server.database.windows.net,1433;Initial Catalog=BridgeIT-db;Persist Security Info = False;User ID=br-it-adm; Password=MfaizanA21; MultipleActiveResultSets=False; Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;Authentication=\"Active Directory Default\";"
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<BoughtFyp>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__BoughtFY__3213E83FB50844F2");
+            entity.HasKey(e => e.Id).HasName("PK__BoughtFY__3213E83FCEA1BCAA");
 
             entity.ToTable("BoughtFYP");
 
@@ -87,20 +88,20 @@ public partial class BridgeItContext : DbContext
 
             entity.HasOne(d => d.Fyp).WithMany(p => p.BoughtFyps)
                 .HasForeignKey(d => d.FypId)
-                .HasConstraintName("FK__BoughtFYP__fyp_i__1332DBDC");
+                .HasConstraintName("FK__BoughtFYP__fyp_i__25518C17");
 
             entity.HasOne(d => d.IndExpert).WithMany(p => p.BoughtFyps)
                 .HasForeignKey(d => d.IndExpertId)
-                .HasConstraintName("FK__BoughtFYP__ind_e__14270015");
+                .HasConstraintName("FK__BoughtFYP__ind_e__2645B050");
 
             entity.HasOne(d => d.UniversityAdmin).WithMany(p => p.BoughtFyps)
                 .HasForeignKey(d => d.UniversityAdminId)
-                .HasConstraintName("FK__BoughtFYP__unive__151B244E");
+                .HasConstraintName("FK__BoughtFYP__unive__2739D489");
         });
 
         modelBuilder.Entity<Company>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Company__3213E83F05B35D15");
+            entity.HasKey(e => e.Id).HasName("PK__Company__3213E83F9B7417C7");
 
             entity.ToTable("Company");
 
@@ -121,7 +122,7 @@ public partial class BridgeItContext : DbContext
 
         modelBuilder.Entity<DegreeReport>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__DegreeRe__3213E83F749A6585");
+            entity.HasKey(e => e.Id).HasName("PK__DegreeRe__3213E83FC391FF5B");
 
             entity.ToTable("DegreeReport");
 
@@ -137,12 +138,12 @@ public partial class BridgeItContext : DbContext
 
             entity.HasOne(d => d.Student).WithMany(p => p.DegreeReports)
                 .HasForeignKey(d => d.StudentId)
-                .HasConstraintName("FK__DegreeRep__stude__05D8E0BE");
+                .HasConstraintName("FK__DegreeRep__stude__18EBB532");
         });
 
         modelBuilder.Entity<Department>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Departme__3213E83FA8031B97");
+            entity.HasKey(e => e.Id).HasName("PK__Departme__3213E83F8B496504");
 
             entity.ToTable("Department");
 
@@ -156,7 +157,7 @@ public partial class BridgeItContext : DbContext
 
         modelBuilder.Entity<Event>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Event__3213E83F71DAAED1");
+            entity.HasKey(e => e.Id).HasName("PK__Event__3213E83F73A8ACC8");
 
             entity.ToTable("Event");
 
@@ -182,12 +183,12 @@ public partial class BridgeItContext : DbContext
 
             entity.HasOne(d => d.Faculty).WithMany(p => p.Events)
                 .HasForeignKey(d => d.FacultyId)
-                .HasConstraintName("FK__Event__faculty_i__09A971A2");
+                .HasConstraintName("FK__Event__faculty_i__1CBC4616");
         });
 
         modelBuilder.Entity<Faculty>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Faculty__3213E83FF91007D0");
+            entity.HasKey(e => e.Id).HasName("PK__Faculty__3213E83F3ED2B942");
 
             entity.ToTable("Faculty");
 
@@ -208,17 +209,17 @@ public partial class BridgeItContext : DbContext
 
             entity.HasOne(d => d.Uni).WithMany(p => p.Faculties)
                 .HasForeignKey(d => d.UniId)
-                .HasConstraintName("FK__Faculty__uni_id__02FC7413");
+                .HasConstraintName("FK__Faculty__uni_id__160F4887");
 
             entity.HasOne(d => d.User).WithMany(p => p.Faculties)
                 .HasForeignKey(d => d.UserId)
-                .HasConstraintName("FK__Faculty__user_id__02084FDA");
+                .HasConstraintName("FK__Faculty__user_id__151B244E");
 
         });
 
         modelBuilder.Entity<FacultyExperience>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__FacultyE__3213E83F4EE384CA");
+            entity.HasKey(e => e.Id).HasName("PK__FacultyE__3213E83F6FF1BC07");
 
             entity.ToTable("FacultyExperience");
 
@@ -237,16 +238,16 @@ public partial class BridgeItContext : DbContext
 
             entity.HasOne(d => d.Company).WithMany(p => p.FacultyExperiences)
                 .HasForeignKey(d => d.CompanyId)
-                .HasConstraintName("FK__FacultyEx__compa__07C12930");
+                .HasConstraintName("FK__FacultyEx__compa__1AD3FDA4");
 
             entity.HasOne(d => d.Faculty).WithMany(p => p.FacultyExperiences)
                 .HasForeignKey(d => d.FacultyId)
-                .HasConstraintName("FK__FacultyEx__facul__06CD04F7");
+                .HasConstraintName("FK__FacultyEx__facul__19DFD96B");
         });
 
         modelBuilder.Entity<FieldOfInterest>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__FieldOfI__3213E83FCF28A1B2");
+            entity.HasKey(e => e.Id).HasName("PK__FieldOfI__3213E83F670D4F91");
 
             entity.ToTable("FieldOfInterest");
 
@@ -260,7 +261,7 @@ public partial class BridgeItContext : DbContext
 
         modelBuilder.Entity<Fyp>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__FYP__3213E83FFDB3B738");
+            entity.HasKey(e => e.Id).HasName("PK__FYP__3213E83F8A77B011");
 
             entity.ToTable("FYP");
 
@@ -284,12 +285,12 @@ public partial class BridgeItContext : DbContext
 
             entity.HasOne(d => d.Faculty).WithMany(p => p.Fyps)
                 .HasForeignKey(d => d.FacultyId)
-                .HasConstraintName("FK__FYP__faculty_id__123EB7A3");
+                .HasConstraintName("FK__FYP__faculty_id__245D67DE");
         });
 
         modelBuilder.Entity<Idea>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Idea__3213E83F381245CA");
+            entity.HasKey(e => e.Id).HasName("PK__Idea__3213E83FFDEF3EB1");
 
             entity.ToTable("Idea");
 
@@ -309,12 +310,12 @@ public partial class BridgeItContext : DbContext
 
             entity.HasOne(d => d.Faculty).WithMany(p => p.Ideas)
                 .HasForeignKey(d => d.FacultyId)
-                .HasConstraintName("FK__Idea__faculty_id__0A9D95DB");
+                .HasConstraintName("FK__Idea__faculty_id__1DB06A4F");
         });
 
         modelBuilder.Entity<IndustryExpert>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Industry__3213E83FFCA374A6");
+            entity.HasKey(e => e.Id).HasName("PK__Industry__3213E83FA9545AA2");
 
             entity.ToTable("IndustryExpert");
 
@@ -332,16 +333,16 @@ public partial class BridgeItContext : DbContext
 
             entity.HasOne(d => d.Company).WithMany(p => p.IndustryExperts)
                 .HasForeignKey(d => d.CompanyId)
-                .HasConstraintName("FK__IndustryE__compa__04E4BC85");
+                .HasConstraintName("FK__IndustryE__compa__17F790F9");
 
             entity.HasOne(d => d.User).WithMany(p => p.IndustryExperts)
                 .HasForeignKey(d => d.UserId)
-                .HasConstraintName("FK__IndustryE__user___03F0984C");
+                .HasConstraintName("FK__IndustryE__user___17036CC0");
         });
 
         modelBuilder.Entity<MileStone>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__MileSton__3213E83F881D073A");
+            entity.HasKey(e => e.Id).HasName("PK__MileSton__3213E83F3971CE7B");
 
             entity.ToTable("MileStone");
 
@@ -359,12 +360,12 @@ public partial class BridgeItContext : DbContext
 
             entity.HasOne(d => d.Project).WithMany(p => p.MileStones)
                 .HasForeignKey(d => d.ProjectId)
-                .HasConstraintName("FK__MileStone__proje__0D7A0286");
+                .HasConstraintName("FK__MileStone__proje__208CD6FA");
         });
 
         modelBuilder.Entity<Project>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Project__3213E83F754257EF");
+            entity.HasKey(e => e.Id).HasName("PK__Project__3213E83F9E55023D");
 
             entity.ToTable("Project");
 
@@ -392,11 +393,11 @@ public partial class BridgeItContext : DbContext
 
             entity.HasOne(d => d.IndExpert).WithMany(p => p.Projects)
                 .HasForeignKey(d => d.IndExpertId)
-                .HasConstraintName("FK__Project__ind_exp__0C85DE4D");
+                .HasConstraintName("FK__Project__ind_exp__1F98B2C1");
 
             entity.HasOne(d => d.Student).WithMany(p => p.Projects)
                 .HasForeignKey(d => d.StudentId)
-                .HasConstraintName("FK__Project__student__0B91BA14");
+                .HasConstraintName("FK__Project__student__1EA48E88");
 
             entity.HasOne(d => d.Faculty).WithMany(p => p.Projects)
                 .HasForeignKey(d => d.FacultyId)
@@ -433,7 +434,7 @@ public partial class BridgeItContext : DbContext
 
         modelBuilder.Entity<ProjectImage>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__ProjectI__3213E83F18E481B2");
+            entity.HasKey(e => e.Id).HasName("PK__ProjectI__3213E83FFE4CB032");
 
             entity.Property(e => e.Id)
                 .ValueGeneratedNever()
@@ -445,12 +446,12 @@ public partial class BridgeItContext : DbContext
 
             entity.HasOne(d => d.Project).WithMany(p => p.ProjectImages)
                 .HasForeignKey(d => d.ProjectId)
-                .HasConstraintName("FK__ProjectIm__proje__10566F31");
+                .HasConstraintName("FK__ProjectIm__proje__236943A5");
         });
 
         modelBuilder.Entity<ResearchWork>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Research__3213E83FECCA2C02");
+            entity.HasKey(e => e.Id).HasName("PK__Research__3213E83F4DE5E04E");
 
             entity.ToTable("ResearchWork");
 
@@ -477,12 +478,12 @@ public partial class BridgeItContext : DbContext
 
             entity.HasOne(d => d.Faculty).WithMany(p => p.ResearchWorks)
                 .HasForeignKey(d => d.FacultyId)
-                .HasConstraintName("FK__ResearchW__facul__08B54D69");
+                .HasConstraintName("FK__ResearchW__facul__1BC821DD");
         });
 
         modelBuilder.Entity<Review>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Review__3213E83F84CF6FEB");
+            entity.HasKey(e => e.Id).HasName("PK__Review__3213E83F560D307B");
 
             entity.ToTable("Review");
 
@@ -501,16 +502,16 @@ public partial class BridgeItContext : DbContext
 
             entity.HasOne(d => d.Project).WithMany(p => p.Reviews)
                 .HasForeignKey(d => d.ProjectId)
-                .HasConstraintName("FK__Review__project___0E6E26BF");
+                .HasConstraintName("FK__Review__project___2180FB33");
 
             entity.HasOne(d => d.Reviewer).WithMany(p => p.Reviews)
                 .HasForeignKey(d => d.ReviewerId)
-                .HasConstraintName("FK__Review__reviewer__0F624AF8");
+                .HasConstraintName("FK__Review__reviewer__22751F6C");
         });
 
         modelBuilder.Entity<Skill>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Skill__3213E83F3F3E8738");
+            entity.HasKey(e => e.Id).HasName("PK__Skill__3213E83F62CDF175");
 
             entity.ToTable("Skill");
 
@@ -527,7 +528,7 @@ public partial class BridgeItContext : DbContext
 
         modelBuilder.Entity<SponsoredFyp>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Sponsore__3213E83F0A6B9C88");
+            entity.HasKey(e => e.Id).HasName("PK__Sponsore__3213E83F08D49FDF");
 
             entity.ToTable("SponsoredFYP");
 
@@ -542,16 +543,16 @@ public partial class BridgeItContext : DbContext
 
             entity.HasOne(d => d.Fyp).WithMany(p => p.SponsoredFyps)
                 .HasForeignKey(d => d.FypId)
-                .HasConstraintName("FK__Sponsored__fyp_i__160F4887");
+                .HasConstraintName("FK__Sponsored__fyp_i__282DF8C2");
 
             entity.HasOne(d => d.SponsoredBy).WithMany(p => p.SponsoredFyps)
                 .HasForeignKey(d => d.SponsoredById)
-                .HasConstraintName("FK__Sponsored__spons__17036CC0");
+                .HasConstraintName("FK__Sponsored__spons__29221CFB");
         });
 
         modelBuilder.Entity<Student>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Student__3213E83FA25FBC1B");
+            entity.HasKey(e => e.Id).HasName("PK__Student__3213E83FA8A3DFA8");
 
             entity.ToTable("Student");
 
@@ -570,11 +571,11 @@ public partial class BridgeItContext : DbContext
 
             entity.HasOne(d => d.University).WithMany(p => p.Students)
                 .HasForeignKey(d => d.UniversityId)
-                .HasConstraintName("FK__Student__univers__00200768");
+                .HasConstraintName("FK__Student__univers__1332DBDC");
 
             entity.HasOne(d => d.User).WithMany(p => p.Students)
                 .HasForeignKey(d => d.UserId)
-                .HasConstraintName("FK__Student__user_id__01142BA1");
+                .HasConstraintName("FK__Student__user_id__14270015");
 
             entity.HasMany(d => d.Fyps).WithMany(p => p.Students)
                 .UsingEntity<Dictionary<string, object>>(
@@ -582,14 +583,14 @@ public partial class BridgeItContext : DbContext
                     r => r.HasOne<Fyp>().WithMany()
                         .HasForeignKey("FypId")
                         .OnDelete(DeleteBehavior.ClientSetNull)
-                        .HasConstraintName("FK__StudentFY__fyp_i__1AD3FDA4"),
+                        .HasConstraintName("FK__StudentFY__fyp_i__2CF2ADDF"),
                     l => l.HasOne<Student>().WithMany()
                         .HasForeignKey("StudentId")
                         .OnDelete(DeleteBehavior.ClientSetNull)
-                        .HasConstraintName("FK__StudentFY__stude__19DFD96B"),
+                        .HasConstraintName("FK__StudentFY__stude__2BFE89A6"),
                     j =>
                     {
-                        j.HasKey("StudentId", "FypId").HasName("PK__StudentF__2B6D72670A068493");
+                        j.HasKey("StudentId", "FypId").HasName("PK__StudentF__2B6D7267EDC7B330");
                         j.ToTable("StudentFYP");
                         j.IndexerProperty<Guid>("StudentId").HasColumnName("student_id");
                         j.IndexerProperty<Guid>("FypId").HasColumnName("fyp_id");
@@ -617,7 +618,7 @@ public partial class BridgeItContext : DbContext
 
         modelBuilder.Entity<University>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Universi__3213E83FAADAF4A9");
+            entity.HasKey(e => e.Id).HasName("PK__Universi__3213E83FC4E1BD04");
 
             entity.ToTable("University");
 
@@ -635,7 +636,7 @@ public partial class BridgeItContext : DbContext
 
         modelBuilder.Entity<UniversityAdmin>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Universi__3213E83FA3367BB0");
+            entity.HasKey(e => e.Id).HasName("PK__Universi__3213E83FDD7E6C0B");
 
             entity.ToTable("UniversityAdmin");
 
@@ -653,16 +654,16 @@ public partial class BridgeItContext : DbContext
 
             entity.HasOne(d => d.Uni).WithMany(p => p.UniversityAdmins)
                 .HasForeignKey(d => d.UniId)
-                .HasConstraintName("FK__Universit__uni_i__7F2BE32F");
+                .HasConstraintName("FK__Universit__uni_i__123EB7A3");
 
             entity.HasOne(d => d.User).WithMany(p => p.UniversityAdmins)
                 .HasForeignKey(d => d.UserId)
-                .HasConstraintName("FK__Universit__user___7E37BEF6");
+                .HasConstraintName("FK__Universit__user___114A936A");
         });
 
         modelBuilder.Entity<User>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__User__3213E83F1797C1AD");
+            entity.HasKey(e => e.Id).HasName("PK__User__3213E83F4697F9C5");
 
             entity.ToTable("User");
 
