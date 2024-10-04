@@ -9,6 +9,7 @@ public class IndExptAddProjectDTO
     public string CurrentStatus { get; set; } = string.Empty;
     public Guid? StudentId { get; set; } = null;
     public string StartDate { get; set; } = string.Empty;*/
+    public int Budget { get; set; } = 0;
     public string EndDate { get; set; } = string.Empty;
     public Guid IndExpertId { get; set; }
 }
