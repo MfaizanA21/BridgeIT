@@ -100,6 +100,7 @@ public class ProjectsController : ControllerBase
             /*Team = dto.Team,
             Stack = dto.Stack,
             StartDate = DateOnly.Parse(dto.StartDate),*/
+            Budget = dto.Budget,
             CurrentStatus = "Pending",
             EndDate = DateOnly.Parse(dto.EndDate),
             IndExpertId = dto.IndExpertId,
@@ -117,7 +118,7 @@ public class ProjectsController : ControllerBase
         var projects = await _dbContext.Projects
             .Include(p => p.IndExpert)
                 .ThenInclude(p => p.User)
-            .Where(p => p.IndExpertId != null)
+            .Where(p => p.IndExpertId != null && p.StudentId == null)
             .ToListAsync(); 
 
         if (projects == null)
@@ -133,7 +134,41 @@ public class ProjectsController : ControllerBase
             CurrentStatus = project?.CurrentStatus ?? string.Empty,
             Description = project?.Description ?? string.Empty,
             EndDate = project?.EndDate.ToString() ?? string.Empty,
+            Budget = project?.Budget ?? 0,
             Name = project?.IndExpert?.User?.FirstName + " " + project?.IndExpert?.User?.LastName ?? string.Empty,
+        }).ToList();
+
+        return Ok(projectDto);
+    }
+
+    [HttpGet("get-student-with-expert-project-by-id/{studentId}")]
+    public async Task<IActionResult> GetStudentWithExpertProjectById(Guid studentId)
+    {
+        var projects = await _dbContext.Projects
+            .Include(p => p.Student)
+                .ThenInclude(s => s.User)
+            .Include(p => p.IndExpert)
+                .ThenInclude(i => i.User)
+            .Where(p => p.StudentId == studentId && p.IndExpertId != null)
+            .ToListAsync();
+
+        if (projects == null)
+        {
+            return BadRequest("No projects found");
+        }
+
+        var projectDto = projects.Select(project => new StudentWithExpertProjectDTO
+        {
+            Id = project.Id,
+            StudentId = studentId,
+            IndExpertId = project?.IndExpertId,
+            Title = project?.Title ?? string.Empty,
+            Description = project?.Description ?? string.Empty,
+            Status = project?.CurrentStatus ?? string.Empty,
+            EndDate = project?.EndDate.ToString() ?? string.Empty,
+            Budget = project?.Budget ?? 0,
+            studentName = project?.Student?.User?.FirstName + " " + project?.Student?.User?.LastName ?? string.Empty,
+            expertName = project?.IndExpert?.User?.FirstName + " " + project?.IndExpert?.User?.LastName ?? string.Empty,
         }).ToList();
 
         return Ok(projectDto);
@@ -146,7 +181,7 @@ public class ProjectsController : ControllerBase
             .Include(p => p.Student)
                 .ThenInclude(s => s.User)
             .Include(p => p.IndExpert)
-            .Where(p => p.StudentId == id)
+            .Where(p => p.StudentId == id && p.IndExpertId == null)
             .ToListAsync();
 
         if (projects == null)
@@ -181,14 +216,20 @@ public class ProjectsController : ControllerBase
             return BadRequest("No Projects Found");        
         }
 
+        
+
         var list = projects.Select(project => new IndExptProjectTileDTO
         {
+            
             Id = project.Id,
             Title = project?.Title ?? string.Empty,
             Description = project?.Description ?? string.Empty,
             IndExpertId = project?.IndExpertId,
             EndDate = project?.EndDate.ToString(),
+            CurrentStatus = project?.CurrentStatus ?? string.Empty,
+            Budget = project?.Budget ?? 0,
             Name = project?.IndExpert?.User?.FirstName +" " + project?.IndExpert?.User?.LastName ?? string.Empty,
+            StudentId = project?.StudentId,
 
         }).ToList();
 

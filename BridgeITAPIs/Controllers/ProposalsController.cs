@@ -63,6 +63,7 @@ public class ProposalsController : ControllerBase
     public async Task<IActionResult> AcceptProposal(Guid ProposalId)
     {
         var proposal = await _dbContext.Proposals
+            .Include(p => p.Project)
             .FirstOrDefaultAsync(p => p.Id == ProposalId);
 
         if (proposal == null)
@@ -71,6 +72,7 @@ public class ProposalsController : ControllerBase
         }
 
         proposal.Status = "Accepted";
+        proposal.Project.StudentId = proposal.StudentId;
 
         _dbContext.Proposals.Update(proposal);
         await _dbContext.SaveChangesAsync();
@@ -196,7 +198,6 @@ public class ProposalsController : ControllerBase
         return Ok(proposalDTO);
 
     }
-
 
     [HttpGet("get-proposal-for-student/{StudentId}")]
     public async Task<IActionResult> GetProposalForStudent(Guid StudentId)
