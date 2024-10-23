@@ -39,6 +39,8 @@ public partial class BridgeItContext : DbContext
 
     public virtual DbSet<MileStone> MileStones { get; set; }
 
+    public virtual DbSet<Otp> Otps { get; set; }
+
     public virtual DbSet<Project> Projects { get; set; }
 
     public virtual DbSet<ProjectProposal> Proposals { get; set; }
@@ -338,6 +340,24 @@ public partial class BridgeItContext : DbContext
             entity.HasOne(d => d.User).WithMany(p => p.IndustryExperts)
                 .HasForeignKey(d => d.UserId)
                 .HasConstraintName("FK__IndustryE__user___17036CC0");
+        });
+
+        modelBuilder.Entity<Otp>(entity =>
+        {
+            entity.HasKey(e => e.email).HasName("PK__Otp__AB6E616532361977");
+
+            entity.ToTable("Otp");
+
+            entity.Property(e => e.email)
+                .HasMaxLength(255)
+                .HasColumnName("email");
+
+            entity.Property(e => e.otp)
+                .HasColumnName("otp");
+
+            entity.Property(e => e.created_at)
+                .HasMaxLength(255)
+                .HasColumnName("created_at");
         });
 
         modelBuilder.Entity<MileStone>(entity =>
