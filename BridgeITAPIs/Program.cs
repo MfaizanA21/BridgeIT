@@ -63,13 +63,15 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         };
     });
 
+//Email Service
+builder.Services.AddScoped<MailService>();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo { Title = "My API", Version = "v1" });
 
-    // Define the Bearer authentication scheme
+    // Bearer authentication 
     c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
         Description = "JWT Authorization header using the Bearer scheme. Example: \"Bearer {token}\"",
@@ -79,7 +81,7 @@ builder.Services.AddSwaggerGen(c =>
         Scheme = "Bearer"
     });
 
-    // Apply the security scheme to all endpoints
+    // security scheme to all endpoints
     c.AddSecurityRequirement(new OpenApiSecurityRequirement
     {
         {

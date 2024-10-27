@@ -10,10 +10,12 @@ namespace BridgeITAPIs.Controllers;
 public class OtpController : ControllerBase
 {
     private readonly BridgeItContext _context;
+    private readonly MailService _mailService;
 
-    public OtpController(BridgeItContext context)
+    public OtpController(BridgeItContext context, MailService mailService)
     {
         _context = context;
+        _mailService = mailService;
     }
 
     [HttpPost("generate-otp")]
@@ -101,4 +103,25 @@ public class OtpController : ControllerBase
         return Ok(new_otp);
     }
 
+    [HttpPost("send-otp")]
+    public async Task<IActionResult> SendOtp([FromBody] string email)
+    {
+        if (string.IsNullOrEmpty(email))
+        {
+            return BadRequest("Email is required.");
+        }
+
+        var otpData = await _context
+            .Set<Otp>()
+            .FirstOrDefaultAsync(o => o.email == email);
+
+        if (otpData == null)
+        {
+            return BadRequest("Otp data not found/email doesnot exits.");
+        }
+
+        await _mailService.SendOtpMail(email, otpData.otp);
+
+        return Ok("OTP sent successfully.");
+    }
 }
