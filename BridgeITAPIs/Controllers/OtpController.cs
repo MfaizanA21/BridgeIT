@@ -26,6 +26,22 @@ public class OtpController : ControllerBase
             return BadRequest("Email is required.");
         }
 
+       // var mails = _context.Set<Otp>().FirstOrDefaultAsync(otp => otp.email == email);
+
+        /*if (mails != null)
+        {
+            if (DateTime.UtcNow.Subtract(mails.Result.created_at).TotalMinutes < 5)
+            {
+
+                return Ok(mails.Result.otp);
+            }
+            else
+            {
+                _context.Set<Otp>().Remove(mails.Result);
+                await _context.SaveChangesAsync();
+            }
+        }*/
+
         var otp = new Otp
         {
             email = email,
@@ -44,7 +60,12 @@ public class OtpController : ControllerBase
     {
         var otpData = await _context
             .Set<Otp>()
-            .FirstOrDefaultAsync(o => o.email == otp.email && o.otp == otp.otp);
+            .FirstOrDefaultAsync(o => o.email == otp.email);
+
+        if (otpData == null)
+        {
+            return BadRequest("Invalid OTP.");
+        }
 
         if (otp == null)
         {
@@ -61,12 +82,8 @@ public class OtpController : ControllerBase
             return BadRequest("Invalid OTP.");
         }
 
-        if (otpData == null)
-        {
-            return BadRequest("Invalid OTP.");
-        }
 
-        if (DateTime.UtcNow.Subtract(otpData.created_at).TotalMinutes > 5)
+        if (otpData != null && DateTime.UtcNow.Subtract(otpData.created_at).TotalMinutes > 5)
         {
             return BadRequest("OTP expired.");
         }
@@ -89,6 +106,11 @@ public class OtpController : ControllerBase
         if (otpData == null)
         {
             return BadRequest("Otp data not found/email doesnot exits.");
+        }
+
+        if (otpData.created_at.AddMinutes(5) > DateTime.UtcNow)
+        {
+            return BadRequest($"OTP is not expired yet. {otpData.otp}");
         }
 
         int new_otp = new Random().Next(100000, 999999);

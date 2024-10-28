@@ -29,7 +29,7 @@ public class MailService
                     <p>Hello,</p>
                     <p>Your OTP code for email verification is:</p>
                     <h3 style='background: #f2f2f2; padding: 10px; border-radius: 5px; display: inline-block;'>{otp}</h3>
-                    <p>Please enter this code to complete your email verification.</p>
+                    <p>Please enter this code to complete your email verification. your otp will expire in 5 mintues.</p>
                     <p>Thank you,<br/>BridgeIT Team</p>
                 </div>"
         };
