@@ -436,7 +436,7 @@ public partial class BridgeItContext : DbContext
                 .HasColumnName("id");
             entity.Property(e => e.Proposal)
                 .HasColumnName("proposal")
-                .HasColumnType("nvarchar(max)");
+                .HasColumnType("varbinary(max)");
             entity.Property(e => e.Status)
                 .HasMaxLength(255)
                 .HasColumnName("status");

@@ -4,7 +4,7 @@
     {
         public Guid Id {  get; set; }
         
-        public string Proposal { get; set; } = string.Empty;
+        public byte[] Proposal { get; set; } = Array.Empty<byte>();
 
         public string Status { get; set; } = string.Empty;
 
