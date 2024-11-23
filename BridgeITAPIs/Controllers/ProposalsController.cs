@@ -20,15 +20,18 @@ public class ProposalsController : ControllerBase
     [HttpPost("send-proposal")]
     public async Task<IActionResult> SendProposal([FromBody] SendProposalDTO dto)
     {
-        if (dto == null)
+        if (dto.proposal == null || dto.proposal.Length == 0)
         {
-            return BadRequest("Proposal Data is null.");
+            return BadRequest("Proposal file is required.");
         }
+        
+        using var memoryStream = new MemoryStream();
+        await dto.proposal.CopyToAsync(memoryStream);
 
         var proposal = new ProjectProposal
         {
             Id = Guid.NewGuid(),
-            Proposal = dto.proposal,
+            Proposal = memoryStream.ToArray(),
             Status = "Pending",
             StudentId = dto.studentId,
             ProjectId = dto.projectId,
