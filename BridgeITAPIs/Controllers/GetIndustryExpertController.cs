@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using BridgeITAPIs.DTOs.IndustryExpertDTOs;
 using Microsoft.EntityFrameworkCore;
 namespace BridgeITAPIs.Controllers;

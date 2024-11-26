@@ -104,16 +104,21 @@ public class StudentsController : ControllerBase
             .Include(s => s.User)
             .Include(s => s.University)
             .Include(s => s.Projects)
+            .Include(s => s.Proposals)
             .FirstOrDefaultAsync(s => s.Id == Id);
 
         if (student == null)
         {
             return NotFound("Student not found.");
         }
+        
+        if (student.Proposals != null && student.Proposals.Any())
+        {
+            _dbContext.Proposals.RemoveRange(student.Proposals);
+        }
 
         if (student.Projects != null && student.Projects.Any())
         {
-            // Optionally remove or update related projects
             _dbContext.Projects.RemoveRange(student.Projects);
         }
 
