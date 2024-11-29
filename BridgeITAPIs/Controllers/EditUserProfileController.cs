@@ -119,4 +119,20 @@ public class EditUserProfileController : ControllerBase
         await _dbContext.SaveChangesAsync();
         return Ok("Description updated successfully.");
     }
+    
+    [HttpPut("forgot-password/{id}")]
+    public async Task<IActionResult> ForgotPassword(Guid id, [FromBody] string newPassword)
+    {
+        var currentUser = await _dbContext.Users
+            .FirstOrDefaultAsync(u => u.Id == id);
+        if (currentUser == null)
+        {
+            return NotFound("User not found.");
+        }
+        var (passwordHash, passwordSalt) = PasswordHelper.HashPassword(newPassword);
+        currentUser.Hash = passwordHash;
+        currentUser.Salt = passwordSalt;
+        await _dbContext.SaveChangesAsync();
+        return Ok("Password changed successfully. you can now login with your new password.");
+    }
 }
