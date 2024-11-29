@@ -84,10 +84,14 @@ public class OtpController : ControllerBase
 
 
         if (otpData != null && DateTime.UtcNow.Subtract(otpData.created_at).TotalMinutes > 5)
-        {
+        { 
+            _context.Set<Otp>().Remove(otpData);
+            await _context.SaveChangesAsync();
             return BadRequest("OTP expired.");
         }
-
+        
+        _context.Set<Otp>().Remove(otpData!);
+        await _context.SaveChangesAsync();
         return Ok("OTP verified successfully.");
     }
 
