@@ -41,4 +41,5 @@ public class AuthController : ControllerBase
 
         return Ok(new { UserId = userId, Role = role });
     }
+    
 }
