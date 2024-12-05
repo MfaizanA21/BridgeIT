@@ -118,11 +118,11 @@ public class EditUserProfileController : ControllerBase
         return Ok("Description updated successfully.");
     }
     
-    [HttpPut("forgot-password/{id}")]
-    public async Task<IActionResult> ForgotPassword(Guid id, [FromBody] string newPassword)
+    [HttpPut("forgot-password/{email}")]
+    public async Task<IActionResult> ForgotPassword(string email, [FromBody] string newPassword)
     {
         var currentUser = await _dbContext.Users
-            .FirstOrDefaultAsync(u => u.Id == id);
+            .FirstOrDefaultAsync(u => u.Email == email);
         if (currentUser == null)
         {
             return NotFound("User not found.");
