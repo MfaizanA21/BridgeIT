@@ -1,3 +1,4 @@
+using BridgeITAPIs.DTOs.OtpDTOs;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -44,7 +45,25 @@ public class ForgotPasswordController : Controller
         await _mailService.SendOtpMail(email, forgototp);
         
         return Ok("OTP sent successfully");
+    }
 
+    [HttpPost("verify-forgotpassword-otp")]
+    public async Task<IActionResult> VerifyForgotOtp([FromBody] VerifyOtpDTO otp)
+    {
+        var otpData = await _context.Set<ForgotPasswordOtp>().FirstOrDefaultAsync(o => o.email == otp.email);
+        if (otpData == null)
+        {
+            return BadRequest("Invalid OTP");
+        }
+
+        if (otp.otp == otpData.otp)
+        {
+            return Ok("OTP verified successfully");
+        }
+        else
+        {
+            return BadRequest("Invalid OTP");
+        }
     }
     
 }
