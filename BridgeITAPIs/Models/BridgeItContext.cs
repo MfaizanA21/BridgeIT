@@ -30,6 +30,8 @@ public partial class BridgeItContext : DbContext
     public virtual DbSet<FacultyExperience> FacultyExperiences { get; set; }
 
     public virtual DbSet<FieldOfInterest> FieldOfInterests { get; set; }
+    
+    public virtual DbSet<ForgotPasswordOtp> ForgotPasswordOtps { get; set; }
 
     public virtual DbSet<Fyp> Fyps { get; set; }
 
@@ -247,6 +249,20 @@ public partial class BridgeItContext : DbContext
                 .HasConstraintName("FK__FacultyEx__facul__19DFD96B");
         });
 
+        modelBuilder.Entity<ForgotPasswordOtp>(entity =>
+        {
+            entity.HasKey(e => e.id).HasName("PK__ForgotPa__3213E83F71F90E17");
+            entity.ToTable("ForgotPasswordOtp");
+            entity.Property(e => e.email)
+                .HasMaxLength(255)
+                .HasColumnName("email");
+            entity.Property(e => e.otp)
+                .HasColumnName("otp");
+            entity.Property(e => e.created_at)
+                .HasMaxLength(255)
+                .HasColumnName("created_at");
+        });
+        
         modelBuilder.Entity<FieldOfInterest>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("PK__FieldOfI__3213E83F670D4F91");
