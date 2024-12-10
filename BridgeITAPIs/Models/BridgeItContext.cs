@@ -259,7 +259,8 @@ public partial class BridgeItContext : DbContext
             entity.Property(e => e.otp)
                 .HasColumnName("otp");
             entity.Property(e => e.created_at)
-                .HasMaxLength(255)
+                .HasColumnType("datetime")
+                
                 .HasColumnName("created_at");
         });
         
