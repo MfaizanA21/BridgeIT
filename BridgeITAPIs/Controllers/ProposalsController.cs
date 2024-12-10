@@ -20,27 +20,48 @@ public class ProposalsController : ControllerBase
     [HttpPost("send-proposal")]
     public async Task<IActionResult> SendProposal([FromBody] SendProposalDTO dto)
     {
-        if (dto.proposal == null || dto.proposal.Length == 0)
+        if (string.IsNullOrEmpty(dto.proposal) || dto.proposal.Length == 0)
         {
             return BadRequest("Proposal file is required.");
         }
-        
-        using var memoryStream = new MemoryStream();
-        await dto.proposal.CopyToAsync(memoryStream);
 
-        var proposal = new ProjectProposal
+        try
         {
-            Id = Guid.NewGuid(),
-            Proposal = memoryStream.ToArray(),
-            Status = "Pending",
-            StudentId = dto.studentId,
-            ProjectId = dto.projectId,
-        };
+            var proposalBytes = Convert.FromBase64String(dto.proposal);
 
-        await _dbContext.Proposals.AddAsync(proposal);
-        await _dbContext.SaveChangesAsync();
-
-        return Ok("Proposal sent successfully.");
+            var proposal = new ProjectProposal
+            {
+                Id = Guid.NewGuid(),
+                Proposal = proposalBytes,
+                Status = "Pending",
+                StudentId = dto.studentId,
+                ProjectId = dto.projectId,
+            };
+            await _dbContext.Proposals.AddAsync(proposal);
+            await _dbContext.SaveChangesAsync();
+            
+            return Ok("Proposal sent successfully.");
+        } catch (FormatException)
+        {
+            return BadRequest("Invalid base64 string.");
+        }
+        
+        // using var memoryStream = new MemoryStream();
+        // await dto.proposal.CopyToAsync(memoryStream);
+        //
+        // var proposal = new ProjectProposal
+        // {
+        //     Id = Guid.NewGuid(),
+        //     Proposal = memoryStream.ToArray(),
+        //     Status = "Pending",
+        //     StudentId = dto.studentId,
+        //     ProjectId = dto.projectId,
+        // };
+        //
+        // await _dbContext.Proposals.AddAsync(proposal);
+        // await _dbContext.SaveChangesAsync();
+        //
+        // return Ok("Proposal sent successfully.");
     }
 
     [HttpPut("reject-proposal/{ProposalId}")]
