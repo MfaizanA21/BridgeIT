@@ -50,7 +50,7 @@ public class ForgotPasswordController : Controller
     [HttpPost("verify-forgotpassword-otp")]
     public async Task<IActionResult> VerifyForgotOtp([FromBody] VerifyOtpDTO otp)
     {
-        var otpData = await _context.ForgotPasswordOtps.LastOrDefaultAsync(o => o.email == otp.email);
+        var otpData = await _context.ForgotPasswordOtps.OrderBy(o => o.created_at).LastOrDefaultAsync(o => o.email == otp.email);
         if (otpData == null)
         {
             return BadRequest("Invalid OTP");

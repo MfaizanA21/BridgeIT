@@ -262,6 +262,7 @@ public partial class BridgeItContext : DbContext
                 .HasColumnType("datetime")
                 
                 .HasColumnName("created_at");
+            entity.HasKey(e => e.id).HasName("PK__ForgotPa__3213E83F71F90E17");
         });
         
         modelBuilder.Entity<FieldOfInterest>(entity =>
