@@ -6,7 +6,7 @@
         public Guid ProjectId { get; set; }
         public Guid StudentId { get; set; }
         public Guid? ExpertId { get; set; }
-        public byte[]? Proposal { get; set; }
+        public string Proposal { get; set; } = String.Empty;
         public string Status { get; set; } = string.Empty;
         public string ProjectTitle { get; set; } = string.Empty;
         public string ProjectDescription { get; set; } = string.Empty;

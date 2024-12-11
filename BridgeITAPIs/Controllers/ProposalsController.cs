@@ -115,6 +115,11 @@ public class ProposalsController : ControllerBase
             .Include(p => p.Project)
                 .ThenInclude(i => i.IndExpert)
             .ToListAsync();
+        
+        if (proposals == null)
+        {
+            return BadRequest("No Proposals found.");
+        }
 
         var proposalDTOs = proposals.Select(p => new GetAllProposalDTO
         {
@@ -122,9 +127,9 @@ public class ProposalsController : ControllerBase
             ProjectId = p.ProjectId,
             StudentId = p.StudentId,
             ExpertId = p.Project?.IndExpert?.Id,
-            StudentName = p?.Student?.User?.FirstName + " " + p?.Student?.User?.LastName ?? string.Empty,
+            StudentName = (p.Student?.User?.FirstName ?? String.Empty) + " " + (p.Student?.User?.LastName ?? string.Empty),
             email = p?.Student?.User?.Email ?? string.Empty,
-            Proposal = p.Proposal,
+            Proposal = p.Proposal != null ? Convert.ToBase64String(p.Proposal) : string.Empty,
             Status = p.Status,
             skills = p.Student?.skills != null ? p.Student.skills.Split(',').ToList() : new List<string>(),
             university = p?.Student?.University?.Name ?? string.Empty,
@@ -135,6 +140,11 @@ public class ProposalsController : ControllerBase
 
         }).ToList();
 
+        if (proposalDTOs.Count == 0)
+        {
+            return BadRequest("No Proposals found.");
+        }
+        
         return Ok(proposalDTOs);
 
     }
@@ -170,7 +180,7 @@ public class ProposalsController : ControllerBase
             ExpertId = p.Project?.IndExpert?.Id,
             StudentName = p?.Student?.User?.FirstName + " " + p?.Student?.User?.LastName ?? string.Empty,
             email = p?.Student?.User?.Email ?? string.Empty,
-            Proposal = p.Proposal,
+            Proposal = p.Proposal != null ? Convert.ToBase64String(p.Proposal) : string.Empty,
             Status = p.Status,
             skills = p.Student?.skills != null ? p.Student.skills.Split(',').ToList() : new List<string>(),
             university = p?.Student?.University?.Name ?? string.Empty,
@@ -209,7 +219,7 @@ public class ProposalsController : ControllerBase
             ExpertId = proposal.Project?.IndExpert?.Id,
             StudentName = proposal?.Student?.User?.FirstName + " " + proposal?.Student?.User?.LastName ?? string.Empty,
             email = proposal?.Student?.User?.Email ?? string.Empty,
-            Proposal = proposal.Proposal,
+            Proposal = proposal.Proposal != null ? Convert.ToBase64String(proposal.Proposal) : string.Empty,
             Status = proposal.Status,
             skills = proposal.Student?.skills != null ? proposal.Student.skills.Split(',').ToList() : new List<string>(),
             university = proposal?.Student?.University?.Name ?? string.Empty,
@@ -253,7 +263,7 @@ public class ProposalsController : ControllerBase
             StudentId = p.StudentId,
             ExpertId = p.Project?.IndExpert?.Id,
             StudentName = p?.Student?.User?.FirstName + " " + p?.Student?.User?.LastName ?? string.Empty,
-            Proposal = p.Proposal,
+            Proposal = p?.Proposal != null ? Convert.ToBase64String(p.Proposal) : string.Empty,
             Status = p.Status,
             ProjectTitle = p?.Project?.Title ?? string.Empty,
             ProjectDescription = p?.Project?.Description ?? string.Empty,
