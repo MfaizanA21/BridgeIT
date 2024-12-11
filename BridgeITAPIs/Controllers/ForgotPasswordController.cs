@@ -25,7 +25,7 @@ public class ForgotPasswordController : Controller
             return BadRequest("Enter your email");
         }
 
-        var users = await _context.Set<User>().FirstOrDefaultAsync(u => u.Email == email);
+        var users = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
         
         if (users == null)
         {
