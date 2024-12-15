@@ -15,6 +15,8 @@ public partial class University
     
     public byte[]? uniImage { get; set; }
 
+    // public ICollection<Fyp> Fyps { get; set; } = new List<Fyp>();
+    
     public virtual ICollection<Faculty> Faculties { get; set; } = new List<Faculty>();
 
     public virtual ICollection<Student> Students { get; set; } = new List<Student>();
