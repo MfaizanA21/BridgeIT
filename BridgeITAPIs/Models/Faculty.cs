@@ -21,7 +21,7 @@ public partial class Faculty
 
     public virtual ICollection<FacultyExperience> FacultyExperiences { get; set; } = new List<FacultyExperience>();
 
-    public virtual ICollection<Fyp> Fyps { get; set; } = new List<Fyp>();
+    // public virtual ICollection<Fyp> Fyps { get; set; } = new List<Fyp>();
 
     public virtual ICollection<Idea> Ideas { get; set; } = new List<Idea>();
 

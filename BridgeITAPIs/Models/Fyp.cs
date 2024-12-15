@@ -16,12 +16,19 @@ public partial class Fyp
     public string? Technology { get; set; }
 
     public string? Description { get; set; }
+    
+    public string? fyp_id { get; set; }
+    
+    public string? Status { get; set; }
 
-    public Guid? FacultyId { get; set; }
+    // public Guid? FacultyId { get; set; }
+    
+    // public Guid? UniId { get; set; }
 
     public virtual ICollection<BoughtFyp> BoughtFyps { get; set; } = new List<BoughtFyp>();
 
-    public virtual Faculty? Faculty { get; set; }
+    // public virtual Faculty? Faculty { get; set; }
+    // public virtual University? University { get; set; }
 
     public virtual ICollection<SponsoredFyp> SponsoredFyps { get; set; } = new List<SponsoredFyp>();
 

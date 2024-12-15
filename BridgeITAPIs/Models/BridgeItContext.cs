@@ -260,7 +260,6 @@ public partial class BridgeItContext : DbContext
                 .HasColumnName("otp");
             entity.Property(e => e.created_at)
                 .HasColumnType("datetime")
-                
                 .HasColumnName("created_at");
             entity.HasKey(e => e.id).HasName("PK__ForgotPa__3213E83F71F90E17");
         });
@@ -294,18 +293,27 @@ public partial class BridgeItContext : DbContext
             entity.Property(e => e.Description)
                 .HasMaxLength(255)
                 .HasColumnName("description");
-            entity.Property(e => e.FacultyId).HasColumnName("faculty_id");
+            // entity.Property(e => e.FacultyId).HasColumnName("faculty_id");
             entity.Property(e => e.Members).HasColumnName("members");
+            entity.Property(i => i.fyp_id)
+                .HasMaxLength(25)
+                .HasColumnName("fyp_id");
+            entity.Property(s => s.Status)
+                .HasMaxLength(25)
+                .HasColumnName("status");
             entity.Property(e => e.Technology)
                 .HasMaxLength(255)
                 .HasColumnName("technology");
             entity.Property(e => e.Title)
                 .HasMaxLength(255)
                 .HasColumnName("title");
+            // entity.HasOne(u => u.University).WithMany(f => f.Fyps)
+            //     .HasForeignKey(u => u.UniId)
+            //     .HasConstraintName("FK__FYP__UNIVERSITY");
 
-            entity.HasOne(d => d.Faculty).WithMany(p => p.Fyps)
-                .HasForeignKey(d => d.FacultyId)
-                .HasConstraintName("FK__FYP__faculty_id__245D67DE");
+            // entity.HasOne(d => d.Faculty).WithMany(p => p.Fyps)
+            //     .HasForeignKey(d => d.FacultyId)
+            //     .HasConstraintName("FK__FYP__faculty_id__245D67DE");
         });
 
         modelBuilder.Entity<Idea>(entity =>
@@ -634,26 +642,26 @@ public partial class BridgeItContext : DbContext
                         j.IndexerProperty<Guid>("StudentId").HasColumnName("student_id");
                         j.IndexerProperty<Guid>("FypId").HasColumnName("fyp_id");
                     });
-
-           /* entity.HasMany(d => d.Skills).WithMany(p => p.Students)
-                .UsingEntity<Dictionary<string, object>>(
-                    "StudentSkill",
-                    r => r.HasOne<Skill>().WithMany()
-                        .HasForeignKey("SkillId")
-                        .OnDelete(DeleteBehavior.ClientSetNull)
-                        .HasConstraintName("FK__StudentSk__skill__797309D9"),
-                    l => l.HasOne<Student>().WithMany()
-                        .HasForeignKey("StudentId")
-                        .OnDelete(DeleteBehavior.ClientSetNull)
-                        .HasConstraintName("FK__StudentSk__stude__787EE5A0"),
-                    j =>
-                    {
-                        j.HasKey("StudentId", "SkillId").HasName("PK__StudentS__A588AEAD140FF03C");
-                        j.ToTable("StudentSkill");
-                        j.IndexerProperty<Guid>("StudentId").HasColumnName("student_id");
-                        j.IndexerProperty<Guid>("SkillId").HasColumnName("skill_id");
-                    }); */
         });
+        //    entity.HasMany(d => d.Skills).WithMany(p => p.Students)
+        //         .UsingEntity<Dictionary<string, object>>(
+        //             "StudentSkill",
+        //             r => r.HasOne<Skill>().WithMany()
+        //                 .HasForeignKey("SkillId")
+        //                 .OnDelete(DeleteBehavior.ClientSetNull)
+        //                 .HasConstraintName("FK__StudentSk__skill__797309D9"),
+        //             l => l.HasOne<Student>().WithMany()
+        //                 .HasForeignKey("StudentId")
+        //                 .OnDelete(DeleteBehavior.ClientSetNull)
+        //                 .HasConstraintName("FK__StudentSk__stude__787EE5A0"),
+        //             j =>
+        //             {
+        //                 j.HasKey("StudentId", "SkillId").HasName("PK__StudentS__A588AEAD140FF03C");
+        //                 j.ToTable("StudentSkill");
+        //                 j.IndexerProperty<Guid>("StudentId").HasColumnName("student_id");
+        //                 j.IndexerProperty<Guid>("SkillId").HasColumnName("skill_id");
+        //             }); 
+        // });
 
         modelBuilder.Entity<University>(entity =>
         {
