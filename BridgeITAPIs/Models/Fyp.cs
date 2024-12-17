@@ -30,6 +30,8 @@ public partial class Fyp
     // public virtual Faculty? Faculty { get; set; }
     // public virtual University? University { get; set; }
 
+    public virtual ICollection<RequestForFyp> RequestForFyps { get; set; } = new List<RequestForFyp>();
+    
     public virtual ICollection<SponsoredFyp> SponsoredFyps { get; set; } = new List<SponsoredFyp>();
 
     public virtual ICollection<Student> Students { get; set; } = new List<Student>();
