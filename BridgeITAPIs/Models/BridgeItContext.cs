@@ -158,7 +158,7 @@ public partial class BridgeItContext : DbContext
                 .HasMaxLength(255)
                 .HasColumnName("department");
         });
-
+        
         modelBuilder.Entity<Event>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("PK__Event__3213E83F73A8ACC8");
@@ -528,6 +528,32 @@ public partial class BridgeItContext : DbContext
                 .HasConstraintName("FK__ResearchW__facul__1BC821DD");
         });
 
+        modelBuilder.Entity<RequestForFyp>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__RequestF__3213E83F08D70405");
+            entity.ToTable("RequestForFyp");
+
+            entity.Property(e => e.Id)
+                .ValueGeneratedNever()
+                .HasColumnName("id");
+
+            entity.Property(e => e.Status)
+                .HasColumnName("status")
+                .HasColumnType("int");
+            
+            entity.HasOne(e => e.Student)
+                .WithMany(p => p.RequestForFyps)
+                .HasForeignKey(d => d.StudentId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK__Requested_Student");
+
+            entity.HasOne(e => e.Fyp)
+                .WithMany(p => p.RequestForFyps)
+                .HasForeignKey(d => d.FypId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK__FOR_FYP");
+        });
+
         modelBuilder.Entity<Review>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("PK__Review__3213E83F560D307B");
@@ -615,6 +641,7 @@ public partial class BridgeItContext : DbContext
             entity.Property(e => e.RollNumber).HasColumnName("rollNumber");
             entity.Property(e => e.UniversityId).HasColumnName("university_id");
             entity.Property(e => e.UserId).HasColumnName("user_id");
+            entity.Property(f => f.FypId).HasColumnName("fyp_id");
 
             entity.HasOne(d => d.University).WithMany(p => p.Students)
                 .HasForeignKey(d => d.UniversityId)
@@ -624,44 +651,48 @@ public partial class BridgeItContext : DbContext
                 .HasForeignKey(d => d.UserId)
                 .HasConstraintName("FK__Student__user_id__14270015");
 
-            entity.HasMany(d => d.Fyps).WithMany(p => p.Students)
-                .UsingEntity<Dictionary<string, object>>(
-                    "StudentFyp",
-                    r => r.HasOne<Fyp>().WithMany()
-                        .HasForeignKey("FypId")
-                        .OnDelete(DeleteBehavior.ClientSetNull)
-                        .HasConstraintName("FK__StudentFY__fyp_i__2CF2ADDF"),
-                    l => l.HasOne<Student>().WithMany()
-                        .HasForeignKey("StudentId")
-                        .OnDelete(DeleteBehavior.ClientSetNull)
-                        .HasConstraintName("FK__StudentFY__stude__2BFE89A6"),
-                    j =>
-                    {
-                        j.HasKey("StudentId", "FypId").HasName("PK__StudentF__2B6D7267EDC7B330");
-                        j.ToTable("StudentFYP");
-                        j.IndexerProperty<Guid>("StudentId").HasColumnName("student_id");
-                        j.IndexerProperty<Guid>("FypId").HasColumnName("fyp_id");
-                    });
+            entity.HasOne(f => f.Fyp).WithMany(s => s.Students)
+                .HasForeignKey(f => f.FypId)
+                .HasConstraintName("FK__Student_FYP");
+
+            //     entity.HasMany(d => d.Fyps).WithMany(p => p.Students)
+            //         .UsingEntity<Dictionary<string, object>>(
+            //             "StudentFyp",
+            //             r => r.HasOne<Fyp>().WithMany()
+            //                 .HasForeignKey("FypId")
+            //                 .OnDelete(DeleteBehavior.ClientSetNull)
+            //                 .HasConstraintName("FK__StudentFY__fyp_i__2CF2ADDF"),
+            //             l => l.HasOne<Student>().WithMany()
+            //                 .HasForeignKey("StudentId")
+            //                 .OnDelete(DeleteBehavior.ClientSetNull)
+            //                 .HasConstraintName("FK__StudentFY__stude__2BFE89A6"),
+            //             j =>
+            //             {
+            //                 j.HasKey("StudentId", "FypId").HasName("PK__StudentF__2B6D7267EDC7B330");
+            //                 j.ToTable("StudentFYP");
+            //                 j.IndexerProperty<Guid>("StudentId").HasColumnName("student_id");
+            //                 j.IndexerProperty<Guid>("FypId").HasColumnName("fyp_id");
+            //             });
+            // });
+            //    entity.HasMany(d => d.Skills).WithMany(p => p.Students)
+            //         .UsingEntity<Dictionary<string, object>>(
+            //             "StudentSkill",
+            //             r => r.HasOne<Skill>().WithMany()
+            //                 .HasForeignKey("SkillId")
+            //                 .OnDelete(DeleteBehavior.ClientSetNull)
+            //                 .HasConstraintName("FK__StudentSk__skill__797309D9"),
+            //             l => l.HasOne<Student>().WithMany()
+            //                 .HasForeignKey("StudentId")
+            //                 .OnDelete(DeleteBehavior.ClientSetNull)
+            //                 .HasConstraintName("FK__StudentSk__stude__787EE5A0"),
+            //             j =>
+            //             {
+            //                 j.HasKey("StudentId", "SkillId").HasName("PK__StudentS__A588AEAD140FF03C");
+            //                 j.ToTable("StudentSkill");
+            //                 j.IndexerProperty<Guid>("StudentId").HasColumnName("student_id");
+            //                 j.IndexerProperty<Guid>("SkillId").HasColumnName("skill_id");
+            //             }); 
         });
-        //    entity.HasMany(d => d.Skills).WithMany(p => p.Students)
-        //         .UsingEntity<Dictionary<string, object>>(
-        //             "StudentSkill",
-        //             r => r.HasOne<Skill>().WithMany()
-        //                 .HasForeignKey("SkillId")
-        //                 .OnDelete(DeleteBehavior.ClientSetNull)
-        //                 .HasConstraintName("FK__StudentSk__skill__797309D9"),
-        //             l => l.HasOne<Student>().WithMany()
-        //                 .HasForeignKey("StudentId")
-        //                 .OnDelete(DeleteBehavior.ClientSetNull)
-        //                 .HasConstraintName("FK__StudentSk__stude__787EE5A0"),
-        //             j =>
-        //             {
-        //                 j.HasKey("StudentId", "SkillId").HasName("PK__StudentS__A588AEAD140FF03C");
-        //                 j.ToTable("StudentSkill");
-        //                 j.IndexerProperty<Guid>("StudentId").HasColumnName("student_id");
-        //                 j.IndexerProperty<Guid>("SkillId").HasColumnName("skill_id");
-        //             }); 
-        // });
 
         modelBuilder.Entity<University>(entity =>
         {
