@@ -539,7 +539,7 @@ public partial class BridgeItContext : DbContext
 
             entity.Property(e => e.Status)
                 .HasColumnName("status")
-                .HasColumnType("int");
+                .HasMaxLength(255);
             
             entity.HasOne(e => e.Student)
                 .WithMany(p => p.RequestForFyps)
