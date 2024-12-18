@@ -653,6 +653,7 @@ public partial class BridgeItContext : DbContext
 
             entity.HasOne(f => f.Fyp).WithMany(s => s.Students)
                 .HasForeignKey(f => f.FypId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK__Student_FYP");
 
             //     entity.HasMany(d => d.Fyps).WithMany(p => p.Students)
