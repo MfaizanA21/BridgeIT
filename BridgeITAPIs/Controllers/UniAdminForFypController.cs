@@ -16,33 +16,35 @@ public class UniAdminForFypController : Controller
         _mailService = mailService;
     }
 
-    [HttpGet("approve-fyp")]
-    public async Task<IActionResult> ApproveFyp()
+    [HttpPut("approve-fyp")]
+    public async Task<IActionResult> ApproveFyp([FromQuery] Guid fypId)
     {
-        var fyp = await _dbContext.Fyps.ToListAsync();
-            // .FirstOrDefaultAsync(f => f.Id == fypId);
-        // var student = await _dbContext.Students
-        //     .Include(u => u.User)
-        //     .FirstOrDefaultAsync(f => f.FypId == fypId);
+        var fyp = await _dbContext.Fyps
+            .FirstOrDefaultAsync(f => f.Id == fypId);
+        var student = await _dbContext.Students
+            .Include(u => u.User)
+            .FirstOrDefaultAsync(f => f.FypId == fypId);
         
-        // if (fyp == null || student == null)
-        // {
-        //     return BadRequest("FYP not found.");
-        // }
-        //
-        // if (student.User == null)
-        // {
-        //     return BadRequest("Something went wrong.");
-        // }
-        //
-        // fyp.Status = "Approved";
-        //
-        // await _dbContext.SaveChangesAsync();
-        //
-        // await _mailService.SendFypMail(student.User.Email, fyp.Title, "Approved");
+        Console.WriteLine(student.User.Email);
         
-        // return Ok("FYP approved successfully.");
-        return Ok(fyp);
+        if (fyp == null || student == null)
+        {
+            return BadRequest("FYP not found.");
+        }
+        
+        if (student.User == null)
+        {
+            return BadRequest("Something went wrong.");
+        }
+        
+        fyp.Status = "Approved";
+        
+        await _dbContext.SaveChangesAsync();
+        
+        await _mailService.SendFypMail(student.User.Email, fyp.Title, "Approved");
+        
+        return Ok("FYP approved successfully.");
+        // return Ok(fyp);
     }
     
 }
