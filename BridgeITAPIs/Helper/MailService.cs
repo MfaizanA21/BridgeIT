@@ -14,6 +14,33 @@ public class MailService
         _configuration = configuration;
     }
 
+    public async Task SendFypMail(string to_mail, string fypName, string result)
+    {
+        var email = new MimeMessage();
+        email.From.Add(new MailboxAddress("BridgeIT", _configuration["SmtpSettings:SenderEmail"]));
+        email.Subject = "BridgeIT FYP Approval";
+
+        var bodyBuilder = new BodyBuilder
+        {
+            HtmlBody = $@"
+                <div style='font-family: Arial, sans-serif; padding: 20px; color: #333;'>
+                    <h2 style='color: #0066cc;'>BridgeIT: FYP Approval</h2>
+                    <p>Hello,</p>
+                    <p>Your FYP <strong>{fypName}</strong> has been <strong>{result}</strong> by the university admin.</p>
+                    <p>For Further details please contact your university admin. </p>
+                    <br></br>
+                    <p>Thank you,<br/>BridgeIT Team</p>
+                </div>"
+        };
+        email.Body = bodyBuilder.ToMessageBody();
+        using var smtp = new SmtpClient();
+        await smtp.ConnectAsync(_configuration["SmtpSettings:Server"], int.Parse(_configuration["SmtpSettings:Port"]), MailKit.Security.SecureSocketOptions.StartTls);
+        await smtp.AuthenticateAsync(_configuration["SmtpSettings:Username"], _configuration["SmtpSettings:Password"]);
+        await smtp.SendAsync(email);
+        await smtp.DisconnectAsync(true);
+
+    }
+    
     public async Task SendOtpMail(string to_mail, int otp)
     {
         var email = new MimeMessage();
