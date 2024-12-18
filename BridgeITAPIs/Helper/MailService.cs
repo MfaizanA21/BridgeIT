@@ -18,6 +18,7 @@ public class MailService
     {
         var email = new MimeMessage();
         email.From.Add(new MailboxAddress("BridgeIT", _configuration["SmtpSettings:SenderEmail"]));
+        email.To.Add(MailboxAddress.Parse(to_mail));
         email.Subject = "BridgeIT FYP Approval";
 
         var bodyBuilder = new BodyBuilder

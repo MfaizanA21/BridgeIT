@@ -25,12 +25,11 @@ public class FypController : Controller
         }
         
         var student = await _dbContext.Students
-            // .Include(s => s.Fyps)
             .FirstOrDefaultAsync(s => s.Id == studentId);
         
         if (student == null)
         {
-            return NotFound("Student not found.");
+            return NotFound("Student not founds.");
         }
         
         if (student.FypId != null)
@@ -48,21 +47,10 @@ public class FypController : Controller
             Batch = fypDTO.Batch,
             Technology = fypDTO.Technology,
             Description = fypDTO.Description,
-            // UniId = fypDTO.UniId
         };
         await _dbContext.Fyps.AddAsync(fyp);
         student.FypId = fyp.Id;
-        // student.Fyps.Add(fyp);
         await _dbContext.SaveChangesAsync();
-
-        // var studentFyp = new Dictionary<string, object>
-        // {
-        //     { "studentId", studentId },
-        //     { "fypId", fyp.Id }
-        // };
-        //
-        // await _dbContext.Set<Dictionary<string, object>>("StudentFyp").AddAsync(studentFyp);
-        // await _dbContext.SaveChangesAsync();
         
         return Ok("FYP registered successfully and is awaiting approval.");
     }

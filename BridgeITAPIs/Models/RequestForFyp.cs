@@ -4,7 +4,7 @@ public class RequestForFyp
 {
     public Guid Id { get; set; }
     
-    public string? Status { get; set; }
+    public int? Status { get; set; }
     
     public Guid StudentId { get; set; }
     
