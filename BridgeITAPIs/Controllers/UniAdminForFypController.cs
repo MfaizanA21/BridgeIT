@@ -44,7 +44,38 @@ public class UniAdminForFypController : Controller
         await _mailService.SendFypMail(student.User.Email, fyp.Title, "Approved");
         
         return Ok("FYP approved successfully.");
-        // return Ok(fyp);
     }
+
+    [HttpPut("reject-fyp")]
+    public async Task<IActionResult> RejectFyp([FromQuery] Guid fypId)
+    {
+        var fyp = await _dbContext.Fyps
+            .FirstOrDefaultAsync(f => f.Id == fypId);
+        var student = await _dbContext.Students
+            .Include(u => u.User)
+            .FirstOrDefaultAsync(f => f.FypId == fypId);
+        
+        Console.WriteLine(student.User.Email);
+        
+        if (fyp == null || student == null)
+        {
+            return BadRequest("FYP not found.");
+        }
+        
+        if (student.User == null)
+        {
+            return BadRequest("Something went wrong.");
+        }
+        
+        fyp.Status = "Rejected";
+        
+        await _dbContext.SaveChangesAsync();
+        
+        await _mailService.SendFypMail(student.User.Email, fyp.Title, "Rejected");
+        
+        return Ok("FYP approved successfully.");
+    }
+    
+    //TO-DO Get Fyps requests for uniAdmin for their university only
     
 }

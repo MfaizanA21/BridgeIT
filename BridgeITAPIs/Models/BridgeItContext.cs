@@ -123,7 +123,7 @@ public partial class BridgeItContext : DbContext
                 .HasMaxLength(255)
                 .HasColumnName("name");
         });
-
+        
         modelBuilder.Entity<DegreeReport>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("PK__DegreeRe__3213E83FC391FF5B");

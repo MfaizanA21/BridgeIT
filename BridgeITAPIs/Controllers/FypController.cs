@@ -54,6 +54,31 @@ public class FypController : Controller
         
         return Ok("FYP registered successfully and is awaiting approval.");
     }
-    
+
+    [HttpGet("get-fyp-by-id/{fypId}")]
+    public async Task<IActionResult> GetFypById(Guid fypId)
+    {
+        var fyp = await _dbContext.Fyps
+            .FirstOrDefaultAsync(f => f.Id == fypId);
+
+        if (fyp == null)
+        {
+            return BadRequest("FYP not found.");
+        }
+
+        var dto = new GetFypByIdDTO
+        {
+            Id = fyp.Id,
+            FypId = fyp.fyp_id,
+            Title = fyp.Title,
+            Members = fyp.Members,
+            Status = fyp.Status,
+            Batch = fyp.Batch,
+            Technology = fyp.Technology,
+            Description = fyp.Description
+        };
+        
+        return Ok(dto);
+    }
     
 }
