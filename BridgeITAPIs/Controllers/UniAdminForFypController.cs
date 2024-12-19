@@ -1,3 +1,4 @@
+using BridgeITAPIs.DTOs.FypDTOs;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -77,5 +78,41 @@ public class UniAdminForFypController : Controller
     }
     
     //TO-DO Get Fyps requests for uniAdmin for their university only
+    [HttpGet("get-fyps-for-uniAdmin-for-approval")]
+    public async Task<IActionResult> GetFypsForUniAdminApproval([FromQuery] Guid uniId)
+    {
+        var students = await _dbContext.Students
+            .Include(u => u.User)
+            .Include(u => u.University)
+            .Include(s => s.Fyp)
+            .Where(s => (s.UniversityId == uniId && s.FypId != null) && s.Fyp.Status == "Pending")
+            .ToListAsync();
+
+        if (students == null || !students.Any())
+        {
+            return BadRequest("No FYPs found.");
+        }
+
+        var dtoList = students.Select(f => new GetFypsRequestsForUniAdminDTO
+        {
+            FId = f.Fyp.Id,
+            Title = f.Fyp.Title,
+            FypId = f.Fyp.fyp_id,
+            Members = f.Fyp.Members,
+            Batch = f.Fyp.Batch,
+            Technology = f.Fyp.Technology,
+            Description = f.Fyp.Description,
+            Status = f.Fyp.Status,
+            StudentId = f.Id,
+            StudentName = f.User.FirstName + " " + f.User.LastName,
+            StudentEmail = f.User.Email,
+            StudentRollNo = f.RollNumber,
+            UniId = f.University.Id,
+            UniName = f.University.Name,
+        }).ToList();
+
+        return Ok(dtoList);
+
+    }
     
 }
