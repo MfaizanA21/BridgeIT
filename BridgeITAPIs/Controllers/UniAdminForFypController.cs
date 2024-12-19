@@ -17,7 +17,7 @@ public class UniAdminForFypController : Controller
         _mailService = mailService;
     }
 
-    [HttpPut("approve-fyp")]
+    [HttpPut("approve-fyp")]//
     public async Task<IActionResult> ApproveFyp([FromQuery] Guid fypId)
     {
         var fyp = await _dbContext.Fyps
