@@ -16,7 +16,7 @@ public class FypController : Controller
         _dbContext = dbContext;
     }
 
-    [HttpPost("register-fyp/")]
+    [HttpPost("register-fyp")]
     public async Task<IActionResult> RegisterFyp([FromBody] RegisterFypDTO fypDTO, [FromQuery] Guid studentId)
     {
         if (!ModelState.IsValid)

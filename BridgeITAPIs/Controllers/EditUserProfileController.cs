@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using BridgeITAPIs.DTOs.UserDTOs;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace BridgeITAPIs.Controllers;
@@ -102,8 +103,8 @@ public class EditUserProfileController : ControllerBase
         return Ok("Password confirmed.");
     }
 
-    [HttpPut("update-user-description/{Id}")]
-    public async Task<IActionResult> UpdateUserDescription(Guid Id, [FromBody] string description)
+    [HttpPut("update-user-data/{Id}")]
+    public async Task<IActionResult> UpdateUserDescription(Guid Id, [FromBody] EditUserProfileInfoDTO dto)
     {
         var user = await _dbContext.Users
             .FirstOrDefaultAsync(u => u.Id == Id);
@@ -113,9 +114,23 @@ public class EditUserProfileController : ControllerBase
             return NotFound("User not found.");
         }
 
-        user.description = description;
+        if (dto.description != null)
+        {
+            user.description = dto.description;
+        }
+
+        if (dto.Firstname != null)
+        {
+            user.FirstName = dto.Firstname;
+        }
+
+        if (dto.Lastname != null)
+        {
+            user.LastName = dto.Lastname;
+        }
+        
         await _dbContext.SaveChangesAsync();
-        return Ok("Description updated successfully.");
+        return Ok("Profile updated successfully.");
     }
     
     [HttpPut("forgot-password/{email}")]
