@@ -71,5 +71,36 @@ public class MilestoneController : ControllerBase
         
         return Ok(dtos);
     }
+
+    [HttpPut("update-milestone")]
+    public async Task<IActionResult> UpdateMilestone([FromQuery] Guid milesstoneId, [FromBody] UpdateMilestoneDTO dto)
+    {
+        var milestone = await _dbContext.MileStones
+            .FirstOrDefaultAsync(m => m.Id == milesstoneId);
+        
+        if (milestone == null)
+        {
+            return BadRequest("Milestone not found.");
+        }
+        
+        if (dto.Title != null)
+        {
+            milestone.Title = dto.Title;
+        }
+        
+        if (dto.Description != null)
+        {
+            milestone.Description = dto.Description;
+        }
+
+        if (dto.AchievementDate != null)
+        {
+            milestone.AchievementDate = dto.AchievementDate;
+        }
+        
+        await _dbContext.SaveChangesAsync();
+        
+        return Ok("Milestone updated successfully.");
+    }
     
 }

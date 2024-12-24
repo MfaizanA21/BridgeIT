@@ -21,7 +21,6 @@ public class GetStudentController : ControllerBase
         var student = await _dbContext.Students
             .Include(s => s.User)
             .Include(s => s.University)
-            //.Include(s => s.Skills)
             .FirstOrDefaultAsync(s => s.UserId == userId);
 
         if (student == null)
@@ -32,6 +31,7 @@ public class GetStudentController : ControllerBase
         var dto = new GetStudentDTO
         {
             Id = student.Id,
+            FypId = student.FypId,
             userId = student.UserId,
             universityId = student.UniversityId,
             FirstName = student.User?.FirstName ?? string.Empty,
