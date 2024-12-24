@@ -269,4 +269,63 @@ public class ProjectsController : ControllerBase
 
         return Ok(projectDto);
     }
+
+    [HttpGet("get-unassigned-expert-projects")]
+    public async Task<IActionResult> GetUnassignedExpertProjects([FromQuery] Guid expertId)
+    {
+        var projects = await _dbContext.Projects
+            .Include(i => i.IndExpert)
+            .ThenInclude(u => u!.User)
+            .Where(p => p.StudentId == null && p.IndExpertId == expertId)
+            .ToListAsync();
+
+        if (projects == null)
+        {
+            return BadRequest("No Projects Found");
+        }
+
+        var list = projects.Select(project => new IndExptProjectTileDTO
+        {
+            Id = project.Id,
+            Title = project?.Title ?? string.Empty,
+            Description = project?.Description ?? string.Empty,
+            IndExpertId = project?.IndExpertId,
+            EndDate = project?.EndDate.ToString(),
+            CurrentStatus = project?.CurrentStatus ?? string.Empty,
+            Budget = project?.Budget ?? 0,
+            Name = project?.IndExpert?.User?.FirstName + " " + project?.IndExpert?.User?.LastName,
+        }).ToList();
+
+        return Ok(list);
+    }
+    
+    [HttpGet("get-assigned-expert-projects")]
+    public async Task<IActionResult> GetAssignedExpertProjects([FromQuery] Guid expertId)
+    {
+        var projects = await _dbContext.Projects
+            .Include(i => i.IndExpert)
+            .ThenInclude(u => u!.User)
+            .Where(p => p.StudentId != null && p.IndExpertId == expertId)
+            .ToListAsync();
+
+        if (projects == null)
+        {
+            return BadRequest("No Projects Found");
+        }
+
+        var list = projects.Select(project => new IndExptProjectTileDTO
+        {
+            Id = project.Id,
+            Title = project?.Title ?? string.Empty,
+            Description = project?.Description ?? string.Empty,
+            IndExpertId = project?.IndExpertId,
+            EndDate = project?.EndDate.ToString(),
+            CurrentStatus = project?.CurrentStatus ?? string.Empty,
+            Budget = project?.Budget ?? 0,
+            Name = project?.IndExpert?.User?.FirstName + " " + project?.IndExpert?.User?.LastName,
+            StudentId = project!.StudentId
+        }).ToList();
+
+        return Ok(list);
+    }
 }
