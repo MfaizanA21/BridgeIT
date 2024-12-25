@@ -457,7 +457,7 @@ public partial class BridgeItContext : DbContext
             entity.Property(e => e.IndExpertId).HasColumnName("ind_expert_id");
             entity.Property(e => e.Stack)
                 .HasMaxLength(255)
-                .HasColumnName("stack");
+                .HasColumnName("stack");//
             entity.Property(e => e.Link).HasColumnName("link").HasMaxLength(255);
             entity.Property(e => e.Budget).HasColumnName("budget");
             entity.Property(e => e.StartDate).HasColumnName("start_date");
