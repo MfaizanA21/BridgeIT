@@ -22,6 +22,8 @@ public partial class Project
     public DateOnly? EndDate { get; set; }
 
     public int? Budget { get; set; }
+    
+    public string? Link { get; set; }
 
     public Guid? StudentId { get; set; }
 

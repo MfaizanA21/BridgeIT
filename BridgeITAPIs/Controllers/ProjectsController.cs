@@ -41,6 +41,7 @@ public class ProjectsController : ControllerBase
             StartDate = DateOnly.Parse(dto.StartDate),
             EndDate = DateOnly.Parse(dto.EndDate),
             StudentId = dto.StudentId,
+            Link = dto.Link,
         };
 
         await _dbContext.Projects.AddAsync(project);
@@ -59,7 +60,7 @@ public class ProjectsController : ControllerBase
             .Where(p => p.StudentId != null)
             .ToListAsync();
 
-        if (projects == null)
+        if (!projects.Any())
         {
             return BadRequest("No projects found");
         }
@@ -72,7 +73,8 @@ public class ProjectsController : ControllerBase
             Stack = project?.Stack ?? string.Empty,
             Status = project?.CurrentStatus ?? string.Empty,
             StudentId = project?.StudentId,
-            studentName = project?.Student?.User?.FirstName + " " + project?.Student?.User?.LastName ?? string.Empty,
+            studentName = project?.Student?.User?.FirstName + " " + project?.Student?.User?.LastName,
+            Link = project?.Link ?? string.Empty
         }).ToList();
 
         return Ok(projectDto);
@@ -184,7 +186,7 @@ public class ProjectsController : ControllerBase
             .Where(p => p.StudentId == id && p.IndExpertId == null)
             .ToListAsync();
 
-        if (projects == null)
+        if (!projects.Any())
         {
             return BadRequest("No projects found");
         }
@@ -197,7 +199,8 @@ public class ProjectsController : ControllerBase
             Stack = project?.Stack ?? string.Empty,
             Status = project?.CurrentStatus ?? string.Empty,
             StudentId = project?.StudentId,
-            studentName = project?.Student?.User?.FirstName + " " + project?.Student?.User?.LastName ?? string.Empty,
+            studentName = project?.Student?.User?.FirstName + " " + project?.Student?.User?.LastName,
+            Link = project?.Link ?? string.Empty
         }).ToList();
 
         return Ok(projectDto);

@@ -9,5 +9,6 @@ public class StudentProjectTileDTO
     public string Status { get; set; } = string.Empty;
     public Guid? StudentId { get; set; }
     public string studentName { get; set; } = string.Empty;
+    public string Link {get; set; } = string.Empty;
 
 }
