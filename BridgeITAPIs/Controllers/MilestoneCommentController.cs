@@ -1,3 +1,4 @@
+using BridgeITAPIs.DTOs.MilestoneCommentDTOs;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -42,5 +43,31 @@ public class MilestoneCommentController : Controller
         await _dbContext.SaveChangesAsync();
 
         return Ok("Comment Added Successfully.");
+    }
+
+    [HttpGet("get-milestone-comments/")]
+    public async Task<IActionResult> GetMilestoneComments([FromQuery] Guid milestoneId)
+    {
+        var comments = await _dbContext.MilestoneComments
+            .Include(c => c.Commenter)
+            .ThenInclude(c => c.User)
+            .Where(m => m.Milestone_id == milestoneId).ToListAsync();
+
+        if (!comments.Any())
+        {
+            return Ok("No comments found.");
+        }
+
+        var coms = comments.Select(comment => new GetCommentDTO
+        {
+            Id = comment.Id,
+            Comment = comment.Comment,
+            CommentDate = comment.CommentDate,
+            CommenterName = comment.Commenter.User!.FirstName + " " + comment.Commenter.User!.LastName,
+            Commenter_id = comment.Commenter_id,
+            Milestone_id = comment.Milestone_id
+        }).ToList();
+
+        return Ok(coms);
     }
 }
