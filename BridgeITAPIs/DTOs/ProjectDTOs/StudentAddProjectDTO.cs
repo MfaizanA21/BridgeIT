@@ -8,7 +8,7 @@ public class StudentAddProjectDTO
     public string Stack { get; set; } = string.Empty;
     public string CurrentStatus { get; set; } = string.Empty;
     public string StartDate { get; set; } = string.Empty;
-    public string EndDate { get; set; } = string.Empty;
+    public string EndDate { get; set; } = string.Empty;//
     public string Link { get; set; } = string.Empty;
     public Guid? StudentId { get; set; }
     //public Guid? IndExpertId { get; set; }

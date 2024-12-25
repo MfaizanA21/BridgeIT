@@ -175,7 +175,7 @@ public class ProjectsController : ControllerBase
 
         return Ok(projectDto);
     }
-
+//
     [HttpGet("get-student-projects-by-id/{id}")]
     public async Task<IActionResult> GetStudentProjectsById(Guid id)
     {

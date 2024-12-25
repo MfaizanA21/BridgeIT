@@ -19,7 +19,7 @@ public partial class Project
 
     public string? CurrentStatus { get; set; }
 
-    public DateOnly? EndDate { get; set; }
+    public DateOnly? EndDate { get; set; }//
 
     public int? Budget { get; set; }
     
