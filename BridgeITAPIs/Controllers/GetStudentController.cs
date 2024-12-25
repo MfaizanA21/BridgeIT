@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using BridgeITAPIs.DTOs.StudentDTOs;
 using Microsoft.EntityFrameworkCore;
 
@@ -86,7 +85,6 @@ public class GetStudentController : ControllerBase
 
         return Ok(dto);
     }
-
     
     [HttpGet("students")]
     public async Task<IActionResult> GetStudents()
