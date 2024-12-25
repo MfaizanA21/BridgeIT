@@ -40,6 +40,8 @@ public partial class BridgeItContext : DbContext
     public virtual DbSet<IndustryExpert> IndustryExperts { get; set; }
 
     public virtual DbSet<MileStone> MileStones { get; set; }
+    
+    public virtual DbSet<MilestoneComment> MilestoneComments { get; set; }
 
     public virtual DbSet<Otp> Otps { get; set; }
 
@@ -407,6 +409,33 @@ public partial class BridgeItContext : DbContext
             entity.HasOne(d => d.Project).WithMany(p => p.MileStones)
                 .HasForeignKey(d => d.ProjectId)
                 .HasConstraintName("FK__MileStone__proje__208CD6FA");
+        });
+
+        modelBuilder.Entity<MilestoneComment>(entity =>
+        {
+            entity.HasKey((e => e.Id)).HasName("PK__Mileston__3213E83F7B39521F");
+
+            entity.ToTable("MilestoneComment");
+            
+            entity.Property(e => e.Id)
+                .ValueGeneratedNever()
+                .HasColumnName("id");
+            entity.Property(e => e.Comment)
+                .HasColumnName("comment")
+                .HasColumnType("NVARCHAR(MAX)");
+            entity.Property(e => e.CommentDate)
+                .HasColumnType("datetime")
+                .HasColumnName("comment_date");
+
+            entity.Property(e => e.Commenter_id).HasColumnName("commenter_id");
+            entity.Property(e => e.Milestone_id).HasColumnName("milestone_id");
+
+            entity.HasOne(o => o.MileStone).WithMany(m => m.MilestoneComments)
+                .HasForeignKey(o => o.Milestone_id)
+                .HasConstraintName("FK__Milestone__miles_2F9A1060");
+            entity.HasOne(i => i.Commenter).WithMany(i => i.MilestoneComments)
+                .HasForeignKey(i => i.Commenter_id)
+                .HasConstraintName("FK__Milestone__comme__2EA5EC27");
         });
 
         modelBuilder.Entity<Project>(entity =>

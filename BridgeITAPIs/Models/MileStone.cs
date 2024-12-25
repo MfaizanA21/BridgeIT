@@ -16,4 +16,6 @@ public partial class MileStone
     public Guid? ProjectId { get; set; }
 
     public virtual Project? Project { get; set; }
+    
+    public ICollection<MilestoneComment> MilestoneComments { get; set; } = new List<MilestoneComment>();
 }

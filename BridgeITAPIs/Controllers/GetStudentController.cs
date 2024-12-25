@@ -51,6 +51,43 @@ public class GetStudentController : ControllerBase
         return Ok(dto);
     }
 
+    [HttpGet("student-by-student-id/{Id}")]
+    public async Task<IActionResult> GetStudentByStdId(Guid Id)
+    {
+        var student = await _dbContext.Students
+            .Include(s => s.User)
+            .Include(s => s.University)
+            .FirstOrDefaultAsync(s => s.Id == Id);
+
+        if (student == null)
+        {
+            return NotFound("Student not found.");
+        }
+
+        var dto = new GetStudentDTO
+        {
+            Id = student.Id,
+            FypId = student.FypId,
+            userId = student.UserId,
+            universityId = student.UniversityId,
+            FirstName = student.User?.FirstName ?? string.Empty,
+            LastName = student.User?.LastName ?? string.Empty,
+            Email = student.User?.Email ?? string.Empty,
+            Skills = student.skills != null ? student.skills.Split(',').ToList() : new List<string>(),
+            Description = student.User?.description ?? string.Empty,
+            Department = student.department ?? string.Empty,
+            //Skills = student.Skills.Select(s => s.Skill1).ToList(),
+            ImageData = student.User?.ImageData ?? Array.Empty<byte>(),
+            UniversityName = student.University?.Name ?? string.Empty,
+            Address = student.University?.Address ?? string.Empty,
+            UniImage = student.University?.uniImage ?? Array.Empty<byte>(),
+            RollNumber = student?.RollNumber.ToString() ?? string.Empty
+        };
+
+        return Ok(dto);
+    }
+
+    
     [HttpGet("students")]
     public async Task<IActionResult> GetStudents()
     {
