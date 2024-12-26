@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using BridgeITAPIs.DTOs.IdeaDTOs;
+using Microsoft.EntityFrameworkCore;
 
 namespace BridgeITAPIs.Controllers;
 
@@ -30,5 +31,38 @@ public class IdeaController : Controller
         await _dbContext.SaveChangesAsync();
         
         return Ok("Idea added successfully.");
+    }
+
+    [HttpPost("get-ideas-by-uni/{uniId}")]
+    public async Task<IActionResult> GetIdeaByUni(Guid uniId)
+    {
+        var ideas = await _dbContext.Ideas
+            .Include(f => f.Faculty)
+            .ThenInclude(u => u.Uni)
+            .Include(f => f.Faculty)
+            .ThenInclude(u => u.User)
+            .Where(u => u.Faculty.Uni.Id == uniId)
+            .ToListAsync();
+
+        if (!ideas.Any())
+        {
+            return BadRequest("No ideas found.");
+        }
+
+        var dto = ideas.Select(idea => new GetIdeasDto
+        {
+            Id = idea.Id,
+            Title = idea.Name,
+            Technology = idea.Technology,
+            Description = idea.Description,
+            FacultyId = idea.FacultyId,
+            FacultyName = idea.Faculty.User.FirstName + " " + idea.Faculty.User.LastName,
+            Email = idea.Faculty.User.Email,
+            UniId = idea.Faculty.Uni.Id,
+            UserId = idea.Faculty.UserId,
+            UniName = idea.Faculty.Uni.Name
+        }).ToList();
+        
+        return Ok(dto); 
     }
 }
