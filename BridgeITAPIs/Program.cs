@@ -66,6 +66,11 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 //Email Service
 builder.Services.AddScoped<MailService>();
 
+//Stripe Service Configuration
+var stripeSecretKey = builder.Configuration["Stripe:SecretKey"];
+StripeHelper.ConfigureStripe(stripeSecretKey!);
+builder.Services.AddScoped<PaymentService>();
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
