@@ -80,5 +80,31 @@ public class FypController : Controller
         
         return Ok(dto);
     }
+
+    [HttpPost("request-to-add-fyp/{fypId}")]
+    public async Task<IActionResult> RequestToAddFyp(Guid fypId)
+    {
+        var fyp = await _dbContext.Students
+            .Include(f => f.Fyp)
+            .FirstOrDefaultAsync(f => f.FypId == fypId);
+        
+        if (fyp == null)
+        {
+            return NotFound("FYP not found.");
+        }
+
+        var request = new RequestForFyp
+        {
+            Id = Guid.NewGuid(),
+            StudentId = fyp.Id,
+            FypId = fypId,
+            Status = null
+        };
+
+        await _dbContext.RequestForFyps.AddAsync(request);
+        await _dbContext.SaveChangesAsync();
+        
+        return Ok("Request Sent!");
+    }
     
 }

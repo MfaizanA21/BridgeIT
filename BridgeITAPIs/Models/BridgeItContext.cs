@@ -52,6 +52,8 @@ public partial class BridgeItContext : DbContext
     public virtual DbSet<ProjectImage> ProjectImages { get; set; }
 
     public virtual DbSet<ResearchWork> ResearchWorks { get; set; }
+    
+    public virtual DbSet<RequestForFyp> RequestForFyps { get; set; }
 
     public virtual DbSet<Review> Reviews { get; set; }
 
@@ -566,6 +568,8 @@ public partial class BridgeItContext : DbContext
             entity.Property(e => e.Id)
                 .ValueGeneratedNever()
                 .HasColumnName("id");
+            entity.Property(s => s.StudentId).HasColumnName("student_id");
+            entity.Property(f => f.FypId).HasColumnName("fyp_id");
 
             entity.Property(e => e.Status)
                 .HasColumnName("status")
