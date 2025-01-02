@@ -22,6 +22,8 @@ public class FacultiesController : ControllerBase
         var faculty = await _dbContext.Faculties
             .Include(f => f.User)
             .Include(f => f.Uni)
+            .Include(f => f.Events)
+            .Include(f => f.ResearchWorks)
             .FirstOrDefaultAsync(f => f.UserId == userId);
 
         if (faculty == null)

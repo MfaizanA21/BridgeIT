@@ -14,6 +14,60 @@ public class MailService
         _configuration = configuration;
     }
 
+    public async Task ProjectProposalStatusMail(string to_mail, string projectName, string status)
+    {
+        var email = new MimeMessage();
+        email.From.Add(new MailboxAddress("BridgeIT", _configuration["SmtpSettings:SenderEmail"]));
+        email.To.Add(MailboxAddress.Parse(to_mail));
+        email.Subject = "BridgeIT Proposal Submission";
+        
+        var bodyBuilder = new BodyBuilder
+        {
+            HtmlBody = $@"
+                <div style='font-family: Arial, sans-serif; padding: 20px; color: #333;'>
+                    <h2 style='color: #0066cc;'>BridgeIT: FYP Approval</h2>
+                    <p>Hello,</p>
+                    <p>Your Proposal for <strong>{projectName}</strong> project has been <strong>{status}</strong>.</p>
+                    <p>Don't stop just now, Keep grinding </p>
+                    <br></br>
+                    <p>Regards,<br/>BridgeIT Team</p>
+                </div>"
+        };
+        email.Body = bodyBuilder.ToMessageBody();
+        using var smtp = new SmtpClient();
+        await smtp.ConnectAsync(_configuration["SmtpSettings:Server"], int.Parse(_configuration["SmtpSettings:Port"]), MailKit.Security.SecureSocketOptions.StartTls);
+        await smtp.AuthenticateAsync(_configuration["SmtpSettings:Username"], _configuration["SmtpSettings:Password"]);
+        await smtp.SendAsync(email);
+        await smtp.DisconnectAsync(true);
+    }
+    
+    public async Task SendProjectProposalMail(string to_mail, string projectName)
+    {
+        var email = new MimeMessage();
+        email.From.Add(new MailboxAddress("BridgeIT", _configuration["SmtpSettings:SenderEmail"]));
+        email.To.Add(MailboxAddress.Parse(to_mail));
+        email.Subject = "BridgeIT Proposal Submission";
+        
+        var bodyBuilder = new BodyBuilder
+        {
+            HtmlBody = $@"
+                <div style='font-family: Arial, sans-serif; padding: 20px; color: #333;'>
+                    <h2 style='color: #0066cc;'>BridgeIT: FYP Approval</h2>
+                    <p>Hello,</p>
+                    <p>Your Proposal for <strong>{projectName}</strong> project has been sent.</p>
+                    <p>Good luck in getting the project. </p>
+                    <br></br>
+                    <p>Regards,<br/>BridgeIT Team</p>
+                </div>"
+        };
+        email.Body = bodyBuilder.ToMessageBody();
+        using var smtp = new SmtpClient();
+        await smtp.ConnectAsync(_configuration["SmtpSettings:Server"], int.Parse(_configuration["SmtpSettings:Port"]), MailKit.Security.SecureSocketOptions.StartTls);
+        await smtp.AuthenticateAsync(_configuration["SmtpSettings:Username"], _configuration["SmtpSettings:Password"]);
+        await smtp.SendAsync(email);
+        await smtp.DisconnectAsync(true);
+    }
+    
     public async Task SendFypMail(string to_mail, string fypName, string result)
     {
         var email = new MimeMessage();

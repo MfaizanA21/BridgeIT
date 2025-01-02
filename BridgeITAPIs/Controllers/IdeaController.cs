@@ -33,7 +33,7 @@ public class IdeaController : Controller
         return Ok("Idea added successfully.");
     }
 
-    [HttpPost("get-ideas-by-uni/{uniId}")]
+    [HttpGet("get-ideas-by-uni/{uniId}")]
     public async Task<IActionResult> GetIdeaByUni(Guid uniId)
     {
         var ideas = await _dbContext.Ideas
@@ -65,4 +65,71 @@ public class IdeaController : Controller
         
         return Ok(dto); 
     }
+    
+    [HttpGet("get-ideas-by-faculty-id/{Id}")]
+    public async Task<IActionResult> GetIdeaByFacultyId(Guid Id)
+    {
+        var ideas = await _dbContext.Ideas
+            .Include(f => f.Faculty)
+            .ThenInclude(u => u.Uni)
+            .Include(f => f.Faculty)
+            .ThenInclude(u => u.User)
+            .Where(u => u.Faculty.Id == Id)
+            .ToListAsync();
+
+        if (!ideas.Any())
+        {
+            return BadRequest("No ideas found.");
+        }
+
+        var dto = ideas.Select(idea => new GetIdeasDto
+        {
+            Id = idea.Id,
+            Title = idea.Name,
+            Technology = idea.Technology,
+            Description = idea.Description,
+            FacultyId = idea.FacultyId,
+            FacultyName = idea.Faculty.User.FirstName + " " + idea.Faculty.User.LastName,
+            Email = idea.Faculty.User.Email,
+            UniId = idea.Faculty.Uni.Id,
+            UserId = idea.Faculty.UserId,
+            UniName = idea.Faculty.Uni.Name
+        }).ToList();
+        
+        return Ok(dto); 
+    }
+
+    [HttpGet("get-idea-by-id/{Id}")]
+    public async Task<IActionResult> GetIdeaById(Guid Id)
+    {
+        var ideas = await _dbContext.Ideas
+            .Include(f => f.Faculty)
+            .ThenInclude(u => u.Uni)
+            .Include(f => f.Faculty)
+            .ThenInclude(u => u.User)
+            .Where(u => u.Id == Id)
+            .ToListAsync();
+
+        if (!ideas.Any())
+        {
+            return BadRequest("No ideas found.");
+        }
+
+        var dto = ideas.Select(idea => new GetIdeasDto
+        {
+            Id = idea.Id,
+            Title = idea.Name,
+            Technology = idea.Technology,
+            Description = idea.Description,
+            FacultyId = idea.FacultyId,
+            FacultyName = idea.Faculty.User.FirstName + " " + idea.Faculty.User.LastName,
+            Email = idea.Faculty.User.Email,
+            UniId = idea.Faculty.Uni.Id,
+            UserId = idea.Faculty.UserId,
+            UniName = idea.Faculty.Uni.Name
+        }).ToList();
+        
+        return Ok(dto); 
+    }
+
 }
