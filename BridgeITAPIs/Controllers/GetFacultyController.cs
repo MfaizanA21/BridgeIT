@@ -83,7 +83,6 @@ public class GetFacultyController : ControllerBase
         return Ok(dtoList);
     }
 
-
     [HttpGet("faculty-by-university/{uniName}")]
     public async Task<IActionResult> GetFacultiesByUni(string uniName)
     {
@@ -159,5 +158,38 @@ public class GetFacultyController : ControllerBase
 
     }
 
+    [HttpGet("faculty-by-faculity-id/{Id}")]
+    public async Task<IActionResult> GetFacultyByFacultyId(Guid Id)
+    {
+        var faculty = await _dbContext.Faculties
+            .Include(f => f.User)
+            .Include(f => f.Uni)
+            .FirstOrDefaultAsync(f => f.Id == Id);
+
+        if (faculty == null)
+        {
+            return NotFound("Faculty not found.");
+        }
+
+        var dto = new GetFacultyDTO
+        {
+            Id = faculty.Id,
+            UserId = faculty.UserId,
+            uniId = faculty.UniId,
+            FirstName = faculty.User?.FirstName ?? string.Empty,
+            LastName = faculty.User?.LastName ?? string.Empty,
+            Email = faculty.User?.Email ?? string.Empty,
+            ImageData = faculty.User?.ImageData ?? Array.Empty<byte>(),
+            Description = faculty.User?.description ?? string.Empty,
+            Department = faculty.Department ?? string.Empty,
+            Interest = faculty.Interest != null ? new List<string> { faculty.Interest } : new List<string>(),
+            Post = faculty.Post ?? string.Empty,
+            UniversityName = faculty.Uni?.Name ?? string.Empty,
+            Address = faculty.Uni?.Address ?? string.Empty,
+            UniImage = faculty.Uni?.uniImage ?? Array.Empty<byte>()
+        };
+
+        return Ok(dto);
+    }
 
 }
