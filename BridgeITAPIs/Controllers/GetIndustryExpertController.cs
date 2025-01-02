@@ -114,4 +114,37 @@ public class GetIndustryExpertController : ControllerBase
 
         return Ok(dtoList);
     }
+    
+    [HttpGet("industry-expert-by-expert-id/{Id}")]
+    public async Task<IActionResult> GetIndustryExpertByExpertId(Guid Id)
+    {
+        var industryExpert = await _dbContext.IndustryExperts
+            .Include(f => f.User)
+            .Include(f => f.Company)
+            .FirstOrDefaultAsync(f => f.Id == Id);
+
+        if (industryExpert == null)
+        {
+            return NotFound("Industry Expert not found.");
+        }
+
+        var dtoList = new GetIndustryExpertDTO
+        {
+            UserId = industryExpert.UserId,
+            IndExptId = industryExpert.Id,
+            CompanyId = industryExpert.CompanyId,
+            FirstName = industryExpert.User?.FirstName ?? string.Empty,
+            LastName = industryExpert.User?.LastName ?? string.Empty,
+            Email = industryExpert.User?.Email ?? string.Empty,
+            ImageData = industryExpert.User?.ImageData ?? Array.Empty<byte>(),
+            Description = industryExpert.User?.description ?? string.Empty,
+            CompanyName = industryExpert.Company?.Name ?? string.Empty,
+            Address = industryExpert.Company?.Address ?? string.Empty,
+            //Interest = industryExpert.Interest != null ? new List<string> { industryExpert.Interest } : new List<string>()
+            Contact = industryExpert.Contact ?? string.Empty,
+        };
+
+        return Ok(dtoList);
+    }
+
 }

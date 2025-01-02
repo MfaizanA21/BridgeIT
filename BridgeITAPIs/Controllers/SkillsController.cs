@@ -80,19 +80,19 @@ public class SkillsController : ControllerBase
     [HttpGet("get-skills-by-id/{userId}")]
     public async Task<IActionResult> GetSkillsById(Guid userId)
     {
-        var student = _dbContext.Students
+        var student = await _dbContext.Students
             .FirstOrDefaultAsync(s => s.User.Id == userId);
 
-        if (student == null)
+        if (student?.skills == null)
         {
             return BadRequest("No Student Available against this id");
         }
 
         List<string> skills = new List<string>();
 
-        if (student.Result.skills != null)
+        if (student.skills != null)
         {
-            skills = student.Result.skills.Split(',').ToList();
+            skills = student.skills.Split(',').ToList();
         }
 
         return Ok(skills);

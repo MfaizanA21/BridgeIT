@@ -143,4 +143,36 @@ public class GetUniAdminsController : ControllerBase
         return Ok(adminDTO);
     }
 
+    [HttpGet("admins-by-admin-id/{id}")]
+    public async Task<IActionResult> GetUniAdminByAdminId(Guid id)
+    {
+        var admin = await _dbcontext.UniversityAdmins
+            .Include(u => u.User)
+            .Include(u => u.Uni)
+            .FirstOrDefaultAsync(u => u.Id == id);
+
+        if (admin == null)
+        {
+            return NotFound("No Record Found");
+        }
+
+        var adminDTO = new GetUniAdminDTO
+        {
+            Id = admin.Id,
+            UserId = admin.UserId,
+            UniId = admin.UniId,
+            FirstName = admin.User?.FirstName ?? string.Empty,
+            LastName = admin.User?.LastName ?? string.Empty,
+            Email = admin.User?.Email ?? string.Empty,
+            ProfileImage = admin.User?.ImageData ?? Array.Empty<byte>(),
+            Description = admin.User?.description ?? string.Empty,
+            University = admin.Uni?.Name ?? string.Empty,
+            OfficeAddress = admin.OfficeAddress ?? string.Empty,
+            Contact = admin.Contact ?? string.Empty
+        };
+
+        return Ok(adminDTO);
+    }
+
+    
 }
