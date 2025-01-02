@@ -268,6 +268,7 @@ public class ProjectsController : ControllerBase
             EndDate = project?.EndDate.ToString() ?? string.Empty,
             studentName = project?.Student?.User?.FirstName + " " + project?.Student?.User?.LastName ?? string.Empty,
             expertName = project?.IndExpert?.User?.FirstName + " " + project?.IndExpert?.User?.LastName ?? string.Empty,
+            Link = project?.Link ?? string.Empty
         };
 
         return Ok(projectDto);

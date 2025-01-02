@@ -11,15 +11,25 @@ namespace BridgeITAPIs.Controllers;
 public class ProposalsController : ControllerBase
 {
     private readonly BridgeItContext _dbContext;
+    private readonly MailService _mailService;
 
-    public ProposalsController(BridgeItContext dbContext)
+    public ProposalsController(BridgeItContext dbContext, MailService mailService)
     {
         _dbContext = dbContext;
+        _mailService = mailService;
     }
 
     [HttpPost("send-proposal")]
     public async Task<IActionResult> SendProposal([FromBody] SendProposalDTO dto)
     {
+        var proj = await _dbContext.Projects.FirstOrDefaultAsync(p => p.Id == dto.projectId);
+        var student = await _dbContext.Students.Include(u => u.User).FirstOrDefaultAsync(s => s.Id == dto.studentId);
+
+        if (proj == null || student == null)
+        {
+            return BadRequest("Project not found.");
+        }
+        
         if (string.IsNullOrEmpty(dto.proposal) || dto.proposal.Length == 0)
         {
             return BadRequest("Proposal file is required.");
@@ -39,8 +49,11 @@ public class ProposalsController : ControllerBase
             };
             await _dbContext.Proposals.AddAsync(proposal);
             await _dbContext.SaveChangesAsync();
+
+            await _mailService.SendProjectProposalMail(student.User.Email, proj.Title);
             
             return Ok("Proposal sent successfully.");
+            
         } catch (FormatException)
         {
             return BadRequest("Invalid base64 string.");
@@ -64,21 +77,49 @@ public class ProposalsController : ControllerBase
         // return Ok("Proposal sent successfully.");
     }
 
+    [HttpGet("check-sent-proposal/{StudentId}/{ProjectId}")]
+    public async Task<IActionResult> CheckSentProposal(Guid StudentId, Guid ProjectId)
+    {
+        var proposal = await _dbContext.Proposals
+            .FirstOrDefaultAsync(p => p.StudentId == StudentId && p.ProjectId == ProjectId);
+
+        if (proposal == null)
+        {
+            return BadRequest("No proposal found.");
+        }
+
+        return Ok("Proposal found.");
+    }
+    
     [HttpPut("reject-proposal/{ProposalId}")]
     public async Task<IActionResult> UpdateProposalStatus(Guid ProposalId)
     {
         var proposal = await _dbContext.Proposals
             .FirstOrDefaultAsync(p => p.Id == ProposalId);
-
+        
         if (proposal == null)
         {
             return BadRequest("Proposal not found.");
         }
+        
+        var student = await _dbContext.Students
+            .Include(u => u.User)
+            .FirstOrDefaultAsync(s => s.Id == proposal.StudentId);
 
+        var project = await _dbContext.Projects
+            .FirstOrDefaultAsync(p => p.Id == proposal.ProjectId);
+
+        if (student == null || project == null)
+        {
+            return BadRequest("Student or Project not found.");
+        }
+        
         proposal.Status = "Rejected";
 
         _dbContext.Proposals.Update(proposal);
         await _dbContext.SaveChangesAsync();
+
+        await _mailService.ProjectProposalStatusMail(student.User.Email, project.Title, proposal.Status);
 
         return Ok("Proposal status Set To Rejected successfully.");
     }
