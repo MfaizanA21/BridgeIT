@@ -25,7 +25,7 @@ public class MailService
         {
             HtmlBody = $@"
                 <div style='font-family: Arial, sans-serif; padding: 20px; color: #333;'>
-                    <h2 style='color: #0066cc;'>BridgeIT: FYP Approval</h2>
+                    <h2 style='color: #0066cc;'>BridgeIT: Proposal Status</h2>
                     <p>Hello,</p>
                     <p>Your Proposal for <strong>{projectName}</strong> project has been <strong>{status}</strong>.</p>
                     <p>Don't stop just now, Keep grinding </p>
@@ -52,7 +52,7 @@ public class MailService
         {
             HtmlBody = $@"
                 <div style='font-family: Arial, sans-serif; padding: 20px; color: #333;'>
-                    <h2 style='color: #0066cc;'>BridgeIT: FYP Approval</h2>
+                    <h2 style='color: #0066cc;'>BridgeIT: Project Proposal</h2>
                     <p>Hello,</p>
                     <p>Your Proposal for <strong>{projectName}</strong> project has been sent.</p>
                     <p>Good luck in getting the project. </p>
