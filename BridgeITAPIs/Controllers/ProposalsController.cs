@@ -141,7 +141,20 @@ public class ProposalsController : ControllerBase
 
         _dbContext.Proposals.Update(proposal);
         await _dbContext.SaveChangesAsync();
+        var student = await _dbContext.Students
+            .Include(u => u.User)
+            .FirstOrDefaultAsync(s => s.Id == proposal.StudentId);
 
+        var project = await _dbContext.Projects
+            .FirstOrDefaultAsync(p => p.Id == proposal.ProjectId);
+
+        if (project == null || student == null)
+        {
+            return BadRequest("No student to send mail to or project not found.");
+        }
+
+        await _mailService.ProjectProposalStatusMail(student.User.Email, project.Title, proposal.Status);
+        
         return Ok("Proposal status Set To Accepted successfully.");
     }
 
