@@ -34,7 +34,6 @@ public partial class Student
 
     public virtual ICollection<ProjectProposal> Proposals { get; set; } = new List<ProjectProposal>();
     
+    public virtual ICollection<InterestedForIdea> InterestedForIdeas { get; set; } = new List<InterestedForIdea>();
     
-
-    //public virtual ICollection<Skill> Skills { get; set; } = new List<Skill>();
 }

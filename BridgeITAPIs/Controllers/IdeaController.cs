@@ -9,8 +9,8 @@ namespace BridgeITAPIs.Controllers;
 public class IdeaController : Controller
 {
     private readonly BridgeItContext _dbContext;
-
-    public IdeaController(BridgeItContext dbContext)
+    
+    public IdeaController(BridgeItContext dbContext, MailService mailService)
     {
         _dbContext = dbContext;
     }
@@ -74,7 +74,7 @@ public class IdeaController : Controller
             .ThenInclude(u => u.Uni)
             .Include(f => f.Faculty)
             .ThenInclude(u => u.User)
-            .Where(u => u.Faculty.Id == Id)
+            .Where(u => u.Faculty.Id == Id || u.Faculty.UserId == Id)
             .ToListAsync();
 
         if (!ideas.Any())

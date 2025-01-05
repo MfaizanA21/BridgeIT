@@ -39,6 +39,8 @@ public partial class BridgeItContext : DbContext
 
     public virtual DbSet<IndustryExpert> IndustryExperts { get; set; }
     
+    public virtual DbSet<InterestedForIdea> InterestedForIdeas { get; set; }
+    
     public virtual DbSet<Message> Messages { get; set; }
 
     public virtual DbSet<MileStone> MileStones { get; set; }
@@ -372,6 +374,30 @@ public partial class BridgeItContext : DbContext
             entity.HasOne(d => d.User).WithMany(p => p.IndustryExperts)
                 .HasForeignKey(d => d.UserId)
                 .HasConstraintName("FK__IndustryE__user___17036CC0");
+        });
+
+        modelBuilder.Entity<InterestedForIdea>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__Interest__3213E83FF623C2C6");
+
+            entity.ToTable("InterestedForIdea");
+
+            entity.Property(e => e.Id).ValueGeneratedNever().HasColumnName("id");
+            entity.Property(e => e.Status).HasColumnName("status");
+            entity.Property(e => e.StudentId).HasColumnName("student_id");
+            entity.Property(e => e.IdeaId).HasColumnName("idea_id");
+
+            entity.HasOne(e => e.Student)
+                .WithMany(student => student.InterestedForIdeas)
+                .HasForeignKey(e => e.StudentId)
+                .HasConstraintName("FK__InterestedForIdea_Student");
+                // .OnDelete(DeleteBehavior.Cascade); // Optionally enable cascading delete
+
+                entity.HasOne(e => e.Idea)
+                    .WithMany(idea => idea.InterestedForIdeas)
+                    .HasForeignKey(e => e.IdeaId)
+                    .HasConstraintName("FK__InterestedForIdea_Idea");
+                // .OnDelete(DeleteBehavior.Cascade); // Optionally e
         });
 
         modelBuilder.Entity<Otp>(entity =>

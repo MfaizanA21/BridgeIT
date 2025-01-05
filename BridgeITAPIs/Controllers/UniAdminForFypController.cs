@@ -77,7 +77,7 @@ public class UniAdminForFypController : Controller
         return Ok("FYP approved successfully.");
     }
     
-    //TO-DO Get Fyps requests for uniAdmin for their university only
+    //TO-DO Get Fyps requests for uniAdmin for their university only DONE
     [HttpGet("get-fyps-for-uniAdmin-for-approval")]
     public async Task<IActionResult> GetFypsForUniAdminApproval([FromQuery] Guid uniId)
     {
@@ -88,7 +88,7 @@ public class UniAdminForFypController : Controller
             .Where(s => (s.UniversityId == uniId && s.FypId != null) && s.Fyp.Status == "Pending")
             .ToListAsync();
 
-        if (students == null || !students.Any())
+        if (!students.Any())
         {
             return BadRequest("No FYPs found.");
         }
