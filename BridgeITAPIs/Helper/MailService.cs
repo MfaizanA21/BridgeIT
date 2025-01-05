@@ -14,6 +14,33 @@ public class MailService
         _configuration = configuration;
     }
 
+    public async Task SendStudentInterestedForIdeaMailToFaculty(string to_mail, string ideaName, string stdName)
+    {
+        var email = new MimeMessage();
+        email.From.Add(new MailboxAddress("BridgeIT", _configuration["SmtpSettings:SenderEmail"]));
+        email.To.Add(MailboxAddress.Parse(to_mail));
+        email.Subject = "BridgeIT Student Interested in Idea";
+        
+        var bodyBuilder = new BodyBuilder
+        {
+            HtmlBody = $@"
+                <div style='font-family: Arial, sans-serif; padding: 20px; color: #333;'>
+                    <h2 style='color: #0066cc;'>BridgeIT: Student Interested in Idea</h2>
+                    <p>Hello,</p>
+                    <p>Your Idea <strong>{ideaName}</strong> is in interest of <strong>{stdName}</strong>.</p>
+                    <p>Check your Notification tab from BridgeIT to schedule a meeting. </p>
+                    <br></br>
+                    <p>Regards,<br/>BridgeIT Team</p>
+                </div>"
+        };
+        email.Body = bodyBuilder.ToMessageBody();
+        using var smtp = new SmtpClient();
+        await smtp.ConnectAsync(_configuration["SmtpSettings:Server"], int.Parse(_configuration["SmtpSettings:Port"]), MailKit.Security.SecureSocketOptions.StartTls);
+        await smtp.AuthenticateAsync(_configuration["SmtpSettings:Username"], _configuration["SmtpSettings:Password"]);
+        await smtp.SendAsync(email);
+        await smtp.DisconnectAsync(true);
+    }
+
     public async Task ProjectProposalStatusMail(string to_mail, string projectName, string status)
     {
         var email = new MimeMessage();

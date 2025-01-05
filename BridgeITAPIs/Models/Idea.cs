@@ -16,4 +16,6 @@ public partial class Idea
     public Guid? FacultyId { get; set; }
 
     public virtual Faculty? Faculty { get; set; }
+
+    public virtual ICollection<InterestedForIdea> InterestedForIdeas { get; set; } = new List<InterestedForIdea>();
 }
