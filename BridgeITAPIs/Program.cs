@@ -10,6 +10,7 @@ using System.Text;
 using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 using AspNetCoreRateLimit;
+using BridgeITAPIs.SignalRHub;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -41,6 +42,10 @@ builder.Services.AddSingleton(resolver => resolver.GetRequiredService<IOptions<J
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<UserService>();
+
+// SignalR Chatting
+builder.Services.AddSignalR();
+builder.Services.AddScoped<ChatService>();
 
 // EF Core configuration with SQL Server
 builder.Services.AddDbContext<BridgeItContext>( options => 
@@ -120,5 +125,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.MapHub<ChatHub>("/chathub");
 
 app.Run();
