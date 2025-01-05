@@ -38,6 +38,8 @@ public partial class BridgeItContext : DbContext
     public virtual DbSet<Idea> Ideas { get; set; }
 
     public virtual DbSet<IndustryExpert> IndustryExperts { get; set; }
+    
+    public virtual DbSet<Message> Messages { get; set; }
 
     public virtual DbSet<MileStone> MileStones { get; set; }
     
@@ -388,6 +390,18 @@ public partial class BridgeItContext : DbContext
             entity.Property(e => e.created_at)
                 .HasMaxLength(255)
                 .HasColumnName("created_at");
+        });
+
+        modelBuilder.Entity<Message>(entity =>
+        {
+            entity.HasKey(m => m.Id).HasName("PK__Message__3213E83F25D4FD14");
+
+            entity.ToTable("Message");
+
+            entity.Property(e => e.SenderId).HasColumnName("sender_id").HasColumnType("uniqueidentifier");
+            entity.Property(e => e.RecipientId).HasColumnName("recipient_id").HasColumnType("uniqueidentifier");
+            entity.Property(e => e.Content).HasColumnName("content").HasColumnType("NVARCHAR(MAX)");
+            entity.Property(e => e.TimeSent).HasColumnName("time_stamp");
         });
 
         modelBuilder.Entity<MileStone>(entity =>
