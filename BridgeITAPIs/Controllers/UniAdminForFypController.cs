@@ -74,7 +74,7 @@ public class UniAdminForFypController : Controller
         
         await _mailService.SendFypMail(student.User.Email, fyp.Title, "Rejected");
         
-        return Ok("FYP approved successfully.");
+        return Ok("FYP Rejected successfully.");
     }
     
     //TO-DO Get Fyps requests for uniAdmin for their university only DONE
