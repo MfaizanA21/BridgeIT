@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using BridgeITAPIs.DTOs.ProjectProposalDTOs;
 using BridgeITAPIs.Models;
+using BridgeITAPIs.services.Interface;
 
 namespace BridgeITAPIs.Controllers;
 
@@ -12,11 +13,15 @@ public class ProposalsController : ControllerBase
 {
     private readonly BridgeItContext _dbContext;
     private readonly MailService _mailService;
+    private readonly IChargingService _chargingServ;
+    private readonly ILogger<ProposalsController> _logger;
 
-    public ProposalsController(BridgeItContext dbContext, MailService mailService)
+    public ProposalsController(BridgeItContext dbContext, MailService mailService, IChargingService chargingServ, ILogger<ProposalsController> logger)
     {
         _dbContext = dbContext;
         _mailService = mailService;
+        _chargingServ = chargingServ;
+        _logger = logger;
     }
 
     [HttpPost("send-proposal")]
@@ -129,6 +134,7 @@ public class ProposalsController : ControllerBase
     {
         var proposal = await _dbContext.Proposals
             .Include(p => p.Project)
+            .Include(p => p.Student)
             .FirstOrDefaultAsync(p => p.Id == ProposalId);
 
         if (proposal == null)
@@ -138,6 +144,23 @@ public class ProposalsController : ControllerBase
 
         proposal.Status = "Accepted";
         proposal.Project.StudentId = proposal.StudentId;
+        var paymentClientSecret = "";
+        try
+        {
+            if (proposal.Student?.StripeConnectId == null)
+            {
+                throw new Exception("Student has no stripe connect id.");
+            }
+            var intent = await _chargingServ.CreatePaymentIntentAsync(500000, proposal.Student.StripeConnectId, proposal.ProjectId.ToString());
+            proposal.PaymentIntentId = intent.Key;
+            paymentClientSecret = intent.Value;
+        }
+        catch (Exception e)
+        {
+            _logger.LogError("failed to create charging intent for project {projectId}", proposal.ProjectId);
+            _logger.LogError(e.Message);
+            return BadRequest(new {Error = "Failed to create charging intent.", e.Message});
+        }
 
         _dbContext.Proposals.Update(proposal);
         await _dbContext.SaveChangesAsync();
@@ -155,7 +178,11 @@ public class ProposalsController : ControllerBase
 
         await _mailService.ProjectProposalStatusMail(student.User.Email, project.Title, proposal.Status);
         
-        return Ok("Proposal status Set To Accepted successfully.");
+        return Ok(new
+        {
+            Message = "Proposal status Set To Accepted successfully.",
+            PaymentClientSecret = paymentClientSecret
+        });
     }
 
     [HttpGet("get-all-proposals")]

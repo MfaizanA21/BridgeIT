@@ -2,6 +2,7 @@
 using BridgeITAPIs.DTOs.IndustryExpertDTOs;
 using BridgeITAPIs.DTOs.StudentDTOs;
 using BridgeITAPIs.DTOs.UniAdminDTOs;
+using BridgeITAPIs.services.Interface;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -13,35 +14,39 @@ namespace BridgeITAPIs.Controllers;
 public class RegisterUserController : ControllerBase
 {
     private readonly BridgeItContext _dbContext;
+    private readonly IChargingService _chargingServ;
+    private readonly ILogger<RegisterUserController> _logger;
 
-    public RegisterUserController(BridgeItContext dbContext)
+    public RegisterUserController(BridgeItContext dbContext, IChargingService chargingService, ILogger<RegisterUserController> logger)
     {
         _dbContext = dbContext;
+        _chargingServ = chargingService;
+        _logger = logger;
     }
 
     [HttpPost("student")]
-    public async Task<IActionResult> RegisterStudent([FromBody] RegisterStudentDTO registerStudentDTO)
+    public async Task<IActionResult> RegisterStudent([FromBody] RegisterStudentDTO request)
     {
-        if (registerStudentDTO == null)
+        if (request == null) // this can never be null lmao what is this
         {
             return BadRequest("Student Data is null.");
         }
 
-        var university = await _dbContext.Set<University>().FindAsync(registerStudentDTO.UniversityId);
+        var university = await _dbContext.Set<University>().FindAsync(request.UniversityId);
         if (university == null)
         {
             return BadRequest("University not found.");
         }
 
-        var (passwordHash, passwordSalt) = Helper.PasswordHelper.HashPassword(registerStudentDTO.Password);
+        var (passwordHash, passwordSalt) = Helper.PasswordHelper.HashPassword(request.Password);
 
         var user = new User
         {
             Id = Guid.NewGuid(),
-            FirstName = registerStudentDTO.FirstName,
-            LastName = registerStudentDTO.LastName,
-            Email = registerStudentDTO.Email,
-            Role = registerStudentDTO.Role,
+            FirstName = request.FirstName,
+            LastName = request.LastName,
+            Email = request.Email,
+            Role = request.Role,
             //ImageData = registerStudentDTO.ImageData,
             Hash = passwordHash,
             Salt = passwordSalt
@@ -50,14 +55,27 @@ public class RegisterUserController : ControllerBase
         _dbContext.Set<User>().Add(user);
         await _dbContext.SaveChangesAsync();
 
+        string? connectId = null;
+        try
+        {
+            connectId = await _chargingServ.CreateUserConnectAccountAsync(request.Email, request.FirstName, request.LastName);
+        }
+        catch (Exception e)
+        {
+           _logger.LogError($"Unable to create stripe connect account for user {request.Email}");
+           _logger.LogError(e.Message);
+            
+        }
+        
         var student = new Student
         {
             Id = Guid.NewGuid(),
-            RollNumber = registerStudentDTO.RollNumber,
+            RollNumber = request.RollNumber,
             UserId = user.Id,
-            UniversityId = registerStudentDTO.UniversityId,
-            department = registerStudentDTO.Department,
-            skills = string.Join(",", registerStudentDTO.Skills)
+            UniversityId = request.UniversityId,
+            department = request.Department,
+            StripeConnectId = connectId,
+            skills = string.Join(",", request.Skills)
         };
 
         await _dbContext.Set<Student>().AddAsync(student);
