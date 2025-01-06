@@ -13,6 +13,8 @@ public partial class Student
 
     public string? department { get; set; }
 
+    public string? cvLink { get; set; }
+
     public Guid? UserId { get; set; }
 
     public Guid? UniversityId { get; set; }
