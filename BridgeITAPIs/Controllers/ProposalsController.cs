@@ -354,4 +354,30 @@ public class ProposalsController : ControllerBase
 
     }
     
+    /// <summary>
+    /// This is a demo api. please edit it for your use case. When project is completed. release payment
+    /// </summary>
+    /// <param name="proposalId"></param>
+    /// <returns></returns>
+    [HttpPost("{proposalId}/complete")]
+    public async Task<IActionResult> CompleteProject(Guid proposalId)
+    {
+        var proposal = await _dbContext.Proposals
+            .Include(p => p.Project)
+            .FirstOrDefaultAsync(p => p.Id == proposalId);
+
+        if (proposal == null)
+        {
+            return BadRequest("Proposal not found.");
+        }
+
+        if (proposal.PaymentIntentId == null)
+        {
+            return BadRequest("Payment not made.");
+        }
+
+        await _chargingServ.ReleasePayment(proposal.PaymentIntentId);
+
+        return Ok("Project Completed.");
+    }
 }

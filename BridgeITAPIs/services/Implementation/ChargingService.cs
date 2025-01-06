@@ -94,4 +94,10 @@ public class ChargingService: IChargingService
        var intent = await service.CreateAsync(options);
        return new KeyValuePair<string, string>(intent.Id, intent.ClientSecret); 
     }
+
+    public async Task ReleasePayment(string paymentIntentId)
+    {
+       var paymentIntentService = new PaymentIntentService();
+       await paymentIntentService.CaptureAsync(paymentIntentId); 
+    }
 }
