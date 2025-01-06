@@ -136,5 +136,42 @@ public class StudentsController : ControllerBase
         return Ok("Student deleted successfully.");
     }
 
+    [HttpPut("add-cv/{Id}")]
+    public async Task<IActionResult> StudentAddCV(Guid Id, [FromBody] string cvLink)
+    {
+        var student = await _dbContext.Students
+            .Include(s => s.User)
+            .FirstOrDefaultAsync(s => s.Id == Id || s.UserId == Id);
+
+        if (student == null)
+        {
+            return NotFound("No Student Found witht this id");
+        }
+
+        student.cvLink = cvLink;
+
+        await _dbContext.SaveChangesAsync();
+
+        return Ok("Cv Link Stored!");
+    }
+
+    [HttpGet("get-student-cv-by_id/{id}")]
+    public async Task<IActionResult> GetStudentCvById(Guid id)
+    {
+        var student = await _dbContext.Students.FirstOrDefaultAsync(s => s.Id == id || s.UserId == id);
+        
+        if (student == null)
+        {
+            return NotFound("No Student Found with this id");
+        }
+
+        if (student.cvLink == null)
+        {
+            return NotFound("No Cv found for this id");
+        }
+
+        return Ok(student.cvLink);
+    }
+
     
 }

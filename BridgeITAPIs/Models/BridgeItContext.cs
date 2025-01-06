@@ -717,6 +717,7 @@ public partial class BridgeItContext : DbContext
             entity.Property(e => e.UniversityId).HasColumnName("university_id");
             entity.Property(e => e.UserId).HasColumnName("user_id");
             entity.Property(f => f.FypId).HasColumnName("fyp_id");
+            entity.Property(e => e.cvLink).HasColumnName("cv_link").HasColumnType("NVARHCAR(255)");
 
             entity.HasOne(d => d.University).WithMany(p => p.Students)
                 .HasForeignKey(d => d.UniversityId)
