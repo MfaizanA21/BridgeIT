@@ -151,7 +151,7 @@ public class ProposalsController : ControllerBase
             {
                 throw new Exception("Student has no stripe connect id.");
             }
-            var intent = await _chargingServ.CreatePaymentIntentAsync(500000, proposal.Student.StripeConnectId, proposal.ProjectId.ToString());
+            var intent = await _chargingServ.CreatePaymentIntentAsync(5000, proposal.Student.StripeConnectId, proposal.ProjectId.ToString());
             proposal.PaymentIntentId = intent.Key;
             paymentClientSecret = intent.Value;
         }
