@@ -5,6 +5,8 @@
         public Guid Id { get; set; }
         public Guid? StudentId { get; set; }
         public Guid? IndExpertId { get; set; }
+        public Guid? StdUserId { get; set; }
+        public Guid? IExptUserId { get; set; }
         public string Title { get; set; } = string.Empty;
         public string Description { get; set; } = string.Empty;
         public string Stack { get; set; } = string.Empty;

@@ -258,8 +258,10 @@ public class ProjectsController : ControllerBase
         var projectDto = new ProjectDTO
         {
             Id = project.Id,
-            IndExpertId = project?.IndExpertId,
-            StudentId = project?.StudentId,
+            IndExpertId = project.IndExpertId,
+            StudentId = project.StudentId,
+            StdUserId = project?.Student?.UserId,
+            IExptUserId = project?.IndExpert?.UserId,
             Title = project?.Title ?? string.Empty,
             Description = project?.Description ?? string.Empty,
             Stack = project?.Stack ?? string.Empty,
