@@ -301,7 +301,7 @@ public partial class BridgeItContext : DbContext
             entity.Property(e => e.Description)
                 .HasMaxLength(255)
                 .HasColumnName("description");
-            // entity.Property(e => e.FacultyId).HasColumnName("faculty_id");
+            entity.Property(e => e.FacultyId).HasColumnName("faculty_id");
             entity.Property(e => e.Members).HasColumnName("members");
             entity.Property(i => i.fyp_id)
                 .HasMaxLength(25)
@@ -319,9 +319,9 @@ public partial class BridgeItContext : DbContext
             //     .HasForeignKey(u => u.UniId)
             //     .HasConstraintName("FK__FYP__UNIVERSITY");
 
-            // entity.HasOne(d => d.Faculty).WithMany(p => p.Fyps)
-            //     .HasForeignKey(d => d.FacultyId)
-            //     .HasConstraintName("FK__FYP__faculty_id__245D67DE");
+            entity.HasOne(d => d.Faculty).WithMany(p => p.Fyps)
+                .HasForeignKey(d => d.FacultyId)
+                .HasConstraintName("FK__FYP__faculty_id__65F62111");
         });
 
         modelBuilder.Entity<Idea>(entity =>

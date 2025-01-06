@@ -25,6 +25,7 @@ public class FypController : Controller
         }
         
         var student = await _dbContext.Students
+            .Include(s => s.Fyp)
             .FirstOrDefaultAsync(s => s.Id == studentId);
         
         if (student == null)
@@ -32,7 +33,7 @@ public class FypController : Controller
             return NotFound("Student not founds.");
         }
         
-        if (student.FypId != null)
+        if (student.FypId != null && student.Fyp.Status != "Rejected")
         {
             return BadRequest("Student has already registered a FYP.");
         }
@@ -47,6 +48,7 @@ public class FypController : Controller
             Batch = fypDTO.Batch,
             Technology = fypDTO.Technology,
             Description = fypDTO.Description,
+            FacultyId = fypDTO.FacultyId
         };
         await _dbContext.Fyps.AddAsync(fyp);
         student.FypId = fyp.Id;
@@ -106,5 +108,16 @@ public class FypController : Controller
         
         return Ok("Request Sent!");
     }
-    
+
+    // [HttpGet("get-fyp-by-faculty-id/{facultyId")]
+    // public async Task<IActionResult> GetFypByFacultyId(Guid facultyId)
+    // {
+    //     var fyp = await _dbContext.Fyps
+    //         .Include(f => f.Faculty)
+    //         .ThenInclude(u => u.User)
+    //         .Include(s => s.Students)
+    //         .ThenInclude(s => s.User)
+    //         .Where(f => f.FacultyId != null && f.FacultyId == facultyId)
+    //         .ToListAsync();
+    // }
 }
