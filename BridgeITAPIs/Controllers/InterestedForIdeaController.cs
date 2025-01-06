@@ -50,7 +50,7 @@ public class InterestedForIdeaController : Controller
         return Ok("Request Placed Successfully.");
     }
 
-    [HttpGet("get-interested-students/{facultyId}")]
+    [HttpGet("get-interested-students-requests/{facultyId}")]
     public async Task<IActionResult> GetInterestedStudents(Guid facultyId)
     {
         var requests = await _dbContext.InterestedForIdeas
@@ -89,8 +89,8 @@ public class InterestedForIdeaController : Controller
         return Ok(groupedData);
     }
 
-    [HttpGet("get-request-details-by-id/{id}")]
-    public async Task<IActionResult> GetRequestDetailsById(Guid id)
+    [HttpGet("get-request-details-by-id/{RequestId}")]
+    public async Task<IActionResult> GetRequestDetailsById(Guid RequestId)
     {
         var requestDetails = await _dbContext.InterestedForIdeas
             .Include(r => r.Student)
@@ -98,7 +98,7 @@ public class InterestedForIdeaController : Controller
             .Include(r => r.Idea)
             .ThenInclude(r => r.Faculty)
             .ThenInclude(u => u.User)
-            .FirstOrDefaultAsync(r => r.Id == id);
+            .FirstOrDefaultAsync(r => r.Id == RequestId);
 
         if (requestDetails == null)
         {
@@ -121,5 +121,55 @@ public class InterestedForIdeaController : Controller
         };
 
         return Ok(detail);
+    }
+
+    [HttpPut("accept-request/{RequestId}")]
+    public async Task<IActionResult> AcceptRequest(Guid RequestId, [FromBody] string time)
+    {
+        var request = await _dbContext.InterestedForIdeas
+            .Include(r => r.Student)
+            .ThenInclude(r => r.User)
+            .Include(r => r.Idea)
+            .ThenInclude(r => r.Faculty)
+            .ThenInclude(u => u.User)
+            .FirstOrDefaultAsync(r => r.Id == RequestId);
+
+        if (request == null)
+        {
+            return NotFound("Request Not Found");
+        }
+        
+        request.Status = 1;
+        
+        await _dbContext.SaveChangesAsync();
+
+        await _mailService.SendInterestAcceptanceMailToStudent(request.Student.User.Email, request.Idea.Name,request.Idea.Faculty.User.Email, time);
+
+        return Ok("Request have been accepted");
+    }
+    
+    [HttpPut("reject-request/{RequestId}")]
+    public async Task<IActionResult> RejectRequest(Guid RequestId)
+    {
+        var request = await _dbContext.InterestedForIdeas
+            .Include(r => r.Student)
+            .ThenInclude(r => r.User)
+            .Include(r => r.Idea)
+            .ThenInclude(r => r.Faculty)
+            .ThenInclude(u => u.User)
+            .FirstOrDefaultAsync(r => r.Id == RequestId);
+
+        if (request == null)
+        {
+            return NotFound("Request Not Found");
+        }
+        
+        request.Status = 0;
+        
+        await _dbContext.SaveChangesAsync();
+
+        await _mailService.SendInterestRejectionMailToStudent(request.Student.User.Email, request.Idea.Name,request.Idea.Faculty.User.Email);
+
+        return Ok("Request have been accepted");
     }
 }
