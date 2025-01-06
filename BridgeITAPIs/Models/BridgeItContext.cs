@@ -540,6 +540,8 @@ public partial class BridgeItContext : DbContext
                 .HasColumnName("status");
             entity.Property(e => e.ProjectId).HasColumnName("project_id");
             entity.Property(e => e.StudentId).HasColumnName("student_id");
+            entity.Property(e => e.PaymentIntentId).HasColumnName("payment_intent_id")
+                .HasMaxLength(30);
 
             entity.HasOne(d => d.Project).WithMany(p => p.Proposals)
                 .HasForeignKey(d => d.ProjectId)
@@ -717,7 +719,10 @@ public partial class BridgeItContext : DbContext
             entity.Property(e => e.UniversityId).HasColumnName("university_id");
             entity.Property(e => e.UserId).HasColumnName("user_id");
             entity.Property(f => f.FypId).HasColumnName("fyp_id");
-            entity.Property(e => e.cvLink).HasColumnName("cv_link").HasColumnType("NVARHCAR(255)");
+            entity.Property(e => e.cvLink).HasColumnName("cv_link").HasColumnType("NVARCHAR(255)");
+            entity.Property(e => e.StripeConnectId)
+                .HasColumnName("stripe_connect_id")
+                .HasMaxLength(25);
 
             entity.HasOne(d => d.University).WithMany(p => p.Students)
                 .HasForeignKey(d => d.UniversityId)

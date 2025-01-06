@@ -7,6 +7,7 @@
         public byte[] Proposal { get; set; } = Array.Empty<byte>();
 
         public string Status { get; set; } = string.Empty;
+        public string? PaymentIntentId { get; set; } // stripe payment intent id used to withhold and charge with delay
 
         public Guid ProjectId { get; set; }
 
