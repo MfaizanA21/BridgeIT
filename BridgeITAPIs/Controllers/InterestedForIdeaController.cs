@@ -1,3 +1,4 @@
+using BridgeITAPIs.DTOs.InterestedForIdeaDTOs;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -48,6 +49,77 @@ public class InterestedForIdeaController : Controller
         
         return Ok("Request Placed Successfully.");
     }
-    
-    
+
+    [HttpGet("get-interested-students/{facultyId}")]
+    public async Task<IActionResult> GetInterestedStudents(Guid facultyId)
+    {
+        var requests = await _dbContext.InterestedForIdeas
+            .Include(r => r.Student)
+            .ThenInclude(r => r.User)
+            .Include(r => r.Idea)
+            .ThenInclude(r => r.Faculty)
+            .Where(r => r.Idea.FacultyId == facultyId || r.Status != 1)
+            .ToListAsync();
+
+        if (!requests.Any())
+        {
+            return NotFound("No requests found.");
+        }
+
+        var groupedData = requests
+            .GroupBy(r => r.IdeaId)
+            .Select(g => new
+            {
+                IdeaId = g.Key,
+                IdeaName = g.First().Idea.Name,
+                Requests = g.Select(request => new GetRequestsDTO
+                {
+                    Id = request.Id,
+                    IdeaId = request.IdeaId,
+                    StudentId = request.StudentId,
+                    FacultyId = request.Idea?.FacultyId,
+                    StdUserId = request.Student?.UserId,
+                    FacUserId = request.Idea?.Faculty?.UserId,
+                    IdeaName = request.Idea?.Name,
+                    StudentName = $"{request.Student?.User?.FirstName} {request.Student?.User?.LastName}",
+                    StudentDept = request.Student.department,
+                }).ToList()
+            }).ToList();
+
+        return Ok(groupedData);
+    }
+
+    [HttpGet("get-request-details-by-id/{id}")]
+    public async Task<IActionResult> GetRequestDetailsById(Guid id)
+    {
+        var requestDetails = await _dbContext.InterestedForIdeas
+            .Include(r => r.Student)
+            .ThenInclude(r => r.User)
+            .Include(r => r.Idea)
+            .ThenInclude(r => r.Faculty)
+            .ThenInclude(u => u.User)
+            .FirstOrDefaultAsync(r => r.Id == id);
+
+        if (requestDetails == null)
+        {
+            return BadRequest("No request Found.");
+        }
+
+        var detail = new GetRequestDetailDTO
+        {
+            Id = requestDetails.Id,
+            IdeaId = requestDetails.IdeaId,
+            StudentId = requestDetails.StudentId,
+            FacultyId = requestDetails.Idea?.FacultyId,
+            StdUserId = requestDetails.Student?.UserId,
+            FacUserId = requestDetails.Idea?.Faculty?.UserId,
+            IdeaName = requestDetails.Idea?.Name ?? string.Empty,
+            StudentName = $"{requestDetails.Student?.User?.FirstName} {requestDetails.Student?.User?.LastName}",
+            StudentDept = requestDetails.Student?.department ?? String.Empty,
+            StudentEmail = requestDetails.Student?.User?.Email ?? String.Empty,
+            StudentRollNumber = requestDetails.Student?.RollNumber ?? null
+        };
+
+        return Ok(detail);
+    }
 }

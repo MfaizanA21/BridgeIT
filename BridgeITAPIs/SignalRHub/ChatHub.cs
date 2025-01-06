@@ -4,7 +4,6 @@ namespace BridgeITAPIs.SignalRHub;
 
 public class ChatHub: Hub
 {
-    
     public override async Task OnConnectedAsync()
     {
         var userIdClaim = Context.User?.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
@@ -20,8 +19,6 @@ public class ChatHub: Hub
     {
         await base.OnDisconnectedAsync(exception);
     }
-
-
     
     public async Task SendMessage(Guid userId, string message)
     {
