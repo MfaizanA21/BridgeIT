@@ -378,6 +378,8 @@ public class ProposalsController : ControllerBase
 
         await _chargingServ.ReleasePayment(proposal.PaymentIntentId);
 
+        proposal.Project.CurrentStatus = "Completed";
+        
         return Ok("Project Completed.");
     }
 }
