@@ -112,7 +112,6 @@ public class UniAdminForFypController : Controller
         }).ToList();
 
         return Ok(dtoList);
-
     }
     
 }

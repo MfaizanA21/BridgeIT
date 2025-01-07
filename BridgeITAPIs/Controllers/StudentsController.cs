@@ -104,6 +104,8 @@ public class StudentsController : ControllerBase
             .Include(s => s.User)
             .Include(s => s.University)
             .Include(s => s.Projects)
+            .ThenInclude(p => p.MileStones)
+            .ThenInclude(m => m.MilestoneComments)
             .Include(s => s.Proposals)
             .FirstOrDefaultAsync(s => s.Id == Id);
 
@@ -112,18 +114,33 @@ public class StudentsController : ControllerBase
             return NotFound("Student not found.");
         }
         
-        if (student.Proposals != null && student.Proposals.Any())
+        if (student.Proposals.Any())
         {
             _dbContext.Proposals.RemoveRange(student.Proposals);
         }
 
-        if (student.Projects != null && student.Projects.Any())
+        if (student.Projects.Any())
         {
+            foreach (var project in student.Projects)
+            {
+                foreach (var milestone in project.MileStones)
+                {
+                    if (milestone.MilestoneComments.Any())
+                    {
+                        _dbContext.MilestoneComments.RemoveRange(milestone.MilestoneComments);
+                    }
+                }
+
+                if (project.MileStones.Any())
+                {
+                    _dbContext.MileStones.RemoveRange(project.MileStones);
+                }
+            }
             _dbContext.Projects.RemoveRange(student.Projects);
         }
 
-        if (student.User != null)
-        {
+        if (student.User != null) 
+        { 
             _dbContext.Users.Remove(student.User);
             //return NotFound("User not found.");
         }
