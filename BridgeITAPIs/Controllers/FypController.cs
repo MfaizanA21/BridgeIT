@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using BridgeITAPIs.Models;
 using BridgeITAPIs.DTOs.FypDTOs;
+using BridgeITAPIs.DTOs.FypDTOs.DetailedFypDTOs;
 using Microsoft.EntityFrameworkCore;
 
 namespace BridgeITAPIs.Controllers;
@@ -138,21 +139,51 @@ public class FypController : Controller
 
     }
 
-    // [HttpGet("get-detailed-fyp-by-id/{fypId}")]
-    // public async Task<IActionResult> GetDetailedFypById(Guid fypId)
-    // {
-    //     var fyp = await _dbContext.Fyps
-    //         .Include(f => f.Faculty)
-    //         .ThenInclude(u => u.User)
-    //         .Include(f => f.Students)
-    //         .ThenInclude(s => s.University)
-    //         .Where(f => f.Id == fypId)
-    //         .ToListAsync();
-    //
-    //     if (!fyp.Any())
-    //     {
-    //         return BadRequest("No Fyp exists against this Id.");
-    //     }
-    //     
-    // }
+    [HttpGet("get-detailed-fyp-by-id/{fypId}")]
+    public async Task<IActionResult> GetDetailedFypById(Guid fypId)
+    {
+        var fyp = await _dbContext.Fyps
+            .Include(f => f.Faculty)
+            .ThenInclude(fac => fac.User)
+            .Include(f => f.Students)
+            .ThenInclude(stu => stu.User)
+            .Where(f => f.Id == fypId)
+            .FirstOrDefaultAsync();
+
+        if (fyp == null)
+        {
+            return BadRequest("No FYP exists against this Id.");
+        }
+
+        var detailedFypDTO = new DetailedFypDTO
+        {
+            Id = fyp.Id,
+            Title = fyp.Title,
+            Members = fyp.Members,
+            Batch = fyp.Batch,
+            Technology = fyp.Technology,
+            Description = fyp.Description,
+            Status = fyp.Status,
+            Faculty = fyp.Faculty != null ? new FacultyDTO
+            {
+                Id = fyp.Faculty.Id,
+                Name = $"{fyp.Faculty.User?.FirstName} {fyp.Faculty.User?.LastName}",
+                Interest = fyp.Faculty.Interest,
+                Department = fyp.Faculty.Department,
+                Post = fyp.Faculty.Post
+            } : null,
+            Students = fyp.Students.Select(student => new StudentDTO
+            {
+                Id = student.Id,
+                Name = $"{student.User?.FirstName} {student.User?.LastName}",
+                Department = student.department,
+                RollNumber = student.RollNumber,
+                CvLink = student.cvLink,
+                Skills = student.skills
+            }).ToList()
+        };
+
+        return Ok(detailedFypDTO);
+    }
+
 }
