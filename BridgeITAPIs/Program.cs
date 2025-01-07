@@ -1,9 +1,7 @@
 global using BridgeITAPIs.Models;
-global using BridgeITAPIs.DTOs;
 global using BridgeITAPIs.Helper;
 global using BridgeITAPIs.Middlewares;
 global using BridgeITAPIs.Auth;
-using System.Security.Claims;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
@@ -11,8 +9,10 @@ using System.Text;
 using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 using AspNetCoreRateLimit;
+using BridgeITAPIs.services.Implementation;
+using BridgeITAPIs.services.Interface;
 using BridgeITAPIs.SignalRHub;
-using Microsoft.AspNetCore.Cors;
+using Stripe;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -60,6 +60,9 @@ builder.Services.AddScoped<UserService>();
 builder.Services.AddSignalR();
 builder.Services.AddScoped<ChatService>();
 
+// Charging Service
+builder.Services.AddScoped<IChargingService, ChargingService>();
+
 // EF Core configuration with SQL Server
 builder.Services.AddDbContext<BridgeItContext>( options => 
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
@@ -103,8 +106,7 @@ builder.Services.AddScoped<MailService>();
 
 //Stripe Service Configuration
 var stripeSecretKey = builder.Configuration["Stripe:SecretKey"];
-StripeHelper.ConfigureStripe(stripeSecretKey!);
-builder.Services.AddScoped<PaymentService>();
+StripeConfiguration.ApiKey = stripeSecretKey;
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
