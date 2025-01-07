@@ -166,7 +166,7 @@ public class FypController : Controller
             Status = fyp.Status,
             Faculty = fyp.Faculty != null ? new FacultyDTO
             {
-                Id = fyp.Faculty.Id,
+                Id = fyp.Faculty.Id,//
                 Name = $"{fyp.Faculty.User?.FirstName} {fyp.Faculty.User?.LastName}",
                 Interest = fyp.Faculty.Interest,
                 Department = fyp.Faculty.Department,
