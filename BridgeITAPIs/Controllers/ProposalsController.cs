@@ -136,12 +136,20 @@ public class ProposalsController : ControllerBase
             .Include(p => p.Project)
             .Include(p => p.Student)
             .FirstOrDefaultAsync(p => p.Id == ProposalId);
-
+        
         if (proposal == null)
         {
             return BadRequest("Proposal not found.");
         }
-
+        
+        var project = await _dbContext.Projects
+            .Include(proj => proj.Proposals)
+            .FirstOrDefaultAsync(p => p.Id == proposal.ProjectId);
+        
+        var student = await _dbContext.Students
+            .Include(u => u.User)
+            .FirstOrDefaultAsync(s => s.Id == proposal.StudentId);
+        
         proposal.Status = "Accepted";
         proposal.Project.StudentId = proposal.StudentId;
         var paymentClientSecret = "";
@@ -164,16 +172,20 @@ public class ProposalsController : ControllerBase
 
         _dbContext.Proposals.Update(proposal);
         await _dbContext.SaveChangesAsync();
-        var student = await _dbContext.Students
-            .Include(u => u.User)
-            .FirstOrDefaultAsync(s => s.Id == proposal.StudentId);
-
-        var project = await _dbContext.Projects
-            .FirstOrDefaultAsync(p => p.Id == proposal.ProjectId);
-
+        
+        
         if (project == null || student == null)
         {
             return BadRequest("No student to send mail to or project not found.");
+        }
+        
+        if (project != null)
+        {
+            foreach (var prop in project.Proposals)
+            {
+                prop.Status = "Rejected";
+                await _mailService.ProjectProposalStatusMail(student.User.Email, project.Title, prop.Status);
+            }
         }
 
         await _mailService.ProjectProposalStatusMail(student.User.Email, project.Title, proposal.Status);
@@ -243,15 +255,15 @@ public class ProposalsController : ControllerBase
             .Where(p => p.Project.IndExpert.Id == ExpertId  && p.Status == "Pending")
             .ToListAsync();
 
-        if (expert_proposals == null)
+        if (!expert_proposals.Any() || expert_proposals.Count == 0)
         {
             return BadRequest("No Proposals for your projects yet");
         }
 
-        if (expert_proposals.Count == 0)
-        {
-            return BadRequest("No Proposals for your projects yet");
-        }
+        // if (expert_proposals.Count == 0)
+        // {
+        //     return BadRequest("No Proposals for your projects yet");
+        // }
 
         var proposalsList = expert_proposals.Select(p => new GetAllProposalDTO
         {
@@ -327,11 +339,11 @@ public class ProposalsController : ControllerBase
             .Where(p => p.StudentId == StudentId)
             .ToListAsync();
 
-        if (student_proposals == null)
+        if (!student_proposals.Any())
         {
             return BadRequest("No Proposals for your projects yet");
         }
-
+    
         if (student_proposals.Count == 0)
         {
             return BadRequest("No Proposals for your projects yet");
