@@ -132,69 +132,118 @@ public class ProposalsController : ControllerBase
     [HttpPut("accept-proposal/{ProposalId}")]
     public async Task<IActionResult> AcceptProposal(Guid ProposalId)
     {
-        var proposal = await _dbContext.Proposals
-            .Include(p => p.Project)
-            .Include(p => p.Student)
-            .FirstOrDefaultAsync(p => p.Id == ProposalId);
-        
-        if (proposal == null)
-        {
-            return BadRequest("Proposal not found.");
-        }
-        
-        var project = await _dbContext.Projects
-            .Include(proj => proj.Proposals)
-            .FirstOrDefaultAsync(p => p.Id == proposal.ProjectId);
-        
-        var student = await _dbContext.Students
-            .Include(u => u.User)
-            .FirstOrDefaultAsync(s => s.Id == proposal.StudentId);
-        
-        proposal.Status = "Accepted";
-        proposal.Project.StudentId = proposal.StudentId;
-        var paymentClientSecret = "";
+        await using var transaction = await _dbContext.Database.BeginTransactionAsync();
+
         try
         {
-            if (proposal.Student?.StripeConnectId == null)
-            {
-                throw new Exception("Student has no stripe connect id.");
-            }
-            var intent = await _chargingServ.CreatePaymentIntentAsync(5000, proposal.Student.StripeConnectId, proposal.ProjectId.ToString());
-            proposal.PaymentIntentId = intent.Key;
-            paymentClientSecret = intent.Value;
-        }
-        catch (Exception e)
-        {
-            _logger.LogError("failed to create charging intent for project {projectId}", proposal.ProjectId);
-            _logger.LogError(e.Message);
-            return BadRequest(new {Error = "Failed to create charging intent.", e.Message});
-        }
+            // Fetch the proposal with necessary includes
+            var proposal = await _dbContext.Proposals
+                .Include(p => p.Project)
+                .Include(p => p.Student)
+                .ThenInclude(s => s.User)
+                .FirstOrDefaultAsync(p => p.Id == ProposalId);
 
-        _dbContext.Proposals.Update(proposal);
-        await _dbContext.SaveChangesAsync();
-        
-        
-        if (project == null || student == null)
-        {
-            return BadRequest("No student to send mail to or project not found.");
-        }
-        
-        if (project != null)
-        {
-            foreach (var prop in project.Proposals)
+            if (proposal == null)
+            {
+                return BadRequest("Proposal not found.");
+            }
+
+            // Check if the proposal is already accepted
+            if (proposal.Status == "Accepted")
+            {
+                return BadRequest("Proposal has already been accepted.");
+            }
+
+            // Fetch the project with proposals
+            var project = await _dbContext.Projects
+                .Include(proj => proj.Proposals)
+                .FirstOrDefaultAsync(p => p.Id == proposal.ProjectId);
+
+            if (project == null)
+            {
+                return BadRequest("Associated project not found.");
+            }
+
+            // Fetch the student with user details
+            var student = await _dbContext.Students
+                .Include(s => s.User)
+                .FirstOrDefaultAsync(s => s.Id == proposal.StudentId);
+
+            if (student == null)
+            {
+                return BadRequest("Associated student not found.");
+            }
+
+            // Attempt to create Stripe payment intent before making any database changes
+            string paymentClientSecret;
+            string paymentIntentId;
+
+            if (string.IsNullOrEmpty(student.StripeConnectId))
+            {
+                return BadRequest("Student has no Stripe Connect ID.");
+            }
+
+            try
+            {
+                var intent = await _chargingServ.CreatePaymentIntentAsync(5000, student.StripeConnectId, project.Id.ToString());
+                paymentIntentId = intent.Key;
+                paymentClientSecret = intent.Value;
+            }
+            catch (Exception e)
+            {
+                _logger.LogError("Failed to create charging intent for project {projectId}: {ErrorMessage}", project.Id, e.Message);
+                return BadRequest(new { Error = "Failed to create charging intent.", Details = e.Message });
+            }
+
+            // Update proposal and project after successful Stripe payment intent creation
+            proposal.Status = "Accepted";
+            proposal.Project.StudentId = proposal.StudentId;
+            proposal.PaymentIntentId = paymentIntentId;
+
+            // Reject other proposals associated with the project
+            var otherProposals = project.Proposals.Where(p => p.Id != ProposalId && p.Status != "Rejected").ToList();
+
+            foreach (var prop in otherProposals)
             {
                 prop.Status = "Rejected";
-                await _mailService.ProjectProposalStatusMail(student.User.Email, project.Title, prop.Status);
-            }
-        }
+                _dbContext.Proposals.Update(prop);
 
-        await _mailService.ProjectProposalStatusMail(student.User.Email, project.Title, proposal.Status);
-        
-        return Ok(new
+                // Send rejection email asynchronously
+                if (prop.Student?.User?.Email != null)
+                {
+                    await _mailService.ProjectProposalStatusMail(prop.Student.User.Email, project.Title, prop.Status);
+                }
+            }
+
+            // Update the accepted proposal
+            _dbContext.Proposals.Update(proposal);
+
+            // Save all changes within the transaction
+            await _dbContext.SaveChangesAsync();
+
+            // Commit the transaction
+            await transaction.CommitAsync();
+
+            // Send acceptance email
+            if (student.User?.Email != null)
+            {
+                await _mailService.ProjectProposalStatusMail(student.User.Email, project.Title, proposal.Status);
+            }
+
+            return Ok(new
+            {
+                Message = "Proposal status set to Accepted successfully.",
+                PaymentClientSecret = paymentClientSecret
+            });
+        }
+        catch (Exception ex)
         {
-            Message = "Proposal status Set To Accepted successfully.",
-            PaymentClientSecret = paymentClientSecret
-        });
+            // Rollback the transaction in case of any failure
+            await transaction.RollbackAsync();
+
+            _logger.LogError("An error occurred while accepting the proposal {ProposalId}: {ErrorMessage}", ProposalId, ex.Message);
+            return StatusCode(500, "An unexpected error occurred while processing your request.");
+        }
     }
 
     [HttpGet("get-all-proposals")]
