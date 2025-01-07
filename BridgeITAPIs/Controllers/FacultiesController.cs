@@ -24,11 +24,36 @@ public class FacultiesController : ControllerBase
             .Include(f => f.Uni)
             .Include(f => f.Events)
             .Include(f => f.ResearchWorks)
+            .Include(f => f.Fyps)
             .FirstOrDefaultAsync(f => f.UserId == userId);
 
         if (faculty == null)
         {
             return NotFound("Faculty not found.");
+        }
+        
+        if (faculty.Events.Any())
+        {
+            foreach (var ev in faculty.Events)
+            {
+                ev.FacultyId = null;
+            }
+        }
+
+        if (faculty.ResearchWorks.Any())
+        {
+            foreach (var rw in faculty.ResearchWorks)
+            {
+                _dbContext.ResearchWorks.Remove(rw);
+            }
+        }
+        
+        if (faculty.Fyps.Any())
+        {
+            foreach (var fyp in faculty.Fyps)
+            {
+                fyp.FacultyId = null;
+            }
         }
 
         if (faculty.User != null)
@@ -101,11 +126,11 @@ public class FacultiesController : ControllerBase
             if (!string.IsNullOrEmpty(dto.Email))
                 faculty.User.Email = dto.Email;
 
-            if (dto.ImageData != null && dto.ImageData.Length > 0)
+            if (dto.ImageData.Length > 0)
                 faculty.User.ImageData = dto.ImageData;
         }
 
-        if(dto.Interest != null && dto.Interest.Any())
+        if(dto.Interest.Any())
             faculty.Interest = string.Join(",", dto.Interest);
 
         if(!string.IsNullOrEmpty(dto.Post))
