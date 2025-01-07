@@ -14,6 +14,7 @@ public partial class Student
     public string? department { get; set; }
 
     public string? cvLink { get; set; }
+    public string? StripeConnectId { get; set; }
 
     public Guid? UserId { get; set; }
 
