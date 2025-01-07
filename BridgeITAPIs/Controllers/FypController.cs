@@ -35,7 +35,7 @@ public class FypController : Controller
         
         if (student.FypId != null && student.Fyp.Status != "Rejected")
         {
-            return BadRequest("Student has already registered a FYP.");
+            return BadRequest("Student has already registered a FYP or request for it.");
         }
         
         var fyp = new Fyp
@@ -109,15 +109,50 @@ public class FypController : Controller
         return Ok("Request Sent!");
     }
 
-    // [HttpGet("get-fyp-by-faculty-id/{facultyId")]
-    // public async Task<IActionResult> GetFypByFacultyId(Guid facultyId)
+    [HttpGet("get-fyp-by-faculty-id/{facultyId}")]
+    public async Task<IActionResult> GetFypByFacultyId(Guid facultyId)
+    {
+        var fyp = await _dbContext.Fyps
+            .Include(f => f.Faculty)
+            .ThenInclude(u => u.User)
+            // .Include(s => s.Students)
+            // .ThenInclude(s => s.User)
+            .Where(f => f.FacultyId != null && f.FacultyId == facultyId && f.Status != "Rejected")
+            .ToListAsync();
+
+        if (!fyp.Any())
+        {
+            return NotFound("Not Fyp found for this faculty");
+        }
+
+        var fypDto = fyp.Select(f => new GetFypForFacultyDTO
+        {
+            Id = f.Id,
+            Title = f.Title,
+            FypId = f.fyp_id,
+            Description = f.Description,
+            Members = f.Members
+        }).ToList();
+
+        return Ok(fypDto);
+
+    }
+
+    // [HttpGet("get-detailed-fyp-by-id/{fypId}")]
+    // public async Task<IActionResult> GetDetailedFypById(Guid fypId)
     // {
     //     var fyp = await _dbContext.Fyps
     //         .Include(f => f.Faculty)
     //         .ThenInclude(u => u.User)
-    //         .Include(s => s.Students)
-    //         .ThenInclude(s => s.User)
-    //         .Where(f => f.FacultyId != null && f.FacultyId == facultyId)
+    //         .Include(f => f.Students)
+    //         .ThenInclude(s => s.University)
+    //         .Where(f => f.Id == fypId)
     //         .ToListAsync();
+    //
+    //     if (!fyp.Any())
+    //     {
+    //         return BadRequest("No Fyp exists against this Id.");
+    //     }
+    //     
     // }
 }
