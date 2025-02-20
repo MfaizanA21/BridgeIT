@@ -100,4 +100,12 @@ public class ChargingService: IChargingService
        var paymentIntentService = new PaymentIntentService();
        await paymentIntentService.CaptureAsync(paymentIntentId); 
     }
+    
+    public async Task<string> GetPaymentIntentStatusAsync(string paymentIntentId)
+    {
+       var service = new PaymentIntentService();
+       var intent = await service.GetAsync(paymentIntentId);
+       return intent.Status;
+    }
+
 }

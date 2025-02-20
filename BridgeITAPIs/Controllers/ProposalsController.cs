@@ -194,6 +194,12 @@ public class ProposalsController : ControllerBase
                 _logger.LogError("Failed to create charging intent for project {projectId}: {ErrorMessage}", project.Id, e.Message);
                 return BadRequest(new { Error = "Failed to create charging intent.", Details = e.Message });
             }
+            
+            var paymentIntentStatus = await _chargingServ.GetPaymentIntentStatusAsync(paymentIntentId);
+            if (paymentIntentStatus != "succeeded")
+            {
+                return BadRequest("Payment failed or not completed. Proposal not accepted.");
+            }
 
             // Update proposal and project after successful Stripe payment intent creation
             proposal.Status = "Accepted";
