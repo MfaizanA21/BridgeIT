@@ -6,6 +6,12 @@ namespace BridgeITAPIs.SignalRHub;
 public class ChatHub: Hub
 {
     private static readonly ConcurrentDictionary<string, string> _userConnections = new();
+    
+    private readonly BridgeItContext _dbContext;
+    public ChatHub(BridgeItContext dbContext)
+    {
+        _dbContext = dbContext;
+    }
 
     public override async Task OnConnectedAsync()
     {
@@ -27,6 +33,17 @@ public class ChatHub: Hub
     public async Task SendMessageToUser(string recipientUserId, string senderUserId, string message, DateTime timeStamp)
     {
         string messageId = $"{senderUserId}-{recipientUserId}-{DateTime.UtcNow.Ticks}";
+        Guid senderId = Guid.Parse(senderUserId);
+        Guid recipientId = Guid.Parse(recipientUserId);
+        await _dbContext.Messages.AddAsync(new Message
+        {
+            Id = Guid.NewGuid(),
+            SenderId = senderId,
+            RecipientId = recipientId,
+            Content = message,
+            TimeSent = timeStamp
+        });
+        await _dbContext.SaveChangesAsync();
       //  await _userRepository.InsertMessage(messageId, senderUserId, recipientUserId, encryptedMessage);
 
         var recipientConnectionId = _userConnections.FirstOrDefault(x => x.Value == recipientUserId).Key;
