@@ -8,4 +8,6 @@ public interface IChargingService
     
     public Task ReleasePayment(string paymentIntentId);
 
+    public Task<string> GetPaymentIntentStatusAsync(string paymentIntentId);
+
 }
