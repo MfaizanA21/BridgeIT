@@ -175,31 +175,31 @@ public class ProposalsController : ControllerBase
             }
 
             // Attempt to create Stripe payment intent before making any database changes
-            string paymentClientSecret;
-            string paymentIntentId;
+            //string paymentClientSecret;
+            //string paymentIntentId;
 
-            if (string.IsNullOrEmpty(student.StripeConnectId))
-            {
-                return BadRequest("Student has no Stripe Connect ID.");
-            }
+            //if (string.IsNullOrEmpty(student.StripeConnectId))
+            //{
+            //    return BadRequest("Student has no Stripe Connect ID.");
+            //}
 
-            try
-            {
-                var intent = await _chargingServ.CreatePaymentIntentAsync(5000, student.StripeConnectId, project.Id.ToString());
-                paymentIntentId = intent.Key;
-                paymentClientSecret = intent.Value;
-            }
-            catch (Exception e)
-            {
-                _logger.LogError("Failed to create charging intent for project {projectId}: {ErrorMessage}", project.Id, e.Message);
-                return BadRequest(new { Error = "Failed to create charging intent.", Details = e.Message });
-            }
+            //try
+            //{
+            //    var intent = await _chargingServ.CreatePaymentIntentAsync(5000, student.StripeConnectId, project.Id.ToString());
+            //    paymentIntentId = intent.Key;
+            //    paymentClientSecret = intent.Value;
+            //}
+            //catch (Exception e)
+            //{
+            //    _logger.LogError("Failed to create charging intent for project {projectId}: {ErrorMessage}", project.Id, e.Message);
+            //    return BadRequest(new { Error = "Failed to create charging intent.", Details = e.Message });
+            //}
             
-            var paymentIntentStatus = await _chargingServ.GetPaymentIntentStatusAsync(paymentIntentId);
-            if (paymentIntentStatus != "succeeded")
-            {
-                return BadRequest("Payment failed or not completed. Proposal not accepted.");
-            }
+            //var paymentIntentStatus = await _chargingServ.GetPaymentIntentStatusAsync(paymentIntentId);
+            //if (paymentIntentStatus != "succeeded")
+            //{
+            //    return BadRequest("Payment failed or not completed. Proposal not accepted.");
+            //}
 
             // Update proposal and project after successful Stripe payment intent creation
             proposal.Status = "Accepted";
