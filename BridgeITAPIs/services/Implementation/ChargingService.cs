@@ -108,4 +108,24 @@ public class ChargingService: IChargingService
        return intent.Status;
     }
 
+    public async Task<(string PaymentIntentId, string PaymentClientSecret)?> GetPaymentIntentDetailsAsync(string paymentIntentId)
+    {
+        try
+        {
+            var service = new PaymentIntentService();
+            var paymentIntent = await service.GetAsync(paymentIntentId);
+
+            if (paymentIntent == null)
+            {
+                return null;
+            }
+
+            return (paymentIntent.Id, paymentIntent.ClientSecret);
+        }
+        catch (StripeException ex)
+        {
+            return null; // Handle error gracefully
+        }
+    }
+
 }
