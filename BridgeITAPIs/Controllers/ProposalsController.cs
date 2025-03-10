@@ -204,7 +204,7 @@ public class ProposalsController : ControllerBase
             // Update proposal and project after successful Stripe payment intent creation
             proposal.Status = "Accepted";
             proposal.Project.StudentId = proposal.StudentId;
-            proposal.PaymentIntentId = paymentIntentId;
+            //proposal.PaymentIntentId = paymentIntentId;
 
             // Reject other proposals associated with the project
             var otherProposals = project.Proposals.Where(p => p.Id != ProposalId && p.Status != "Rejected").ToList();
@@ -239,7 +239,7 @@ public class ProposalsController : ControllerBase
             return Ok(new
             {
                 Message = "Proposal status set to Accepted successfully.",
-                PaymentClientSecret = paymentClientSecret
+                //PaymentClientSecret = paymentClientSecret
             });
         }
         catch (Exception ex)
