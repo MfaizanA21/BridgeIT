@@ -84,7 +84,7 @@ public class PaymentController : Controller
             }
 
             return Ok(new
-            {
+            {   
                 PaymentIntentId = paymentIntentDetails.Value.PaymentIntentId,
                 PaymentClientSecret = paymentIntentDetails.Value.PaymentClientSecret,
                 Status = status
