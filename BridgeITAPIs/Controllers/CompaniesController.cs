@@ -1,11 +1,11 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using BridgeITAPIs.Models;
+using Microsoft.AspNetCore.Authorization;
 using BridgeITAPIs.DTOs.CompanyDTOs;
 
 namespace BridgeITAPIs.Controllers;
 
+[Authorize]
 [Route("api/companies")]
 [ApiController]
 public class CompaniesController : ControllerBase
