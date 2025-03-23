@@ -40,6 +40,8 @@ public partial class Project
     public virtual ICollection<Review> Reviews { get; set; } = new List<Review>();
 
     public virtual ICollection<ProjectProposal> Proposals { get; set; } = new List<ProjectProposal>();
+    
+    public virtual ICollection<ProjectProgress> ProjectProgresses { get; set; } = new List<ProjectProgress>();
 
     public virtual Student? Student { get; set; }
 
