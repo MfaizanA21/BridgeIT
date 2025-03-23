@@ -72,27 +72,33 @@ public class ChargingService: IChargingService
 
     public async Task<KeyValuePair<string, string>> CreatePaymentIntentAsync(double amount, string accountId, string projectId)
     {
-       amount *= 100; // strips uses lowest form of currency. so to send 100.00 rupees it needs to be 100000 paisa
+       amount *= 100; // Convert to paisa (smallest unit)
+    
+       if (amount < 10000) 
+          throw new ArgumentException("Amount must be at least 100 PKR."); // Ensure valid Stripe amount
+    
        var options = new PaymentIntentCreateOptions
        {
           Amount = (long)amount,
           Currency = "pkr",
-          PaymentMethodTypes = ["card"],
+          PaymentMethodTypes = new List<string> { "card" },
           CaptureMethod = "manual",
           Description = "Appointment Booking Payment",
           Metadata = new Dictionary<string, string>
           {
-             { "project_id", projectId }, // Track your condition (project id)
+             { "project_id", projectId } 
           },
           ApplicationFeeAmount = (long)(amount * 0.1), // 10% platform fee
           TransferData = new PaymentIntentTransferDataOptions
           {
-             Destination = accountId // Connected account ID
+             Destination = accountId 
           }
        };
+
        var service = new PaymentIntentService();
        var intent = await service.CreateAsync(options);
-       return new KeyValuePair<string, string>(intent.Id, intent.ClientSecret); 
+    
+       return new KeyValuePair<string, string>(intent.Id, intent.ClientSecret);
     }
 
     public async Task ReleasePayment(string paymentIntentId)

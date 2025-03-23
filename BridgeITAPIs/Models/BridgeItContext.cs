@@ -48,6 +48,8 @@ public partial class BridgeItContext : DbContext
     public virtual DbSet<Otp> Otps { get; set; }
 
     public virtual DbSet<Project> Projects { get; set; }
+    
+    public virtual DbSet<ProjectProgress> ProjectProgresses { get; set; }
 
     public virtual DbSet<ProjectProposal> Proposals { get; set; }
 
@@ -519,6 +521,27 @@ public partial class BridgeItContext : DbContext
             entity.HasOne(d => d.Faculty).WithMany(p => p.Projects)
                 .HasForeignKey(d => d.FacultyId)
                 .HasConstraintName("FK_Project_Faculty");
+        });
+
+        modelBuilder.Entity<ProjectProgress>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__ProjectP__3213E83FDFBC58FE");
+
+            entity.ToTable("ProjectProgress");
+            
+            entity.Property(e => e.Id)
+                .ValueGeneratedNever()
+                .HasColumnName("id");
+            entity.Property(e=> e.Task)
+                .HasColumnName("task")
+                .HasColumnType("NVARCHAR(MAX)");
+            entity.Property(e => e.TaskStatus)
+                .HasColumnName("task_status")
+                .HasColumnType("VARCHAR(25)");
+            
+            entity.HasOne(p => p.Project).WithMany(pp => pp.ProjectProgresses)
+                .HasForeignKey(p => p.ProjectId)
+                .HasConstraintName("FK__ProjectPr__proje__3C34F16F");
         });
 
         modelBuilder.Entity<ProjectProposal>(entity =>

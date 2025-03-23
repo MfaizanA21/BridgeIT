@@ -18,6 +18,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 
 builder.Services.AddControllers();
+builder.Services.AddRazorPages(); 
 
 builder.Services.AddCors(options => options.AddPolicy("CorsPolicy",
     build =>
@@ -163,7 +164,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
-
+app.MapRazorPages();
 app.MapHub<ChatHub>("/chathub");
 
 app.Run();
