@@ -64,7 +64,7 @@ public class ProjectProgressController : Controller
         return Ok(projectProgressDTOs);
     }
     
-    [HttpPut("update-task-status/{projectId}/{taskId}")]
+    [HttpPut("marks-as-complete/{projectId}/{taskId}")]
     public async Task<IActionResult> UpdateTaskStatus(Guid projectId, Guid taskId)
     {
         var projectProgress = await _dbContext.ProjectProgresses
