@@ -21,11 +21,11 @@ public class PaymentsModel : PageModel
     public string PaymentIntentId { get; set; }
     public string PaymentClientSecret { get; set; }
 
-    public async Task<IActionResult> OnPostAsync()
-    {
-        var paymentIntent = await _chargingService.CreatePaymentIntentAsync(Amount, "acct_1Qvu4APIGUa5vpsj", "2d64bd7a-adb9-4a94-82c6-031838bd6682");
-        PaymentIntentId = paymentIntent.Key;
-        PaymentClientSecret = paymentIntent.Value;
-        return Page();
-    }
+    // public async Task<IActionResult> OnPostAsync()
+    // {
+    //     var paymentIntent = await _chargingService.CreatePaymentIntentAsync(Amount, "acct_1Qvu4APIGUa5vpsj", "2d64bd7a-adb9-4a94-82c6-031838bd6682");
+    //     PaymentIntentId = paymentIntent.Key;
+    //     PaymentClientSecret = paymentIntent.Value;
+    //     return Page();
+    // }
 }
