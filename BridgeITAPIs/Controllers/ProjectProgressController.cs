@@ -58,6 +58,7 @@ public class ProjectProgressController : Controller
         {
             Id = p.Id,
             ProjectId = p.ProjectId,
+            Description = p.Description,
             Task = p.Task,
             TaskStatus = p.TaskStatus
         });
