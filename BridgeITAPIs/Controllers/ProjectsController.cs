@@ -354,40 +354,47 @@ public class ProjectsController : ControllerBase
         return Ok("Project Completed.");
     }
 
-    [HttpGet("get-industry-completed-projects/{studentId}")]
-    public async Task<IActionResult> GetIndustryCompletedProjects(Guid studentId)
+    [HttpGet("get-industry-completed-projects/{Id}")]
+    public async Task<IActionResult> GetIndustryCompletedProjects(Guid Id)
     {
         var projects = await _dbContext.Projects
             .Include(p => p.Student)
-                .ThenInclude(s => s.User)
+            .ThenInclude(s => s.User)
             .Include(p => p.IndExpert)
-                .ThenInclude(i => i.User)
-            .Where(p => p.StudentId == studentId && p.CurrentStatus == "Completed")
+            .ThenInclude(i => i.User)
+            .Where(p => (p.StudentId == Id || p.IndExpertId == Id) && (p.CurrentStatus == "Completed"))
+            .AsNoTracking() 
             .ToListAsync();
 
         if (projects.Count == 0)
         {
-            return BadRequest("No Completed Projects Found");
+            return NotFound("No Completed Projects Found");
         }
         
+        if(projects[0].IndExpertId == null)
+        {
+            return BadRequest("No Completed Projects Found");
+        }
+
         var projectDto = projects.Select(project => new ProjectDTO
         {
             Id = project.Id,
             IndExpertId = project.IndExpertId,
             StudentId = project.StudentId,
-            StdUserId = project?.Student?.UserId,
-            IExptUserId = project?.IndExpert?.UserId,
-            Title = project?.Title ?? string.Empty,
-            Description = project?.Description ?? string.Empty,
-            Stack = project?.Stack ?? string.Empty,
-            Status = project?.CurrentStatus ?? string.Empty,
-            StartDate = project?.StartDate.ToString() ?? string.Empty,
-            EndDate = project?.EndDate.ToString() ?? string.Empty,
-            studentName = project?.Student?.User?.FirstName + " " + project?.Student?.User?.LastName ?? string.Empty,
-            expertName = project?.IndExpert?.User?.FirstName + " " + project?.IndExpert?.User?.LastName ?? string.Empty,
-            Link = project?.Link ?? string.Empty
+            StdUserId = project.Student?.UserId,
+            IExptUserId = project.IndExpert?.UserId,
+            Title = project.Title ?? string.Empty,
+            Description = project.Description ?? string.Empty,
+            Stack = project.Stack ?? string.Empty,
+            Status = project.CurrentStatus ?? string.Empty,
+            StartDate = project.StartDate.ToString(),
+            EndDate = project.EndDate.ToString(),
+            studentName = (project.Student?.User?.FirstName + " " + project.Student?.User?.LastName) ?? string.Empty,
+            expertName = (project.IndExpert?.User?.FirstName + " " + project.IndExpert?.User?.LastName) ?? string.Empty,
+            Link = project.Link ?? string.Empty
         }).ToList();
-        
+
         return Ok(projectDto);
     }
+
 }
