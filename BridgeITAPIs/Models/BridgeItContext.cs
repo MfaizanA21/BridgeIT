@@ -535,6 +535,9 @@ public partial class BridgeItContext : DbContext
             entity.Property(e=> e.Task)
                 .HasColumnName("task")
                 .HasColumnType("NVARCHAR(MAX)");
+            entity.Property(e => e.Description)
+                .HasColumnName("description")
+                .HasColumnType("NVARCHAR(MAX)");
             entity.Property(e => e.TaskStatus)
                 .HasColumnName("task_status")
                 .HasColumnType("VARCHAR(25)");

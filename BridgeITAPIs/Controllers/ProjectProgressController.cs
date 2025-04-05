@@ -17,7 +17,7 @@ public class ProjectProgressController : Controller
     }
 
     [HttpPost("add-tasks/{projectId}")]
-    public async Task<IActionResult> AddTasks(Guid projectId, [FromBody] string task)
+    public async Task<IActionResult> AddTasks(Guid projectId, [FromBody] AddProjectProgressDTO addProjectProgressDto)
     {
         var project = await _dbContext.Projects
             .FirstOrDefaultAsync(p => p.Id == projectId);
@@ -28,7 +28,8 @@ public class ProjectProgressController : Controller
         }
 
         var projectProgress = new ProjectProgress{
-            Task = task,
+            Task = addProjectProgressDto.Task,
+            Description = addProjectProgressDto.Description,
             ProjectId = projectId,
             Id = Guid.NewGuid(),
             TaskStatus = ProjectProgressStatus.PENDING.ToString()
