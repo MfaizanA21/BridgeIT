@@ -334,4 +334,23 @@ public class ProjectsController : ControllerBase
 
         return Ok(list);
     }
+    
+    [HttpPatch("{projectId}/complete")]
+    public async Task<IActionResult> CompleteProject(Guid projectId)
+    {
+        var project = await _dbContext.Projects
+            .FirstOrDefaultAsync(p => p.Id == projectId);
+
+        if (project == null)
+        {
+            return BadRequest("Project not found.");
+        }
+        
+        project.CurrentStatus = "Completed";
+        project.EndDate = DateOnly.FromDateTime(DateTime.Now);
+        
+        await _dbContext.SaveChangesAsync();
+        
+        return Ok("Project Completed.");
+    }
 }
