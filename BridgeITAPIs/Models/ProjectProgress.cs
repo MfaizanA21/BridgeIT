@@ -10,6 +10,8 @@ public partial class ProjectProgress
     
     required public string Task { get; set; }
     
+    public string? Description { get; set; } = string.Empty;
+    
     public string TaskStatus { get; set; } = ProjectProgressStatus.PENDING.ToString();
     
     public virtual Project? Project { get; set; }
