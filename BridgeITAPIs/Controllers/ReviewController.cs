@@ -38,20 +38,28 @@ public class ReviewController : Controller
         {
             return NotFound("Project not found.");
         }
-        
-        var review = new Review
-        {
-            Id = Guid.NewGuid(),
-            ProjectId = projectId,
-            ReviewerId = reviewDto.ReviewerId,
-            Review1 = reviewDto.Review,
-            Rating = reviewDto.Rating,
-            DatePosted = DateTime.Today,
-        };
-        await _context.Reviews.AddAsync(review);
-        await _context.SaveChangesAsync();
 
-        return StatusCode(201, "review added successfully");
+        if (project.CurrentStatus == "Completed" && project.IndExpertId != null)
+        {
+            var review = new Review
+            {
+                Id = Guid.NewGuid(),
+                ProjectId = projectId,
+                ReviewerId = reviewDto.ReviewerId,
+                Review1 = reviewDto.Review,
+                Rating = reviewDto.Rating,
+                DatePosted = DateTime.Today,
+            };
+            await _context.Reviews.AddAsync(review);
+            await _context.SaveChangesAsync();
+
+            return StatusCode(201, "review added successfully");
+        }
+        else
+        {
+            return BadRequest("Either the project is not completed yet or this is your personal project");
+        }
+        
 
     }
 
