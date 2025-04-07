@@ -3,7 +3,6 @@ using BridgeITAPIs.DTOs.IndustryExpertDTOs;
 using BridgeITAPIs.DTOs.StudentDTOs;
 using BridgeITAPIs.DTOs.UniAdminDTOs;
 using BridgeITAPIs.services.Interface;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -27,10 +26,6 @@ public class RegisterUserController : ControllerBase
     [HttpPost("student")]
     public async Task<IActionResult> RegisterStudent([FromBody] RegisterStudentDTO request)
     {
-        if (request == null) // this can never be null lmao what is this
-        {
-            return BadRequest("Student Data is null.");
-        }
 
         var university = await _dbContext.Set<University>().FindAsync(request.UniversityId);
         if (university == null)
@@ -38,7 +33,7 @@ public class RegisterUserController : ControllerBase
             return BadRequest("University not found.");
         }
 
-        var (passwordHash, passwordSalt) = Helper.PasswordHelper.HashPassword(request.Password);
+        var (passwordHash, passwordSalt) = PasswordHelper.HashPassword(request.Password);
 
         var user = new User
         {
@@ -47,7 +42,6 @@ public class RegisterUserController : ControllerBase
             LastName = request.LastName,
             Email = request.Email,
             Role = request.Role,
-            //ImageData = registerStudentDTO.ImageData,
             Hash = passwordHash,
             Salt = passwordSalt
         };
@@ -88,17 +82,13 @@ public class RegisterUserController : ControllerBase
     [HttpPost("faculty")]
     public async Task<IActionResult> RegisterFaculty([FromBody] RegisterFacultyDTO registerFacultyDTO)
     {
-        if (registerFacultyDTO == null)
-        {
-            return BadRequest("Faculty Data is null.");
-        }
 
         var university = await _dbContext.Set<University>().FindAsync(registerFacultyDTO.UniversityId);
         if (university == null)
         {
             return BadRequest("University not found.");
         }
-        var (passwordHash, passwordSalt) = Helper.PasswordHelper.HashPassword(registerFacultyDTO.Password);
+        var (passwordHash, passwordSalt) = PasswordHelper.HashPassword(registerFacultyDTO.Password);
 
         var user = new User
         {
@@ -133,18 +123,13 @@ public class RegisterUserController : ControllerBase
     [HttpPost("industry-expert")]
     public async Task<IActionResult> RegisterIndustryExpert([FromBody] RegisterIndustryExpertDTO registerIndustryExpertDTO)
     {
-        if (registerIndustryExpertDTO == null)
-        {
-            return BadRequest("Industry Expert Data is null.");
-        }
-
         var company = await _dbContext.Set<Company>().FindAsync(registerIndustryExpertDTO.CompanyId);
         if (company == null)
         {
             return BadRequest("Company not found.");
         }
 
-        var (passwordHash, passwordSalt) = Helper.PasswordHelper.HashPassword(registerIndustryExpertDTO.Password);
+        var (passwordHash, passwordSalt) = PasswordHelper.HashPassword(registerIndustryExpertDTO.Password);
 
         var user = new User
         {
@@ -179,10 +164,6 @@ public class RegisterUserController : ControllerBase
     [HttpPost("university-admin")]
     public async Task<IActionResult> RegisterUniversityAdmin([FromBody] RegisterUniAdminDTO registerUniAdminDTO)
     {
-        if( registerUniAdminDTO == null)
-        {
-            return BadRequest("University Admin Data is null.");
-        }
 
         var university = await _dbContext.Set<University>().FindAsync(registerUniAdminDTO.UniversityId);
         if (university == null)
@@ -190,7 +171,7 @@ public class RegisterUserController : ControllerBase
             return BadRequest("University not found.");
         }
 
-        var (passwordHash, passwordSalt) = Helper.PasswordHelper.HashPassword(registerUniAdminDTO.Password);
+        var (passwordHash, passwordSalt) = PasswordHelper.HashPassword(registerUniAdminDTO.Password);
 
         var user = new User
         {

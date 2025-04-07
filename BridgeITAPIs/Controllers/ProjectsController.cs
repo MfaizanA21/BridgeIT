@@ -1,6 +1,4 @@
-﻿using BridgeITAPIs.Models;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using BridgeITAPIs.DTOs.ProjectDTOs;
 
@@ -20,10 +18,6 @@ public class ProjectsController : ControllerBase
     [HttpPost("student-add-projects")]
     public async Task<IActionResult> AddProject([FromBody] StudentAddProjectDTO dto)
     {
-        if (dto == null)
-        {
-            return BadRequest("Project Data is null.");
-        }
 
         if (dto.StudentId == null)
         {
@@ -55,7 +49,7 @@ public class ProjectsController : ControllerBase
     {
         var projects = await _dbContext.Projects
             .Include(p => p.Student)
-                .ThenInclude(s => s.User)
+                .ThenInclude(s => s!.User)
             .Include(p => p.IndExpert)
             .Where(p => p.StudentId != null)
             .ToListAsync();
@@ -68,9 +62,9 @@ public class ProjectsController : ControllerBase
         var projectDto = projects.Select(project => new StudentProjectTileDTO
         {
             Id = project.Id,
-            Title = project?.Title ?? string.Empty,
-            Description = project?.Description ?? string.Empty,
-            Stack = project?.Stack ?? string.Empty,
+            Title = project.Title ?? string.Empty,
+            Description = project.Description ?? string.Empty,
+            Stack = project.Stack ?? string.Empty,
             Status = project?.CurrentStatus ?? string.Empty,
             StudentId = project?.StudentId,
             studentName = project?.Student?.User?.FirstName + " " + project?.Student?.User?.LastName,
@@ -84,16 +78,6 @@ public class ProjectsController : ControllerBase
     [HttpPost("expert-post-project")]
     public async Task<IActionResult> PostProject([FromBody] IndExptAddProjectDTO dto)
     {
-        if (dto == null)
-        {
-            return BadRequest("Project Data is null.");
-        }
-
-        if (dto.IndExpertId == null)
-        {
-            return BadRequest("IndExpertId must be provided");
-        }
-
         var project = new Project
         {
             Id = Guid.NewGuid(),
@@ -119,11 +103,11 @@ public class ProjectsController : ControllerBase
     {
         var projects = await _dbContext.Projects
             .Include(p => p.IndExpert)
-                .ThenInclude(p => p.User)
+                .ThenInclude(p => p!.User)
             .Where(p => p.IndExpertId != null && p.StudentId == null)
             .ToListAsync(); 
 
-        if (projects == null)
+        if (projects.Count == 0)
         {
             return BadRequest("No projects found");
         }
@@ -148,13 +132,13 @@ public class ProjectsController : ControllerBase
     {
         var projects = await _dbContext.Projects
             .Include(p => p.Student)
-                .ThenInclude(s => s.User)
+                .ThenInclude(s => s!.User)
             .Include(p => p.IndExpert)
-                .ThenInclude(i => i.User)
+                .ThenInclude(i => i!.User)
             .Where(p => p.StudentId == studentId && p.IndExpertId != null)
             .ToListAsync();
 
-        if (projects == null)
+        if (projects.Count == 0)
         {
             return BadRequest("No projects found");
         }
@@ -181,7 +165,7 @@ public class ProjectsController : ControllerBase
     {
         var projects = await _dbContext.Projects
             .Include(p => p.Student)
-                .ThenInclude(s => s.User)
+                .ThenInclude(s => s!.User)
             .Include(p => p.IndExpert)
             .Where(p => p.StudentId == id && p.IndExpertId == null)
             .ToListAsync();
@@ -211,10 +195,10 @@ public class ProjectsController : ControllerBase
     {
         var projects = await _dbContext.Projects
             .Include(i => i.IndExpert)
-                .ThenInclude(u => u.User)
+                .ThenInclude(u => u!.User)
             .Where(p => p.IndExpertId == Expertid).ToListAsync();
 
-        if (projects == null)
+        if (projects.Count == 0)
         {
             return BadRequest("No Projects Found");        
         }
@@ -225,13 +209,13 @@ public class ProjectsController : ControllerBase
         {
             
             Id = project.Id,
-            Title = project?.Title ?? string.Empty,
+            Title = project.Title ?? string.Empty,
             Description = project?.Description ?? string.Empty,
             IndExpertId = project?.IndExpertId,
             EndDate = project?.EndDate.ToString(),
             CurrentStatus = project?.CurrentStatus ?? string.Empty,
             Budget = project?.Budget ?? 0,
-            Name = project?.IndExpert?.User?.FirstName +" " + project?.IndExpert?.User?.LastName ?? string.Empty,
+            Name = project?.IndExpert?.User?.FirstName +" " + project?.IndExpert?.User?.LastName,
             StudentId = project?.StudentId,
 
         }).ToList();
@@ -244,9 +228,9 @@ public class ProjectsController : ControllerBase
     {
         var project = await _dbContext.Projects
             .Include(p => p.Student)
-                .ThenInclude(s => s.User)
+                .ThenInclude(s => s!.User)
             .Include(p => p.IndExpert)
-                .ThenInclude(i => i.User)
+                .ThenInclude(i => i!.User)
             .Where(p => p.Id == id)
             .FirstOrDefaultAsync();
 
@@ -285,7 +269,7 @@ public class ProjectsController : ControllerBase
             .Where(p => p.StudentId == null && p.IndExpertId == expertId)
             .ToListAsync();
 
-        if (projects == null)
+        if (projects.Count == 0)
         {
             return BadRequest("No Projects Found");
         }
@@ -293,7 +277,7 @@ public class ProjectsController : ControllerBase
         var list = projects.Select(project => new IndExptProjectTileDTO
         {
             Id = project.Id,
-            Title = project?.Title ?? string.Empty,
+            Title = project.Title ?? string.Empty,
             Description = project?.Description ?? string.Empty,
             IndExpertId = project?.IndExpertId,
             EndDate = project?.EndDate.ToString(),
@@ -314,7 +298,7 @@ public class ProjectsController : ControllerBase
             .Where(p => p.StudentId != null && p.IndExpertId == expertId)
             .ToListAsync();
 
-        if (projects == null)
+        if (projects.Count == 0)
         {
             return BadRequest("No Projects Found");
         }
@@ -359,9 +343,9 @@ public class ProjectsController : ControllerBase
     {
         var projects = await _dbContext.Projects
             .Include(p => p.Student)
-            .ThenInclude(s => s.User)
+            .ThenInclude(s => s!.User)
             .Include(p => p.IndExpert)
-            .ThenInclude(i => i.User)
+            .ThenInclude(i => i!.User)
             .Where(p => (p.StudentId == Id || p.IndExpertId == Id) && (p.CurrentStatus == "Completed"))
             .AsNoTracking() 
             .ToListAsync();
@@ -387,10 +371,10 @@ public class ProjectsController : ControllerBase
             Description = project.Description ?? string.Empty,
             Stack = project.Stack ?? string.Empty,
             Status = project.CurrentStatus ?? string.Empty,
-            StartDate = project.StartDate.ToString(),
-            EndDate = project.EndDate.ToString(),
-            studentName = (project.Student?.User?.FirstName + " " + project.Student?.User?.LastName) ?? string.Empty,
-            expertName = (project.IndExpert?.User?.FirstName + " " + project.IndExpert?.User?.LastName) ?? string.Empty,
+            StartDate = project.StartDate.ToString() ?? string.Empty,
+            EndDate = project.EndDate.ToString() ?? string.Empty,
+            studentName = (project.Student?.User?.FirstName + " " + project.Student?.User?.LastName),
+            expertName = (project.IndExpert?.User?.FirstName + " " + project.IndExpert?.User?.LastName),
             Link = project.Link ?? string.Empty
         }).ToList();
 

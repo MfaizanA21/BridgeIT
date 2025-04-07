@@ -39,7 +39,6 @@ public class GetStudentController : ControllerBase
             Skills = student.skills != null ? student.skills.Split(',').ToList() : new List<string>(),
             Description = student.User?.description ?? string.Empty,
             Department = student.department ?? string.Empty,
-            //Skills = student.Skills.Select(s => s.Skill1).ToList(),
             ImageData = student.User?.ImageData ?? Array.Empty<byte>(),
             UniversityName = student.University?.Name ?? string.Empty,
             Address = student.University?.Address ?? string.Empty,
@@ -75,7 +74,6 @@ public class GetStudentController : ControllerBase
             Skills = student.skills != null ? student.skills.Split(',').ToList() : new List<string>(),
             Description = student.User?.description ?? string.Empty,
             Department = student.department ?? string.Empty,
-            //Skills = student.Skills.Select(s => s.Skill1).ToList(),
             ImageData = student.User?.ImageData ?? Array.Empty<byte>(),
             UniversityName = student.University?.Name ?? string.Empty,
             Address = student.University?.Address ?? string.Empty,
@@ -92,10 +90,9 @@ public class GetStudentController : ControllerBase
         var students = await _dbContext.Students
             .Include(s => s.User)
             .Include(s => s.University)
-            //.Include(s => s.Skills)
             .ToListAsync();
 
-        if (students == null)
+        if (students.Count == 0)
         {
             return NotFound("Student not found.");
         }
@@ -135,7 +132,7 @@ public class GetStudentController : ControllerBase
                      s.User.LastName != null && s.User.LastName.ToLower().Contains(name.ToLower())))
             .ToListAsync();
 
-        if (student == null || !student.Any())
+        if (!student.Any())
         {
             return NotFound("Student not found.");
         }
@@ -170,7 +167,7 @@ public class GetStudentController : ControllerBase
             .Where(s => s.University != null && s.University.Name.ToLower().Contains(uniName.ToLower()))
             .ToListAsync();
 
-        if (students == null)
+        if (!students.Any())
         {
             return NotFound("Student not found.");
         }

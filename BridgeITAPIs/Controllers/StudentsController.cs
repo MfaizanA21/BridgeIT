@@ -1,7 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.SqlServer.Query.Internal;
 using BridgeITAPIs.DTOs.StudentDTOs;
 
 
@@ -75,7 +73,7 @@ public class StudentsController : ControllerBase
             if (!string.IsNullOrEmpty(dto.Email))
                 student.User.Email = dto.Email;
 
-            if (dto.ImageData != null && dto.ImageData.Length > 0)
+            if (dto.ImageData.Length > 0)
                 student.User.ImageData = dto.ImageData;
         }
 
@@ -83,8 +81,6 @@ public class StudentsController : ControllerBase
         {
             if (dto.universityId.HasValue)
                 student.University.Id = dto.universityId.Value;
-            //student.University.Name = dto.UniversityName;
-            //student.University.Address = dto.Address;
         }
 
         if (!string.IsNullOrEmpty(dto.RollNumber))

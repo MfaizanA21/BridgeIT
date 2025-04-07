@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using BridgeITAPIs.DTOs.OtpDTOs;
 
@@ -25,23 +24,7 @@ public class OtpController : ControllerBase
         {
             return BadRequest("Email is required.");
         }
-
-       // var mails = _context.Set<Otp>().FirstOrDefaultAsync(otp => otp.email == email);
-
-        /*if (mails != null)
-        {
-            if (DateTime.UtcNow.Subtract(mails.Result.created_at).TotalMinutes < 5)
-            {
-
-                return Ok(mails.Result.otp);
-            }
-            else
-            {
-                _context.Set<Otp>().Remove(mails.Result);
-                await _context.SaveChangesAsync();
-            }
-        }*/
-
+        
         var otp = new Otp
         {
             email = email,
@@ -67,11 +50,6 @@ public class OtpController : ControllerBase
             return BadRequest("Invalid OTP.");
         }
 
-        if (otp == null)
-        {
-            return BadRequest("Otp data is null.");
-        }
-
         if (otp.otp != otpData.otp)
         {
             return BadRequest("Invalid OTP.");
@@ -83,7 +61,7 @@ public class OtpController : ControllerBase
         }
 
 
-        if (otpData != null && DateTime.UtcNow.Subtract(otpData.created_at).TotalMinutes > 5)
+        if (DateTime.UtcNow.Subtract(otpData.created_at).TotalMinutes > 5)
         { 
             _context.Set<Otp>().Remove(otpData);
             await _context.SaveChangesAsync();

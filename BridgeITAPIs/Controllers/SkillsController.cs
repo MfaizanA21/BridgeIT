@@ -1,8 +1,6 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using BridgeITAPIs.DTOs.SkillsDTOs;
-using BridgeITAPIs.Models;
 
 namespace BridgeITAPIs.Controllers;
 
@@ -20,7 +18,7 @@ public class SkillsController : ControllerBase
     [HttpPost("post-skills")]
     public async Task<IActionResult> AddSkills([FromBody] string skill)
     {
-        if (skill == null)
+        if (skill == string.Empty)
         {
             return BadRequest("Skills Data is null.");
         }
@@ -41,7 +39,7 @@ public class SkillsController : ControllerBase
     {
         var skills = await _dbContext.Skills.ToListAsync();
 
-        if (skills == null)
+        if (!skills.Any())
         {
             return NotFound("Skills not found.");
         }
@@ -63,7 +61,7 @@ public class SkillsController : ControllerBase
             .Where(s => s.Skill1 != null && s.Skill1.ToLower().Contains(name.ToLower()))
             .ToListAsync();
 
-        if (skills == null)
+        if (!skills.Any())
         {
             return NotFound("Skills not found.");
         }
@@ -81,7 +79,7 @@ public class SkillsController : ControllerBase
     public async Task<IActionResult> GetSkillsById(Guid userId)
     {
         var student = await _dbContext.Students
-            .FirstOrDefaultAsync(s => s.User.Id == userId);
+            .FirstOrDefaultAsync(s => s.User!.Id == userId);
 
         if (student?.skills == null)
         {

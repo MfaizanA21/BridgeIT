@@ -55,10 +55,10 @@ public class InterestedForIdeaController : Controller
     {
         var requests = await _dbContext.InterestedForIdeas
             .Include(r => r.Student)
-            .ThenInclude(r => r.User)
+            .ThenInclude(r => r!.User)
             .Include(r => r.Idea)
-            .ThenInclude(r => r.Faculty)
-            .Where(r => r.Idea.FacultyId == facultyId || r.Status != 1)
+            .ThenInclude(r => r!.Faculty)
+            .Where(r => r.Idea!.FacultyId == facultyId || r.Status != 1)
             .ToListAsync();
 
         if (!requests.Any())
@@ -71,7 +71,7 @@ public class InterestedForIdeaController : Controller
             .Select(g => new
             {
                 IdeaId = g.Key,
-                IdeaName = g.First().Idea.Name,
+                IdeaName = g.First().Idea!.Name,
                 Requests = g.Select(request => new GetRequestsDTO
                 {
                     Id = request.Id,
@@ -80,7 +80,7 @@ public class InterestedForIdeaController : Controller
                     FacultyId = request.Idea?.FacultyId,
                     StdUserId = request.Student?.UserId,
                     FacUserId = request.Idea?.Faculty?.UserId,
-                    IdeaName = request.Idea?.Name,
+                    IdeaName = request.Idea.Name,
                     StudentName = $"{request.Student?.User?.FirstName} {request.Student?.User?.LastName}",
                     StudentDept = request.Student.department,
                 }).ToList()
@@ -94,10 +94,10 @@ public class InterestedForIdeaController : Controller
     {
         var requestDetails = await _dbContext.InterestedForIdeas
             .Include(r => r.Student)
-            .ThenInclude(r => r.User)
+            .ThenInclude(r => r!.User)
             .Include(r => r.Idea)
-            .ThenInclude(r => r.Faculty)
-            .ThenInclude(u => u.User)
+            .ThenInclude(r => r!.Faculty)
+            .ThenInclude(u => u!.User)
             .FirstOrDefaultAsync(r => r.Id == RequestId);
 
         if (requestDetails == null)
@@ -128,10 +128,10 @@ public class InterestedForIdeaController : Controller
     {
         var request = await _dbContext.InterestedForIdeas
             .Include(r => r.Student)
-            .ThenInclude(r => r.User)
+            .ThenInclude(r => r!.User)
             .Include(r => r.Idea)
-            .ThenInclude(r => r.Faculty)
-            .ThenInclude(u => u.User)
+            .ThenInclude(r => r!.Faculty)
+            .ThenInclude(u => u!.User)
             .FirstOrDefaultAsync(r => r.Id == RequestId);
 
         if (request == null)
@@ -153,10 +153,10 @@ public class InterestedForIdeaController : Controller
     {
         var request = await _dbContext.InterestedForIdeas
             .Include(r => r.Student)
-            .ThenInclude(r => r.User)
+            .ThenInclude(r => r!.User)
             .Include(r => r.Idea)
-            .ThenInclude(r => r.Faculty)
-            .ThenInclude(u => u.User)
+            .ThenInclude(r => r!.Faculty)
+            .ThenInclude(u => u!.User)
             .FirstOrDefaultAsync(r => r.Id == RequestId);
 
         if (request == null)

@@ -39,7 +39,6 @@ public class GetIndustryExpertController : ControllerBase
             Description = industryExpert.User?.description ?? string.Empty,
             CompanyName = industryExpert.Company?.Name ?? string.Empty,
             Address = industryExpert.Company?.Address ?? string.Empty,
-            //Interest = industryExpert.Interest != null ? new List<string> { industryExpert.Interest } : new List<string>()
             Contact = industryExpert.Contact ?? string.Empty,
         };
 
@@ -54,7 +53,7 @@ public class GetIndustryExpertController : ControllerBase
             .Include(f => f.Company)
             .ToListAsync();
 
-        if (industryExperts == null)
+        if (!industryExperts.Any())
         {
             return NotFound("Industry Expert not found.");
         }
@@ -71,7 +70,6 @@ public class GetIndustryExpertController : ControllerBase
             Description = f.User?.description ?? string.Empty,
             CompanyName = f.Company?.Name ?? string.Empty,
             Address = f.Company?.Address ?? string.Empty,
-            //Interest = f.Interest != null ? new List<string> { f.Interest } : new List<string>()
             Contact = f.Contact ?? string.Empty,
         })
             .ToList();
@@ -90,7 +88,7 @@ public class GetIndustryExpertController : ControllerBase
                      i.User.LastName != null && i.User.LastName.ToLower().Contains(name.ToLower())))
             .ToListAsync();
 
-        if (industryExpert == null || !industryExpert.Any())
+        if (!industryExpert.Any())
         {
             return BadRequest("User not found.");
         }
@@ -107,7 +105,6 @@ public class GetIndustryExpertController : ControllerBase
             Description = f.User?.description ?? string.Empty,
             CompanyName = f.Company?.Name ?? string.Empty,
             Address = f.Company?.Address ?? string.Empty,
-            //Interest = f.Interest != null ? new List<string> { f.Interest } : new List<string>()
             Contact = f.Contact ?? string.Empty,
         })
             .ToList();
@@ -140,7 +137,6 @@ public class GetIndustryExpertController : ControllerBase
             Description = industryExpert.User?.description ?? string.Empty,
             CompanyName = industryExpert.Company?.Name ?? string.Empty,
             Address = industryExpert.Company?.Address ?? string.Empty,
-            //Interest = industryExpert.Interest != null ? new List<string> { industryExpert.Interest } : new List<string>()
             Contact = industryExpert.Contact ?? string.Empty,
         };
 

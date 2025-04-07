@@ -1,5 +1,4 @@
 ﻿using BridgeITAPIs.DTOs.FacultyDTOs;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -93,7 +92,7 @@ public class FacultiesController : ControllerBase
 
         if (faculty.Uni != null)
         {
-            faculty.Uni.Id = dto.UniversityId.Value;
+            faculty.Uni.Id = dto.UniversityId!.Value;
         }
 
         await _dbContext.SaveChangesAsync();

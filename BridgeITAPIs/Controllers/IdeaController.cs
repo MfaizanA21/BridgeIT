@@ -38,9 +38,9 @@ public class IdeaController : Controller
     {
         var ideas = await _dbContext.Ideas
             .Include(f => f.Faculty)
-            .ThenInclude(u => u.Uni)
+            .ThenInclude(u => u!.Uni)
             .Include(f => f.Faculty)
-            .ThenInclude(u => u.User)
+            .ThenInclude(u => u!.User)
             .Where(u => u.Faculty.Uni.Id == uniId)
             .ToListAsync();
 
@@ -71,10 +71,10 @@ public class IdeaController : Controller
     {
         var ideas = await _dbContext.Ideas
             .Include(f => f.Faculty)
-            .ThenInclude(u => u.Uni)
+            .ThenInclude(u => u!.Uni)
             .Include(f => f.Faculty)
-            .ThenInclude(u => u.User)
-            .Where(u => u.Faculty.Id == Id || u.Faculty.UserId == Id)
+            .ThenInclude(u => u!.User)
+            .Where(u => u.Faculty!.Id == Id || u.Faculty.UserId == Id)
             .ToListAsync();
 
         if (!ideas.Any())
@@ -91,7 +91,7 @@ public class IdeaController : Controller
             FacultyId = idea.FacultyId,
             FacultyName = idea.Faculty.User.FirstName + " " + idea.Faculty.User.LastName,
             Email = idea.Faculty.User.Email,
-            UniId = idea.Faculty.Uni.Id,
+            UniId = idea.Faculty.Uni!.Id,
             UserId = idea.Faculty.UserId,
             UniName = idea.Faculty.Uni.Name
         }).ToList();
@@ -104,9 +104,9 @@ public class IdeaController : Controller
     {
         var ideas = await _dbContext.Ideas
             .Include(f => f.Faculty)
-            .ThenInclude(u => u.Uni)
+            .ThenInclude(u => u!.Uni)
             .Include(f => f.Faculty)
-            .ThenInclude(u => u.User)
+            .ThenInclude(u => u!.User)
             .Where(u => u.Id == Id)
             .ToListAsync();
 

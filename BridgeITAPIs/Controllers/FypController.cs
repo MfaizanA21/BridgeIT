@@ -1,5 +1,4 @@
 using Microsoft.AspNetCore.Mvc;
-using BridgeITAPIs.Models;
 using BridgeITAPIs.DTOs.FypDTOs;
 using BridgeITAPIs.DTOs.FypDTOs.DetailedFypDTOs;
 using Microsoft.EntityFrameworkCore;
@@ -34,7 +33,7 @@ public class FypController : Controller
             return NotFound("Student not founds.");
         }
         
-        if (student.FypId != null && student.Fyp.Status != "Rejected")
+        if (student.FypId != null && student.Fyp!.Status != "Rejected")
         {
             return BadRequest("Student has already registered a FYP or request for it.");
         }
@@ -73,12 +72,12 @@ public class FypController : Controller
         {
             Id = fyp.Id,
             FypId = fyp.fyp_id,
-            Title = fyp.Title,
+            Title = fyp.Title ?? string.Empty,
             Members = fyp.Members,
-            Status = fyp.Status,
-            Batch = fyp.Batch,
-            Technology = fyp.Technology,
-            Description = fyp.Description
+            Status = fyp.Status ?? string.Empty,
+            Batch = fyp.Batch ?? string.Empty,
+            Technology = fyp.Technology ?? string.Empty,
+            Description = fyp.Description ?? string.Empty
         };
         
         return Ok(dto);
@@ -115,9 +114,7 @@ public class FypController : Controller
     {
         var fyp = await _dbContext.Fyps
             .Include(f => f.Faculty)
-            .ThenInclude(u => u.User)
-            // .Include(s => s.Students)
-            // .ThenInclude(s => s.User)
+            .ThenInclude(u => u!.User)
             .Where(f => f.FacultyId != null && f.FacultyId == facultyId && f.Status != "Rejected")
             .ToListAsync();
 
@@ -129,9 +126,9 @@ public class FypController : Controller
         var fypDto = fyp.Select(f => new GetFypForFacultyDTO
         {
             Id = f.Id,
-            Title = f.Title,
+            Title = f.Title ?? string.Empty,
             FypId = f.fyp_id,
-            Description = f.Description,
+            Description = f.Description ?? string.Empty,
             Members = f.Members
         }).ToList();
 
@@ -144,7 +141,7 @@ public class FypController : Controller
     {
         var fyp = await _dbContext.Fyps
             .Include(f => f.Faculty)
-            .ThenInclude(fac => fac.User)
+            .ThenInclude(fac => fac!.User)
             .Include(f => f.Students)
             .ThenInclude(stu => stu.User)
             .Where(f => f.Id == fypId)
