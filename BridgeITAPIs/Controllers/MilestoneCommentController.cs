@@ -22,7 +22,7 @@ public class MilestoneCommentController : Controller
 
         var stone = _dbContext.MileStones
             .Include(m => m.Project)
-            .ThenInclude(p => p.IndExpert)
+            .ThenInclude(p => p!.IndExpert)
             .Where(p => p.Id == milestoneId && p.Project.IndExpert.Id == expertId);
 
         if (!stone.Any())

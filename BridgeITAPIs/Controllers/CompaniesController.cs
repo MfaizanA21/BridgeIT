@@ -31,10 +31,10 @@ public class CompaniesController : ControllerBase
         var dto = new GetCompanyDTO
         {
             Id = company.Id,
-            Name = company.Name,
-            Address = company.Address,
-            Business = company.Business,
-            Description = company.Description,
+            Name = company.Name ?? string.Empty,
+            Address = company.Address ?? string.Empty,
+            Business = company.Business ?? string.Empty,
+            Description = company.Description ?? string.Empty,
         };
 
         return Ok(dto);
@@ -45,7 +45,7 @@ public class CompaniesController : ControllerBase
     {
         var companies = await _dbContext.Companies.ToListAsync();
 
-        if (companies == null)
+        if (!companies.Any())
         {
             return NotFound("Companies not found.");
         }
@@ -53,10 +53,10 @@ public class CompaniesController : ControllerBase
         var dtoList = companies.Select(c => new GetCompanyDTO
         {
             Id = c.Id,
-            Name = c.Name,
-            Address = c.Address,
-            Business = c.Business,
-            Description = c.Description,
+            Name = c.Name ?? string.Empty,
+            Address = c.Address ?? string.Empty,
+            Business = c.Business ?? string.Empty,
+            Description = c.Description ?? string.Empty,
         }).ToList();
 
         return Ok(dtoList);
@@ -66,10 +66,10 @@ public class CompaniesController : ControllerBase
     public async Task<IActionResult> GetCompanyByName(string name)
     {
         var company = await _dbContext.Companies
-            .Where(c => c.Name.ToLower().Contains(name.ToLower()))
+            .Where(c => c.Name!.ToLower().Contains(name.ToLower()))
             .ToListAsync();
 
-        if (company == null)
+        if (!company.Any())
         {
             return NotFound("Company not found.");
         }
@@ -77,10 +77,10 @@ public class CompaniesController : ControllerBase
         var dtoList = company.Select( c =>  new GetCompanyDTO
         {
             Id = c.Id,
-            Name = c.Name,
-            Address = c.Address,
-            Business = c.Business,
-            Description = c.Description,
+            Name = c.Name ?? string.Empty,
+            Address = c.Address ?? string.Empty,
+            Business = c.Business ?? string.Empty,
+            Description = c.Description ?? string.Empty,
         }).ToList();
 
         return Ok(dtoList);

@@ -20,7 +20,7 @@ public class DepartmentController : ControllerBase
     [HttpPost("add-department")]
     public async Task<IActionResult> AddDepartment([FromBody] string departmentName)
     {
-        if (departmentName == null)
+        if (departmentName == String.Empty)
         {
             return BadRequest("Department name is null.");
         }
@@ -57,7 +57,7 @@ public class DepartmentController : ControllerBase
     {
         var departments = await _dbContext.Departments.ToListAsync();
 
-        if (departments == null)
+        if (!departments.Any())
         {
             return NotFound("Departments not found.");
         }

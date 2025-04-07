@@ -20,7 +20,7 @@ public class ChatController : Controller
     [HttpPost("send-message")]
     public async Task<IActionResult> SendMessage([FromBody] SendMessageDTO messageDto)
     {
-        if (messageDto == null || string.IsNullOrWhiteSpace(messageDto.Message))
+        if (string.IsNullOrWhiteSpace(messageDto.Message))
         {
             return BadRequest(new { Message = "Invalid message data." });
         }

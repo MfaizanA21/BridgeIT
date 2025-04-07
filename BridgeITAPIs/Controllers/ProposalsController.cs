@@ -64,22 +64,6 @@ public class ProposalsController : ControllerBase
             return BadRequest("Invalid base64 string.");
         }
         
-        // using var memoryStream = new MemoryStream();
-        // await dto.proposal.CopyToAsync(memoryStream);
-        //
-        // var proposal = new ProjectProposal
-        // {
-        //     Id = Guid.NewGuid(),
-        //     Proposal = memoryStream.ToArray(),
-        //     Status = "Pending",
-        //     StudentId = dto.studentId,
-        //     ProjectId = dto.projectId,
-        // };
-        //
-        // await _dbContext.Proposals.AddAsync(proposal);
-        // await _dbContext.SaveChangesAsync();
-        //
-        // return Ok("Proposal sent successfully.");
     }
 
     [HttpGet("check-sent-proposal/{StudentId}/{ProjectId}")]
@@ -174,33 +158,7 @@ public class ProposalsController : ControllerBase
                 return BadRequest("Associated student not found.");
             }
 
-            // Attempt to create Stripe payment intent before making any database changes
-            //string paymentClientSecret;
-            //string paymentIntentId;
-
-            //if (string.IsNullOrEmpty(student.StripeConnectId))
-            //{
-            //    return BadRequest("Student has no Stripe Connect ID.");
-            //}
-
-            //try
-            //{
-            //    var intent = await _chargingServ.CreatePaymentIntentAsync(5000, student.StripeConnectId, project.Id.ToString());
-            //    paymentIntentId = intent.Key;
-            //    paymentClientSecret = intent.Value;
-            //}
-            //catch (Exception e)
-            //{
-            //    _logger.LogError("Failed to create charging intent for project {projectId}: {ErrorMessage}", project.Id, e.Message);
-            //    return BadRequest(new { Error = "Failed to create charging intent.", Details = e.Message });
-            //}
             
-            //var paymentIntentStatus = await _chargingServ.GetPaymentIntentStatusAsync(paymentIntentId);
-            //if (paymentIntentStatus != "succeeded")
-            //{
-            //    return BadRequest("Payment failed or not completed. Proposal not accepted.");
-            //}
-
             // Update proposal and project after successful Stripe payment intent creation
             proposal.Status = "Accepted";
             proposal.Project.StudentId = proposal.StudentId;
@@ -260,14 +218,14 @@ public class ProposalsController : ControllerBase
     {
         var proposals = await _dbContext.Proposals
             .Include(p => p.Student)
-                .ThenInclude(s => s.University)
+                .ThenInclude(s => s!.University)
             .Include(p => p.Student)
-                .ThenInclude(s => s.User)
+                .ThenInclude(s => s!.User)
             .Include(p => p.Project)
-                .ThenInclude(i => i.IndExpert)
+                .ThenInclude(i => i!.IndExpert)
             .ToListAsync();
         
-        if (proposals == null)
+        if (!proposals.Any())
         {
             return BadRequest("No Proposals found.");
         }
@@ -305,11 +263,11 @@ public class ProposalsController : ControllerBase
     {
         var expert_proposals = await _dbContext.Proposals
             .Include(p => p.Student)
-                .ThenInclude(p => p.University)
+                .ThenInclude(p => p!.University)
             .Include(p => p.Student)
-                .ThenInclude(p => p.User)
+                .ThenInclude(p => p!.User)
             .Include(p => p.Project)
-                .ThenInclude(p => p.IndExpert)
+                .ThenInclude(p => p!.IndExpert)
             .Where(p => p.Project.IndExpert.Id == ExpertId  && p.Status == "Pending")
             .ToListAsync();
 
@@ -318,21 +276,16 @@ public class ProposalsController : ControllerBase
             return BadRequest("No Proposals for your projects yet");
         }
 
-        // if (expert_proposals.Count == 0)
-        // {
-        //     return BadRequest("No Proposals for your projects yet");
-        // }
-
         var proposalsList = expert_proposals.Select(p => new GetAllProposalDTO
         {
             Id = p.Id,
             ProjectId = p.ProjectId,
             StudentId = p.StudentId,
             ExpertId = p.Project?.IndExpert?.Id,
-            StudentName = p?.Student?.User?.FirstName + " " + p?.Student?.User?.LastName ?? string.Empty,
+            StudentName = p?.Student?.User?.FirstName + " " + p?.Student?.User?.LastName,
             email = p?.Student?.User?.Email ?? string.Empty,
-            Proposal = p.Proposal != null ? Convert.ToBase64String(p.Proposal) : string.Empty,
-            Status = p.Status,
+            Proposal = p?.Proposal != null ? Convert.ToBase64String(p.Proposal) : string.Empty,
+            Status = p!.Status,
             skills = p.Student?.skills != null ? p.Student.skills.Split(',').ToList() : new List<string>(),
             university = p?.Student?.University?.Name ?? string.Empty,
             department = p?.Student?.department ?? string.Empty,
@@ -350,11 +303,11 @@ public class ProposalsController : ControllerBase
     {
         var proposal = await _dbContext.Proposals
             .Include(p => p.Student)
-                .ThenInclude(s => s.University)
+                .ThenInclude(s => s!.University)
             .Include(p => p.Student)
-                .ThenInclude(s => s.User)
+                .ThenInclude(s => s!.User)
             .Include(p => p.Project)
-                .ThenInclude(i => i.IndExpert)
+                .ThenInclude(i => i!.IndExpert)
             .FirstOrDefaultAsync(p => p.Id == ProposalId);
 
         if (proposal == null)
@@ -368,10 +321,10 @@ public class ProposalsController : ControllerBase
             ProjectId = proposal.ProjectId,
             StudentId = proposal.StudentId,
             ExpertId = proposal.Project?.IndExpert?.Id,
-            StudentName = proposal?.Student?.User?.FirstName + " " + proposal?.Student?.User?.LastName ?? string.Empty,
+            StudentName = proposal?.Student?.User?.FirstName + " " + proposal?.Student?.User?.LastName,
             email = proposal?.Student?.User?.Email ?? string.Empty,
-            Proposal = proposal.Proposal != null ? Convert.ToBase64String(proposal.Proposal) : string.Empty,
-            Status = proposal.Status,
+            Proposal = proposal?.Proposal != null ? Convert.ToBase64String(proposal.Proposal) : string.Empty,
+            Status = proposal!.Status,
             skills = proposal.Student?.skills != null ? proposal.Student.skills.Split(',').ToList() : new List<string>(),
             university = proposal?.Student?.University?.Name ?? string.Empty,
             department = proposal?.Student?.department ?? string.Empty,
@@ -389,11 +342,11 @@ public class ProposalsController : ControllerBase
     {
         var student_proposals = await _dbContext.Proposals
             .Include(p => p.Student)
-                .ThenInclude(p => p.University)
+                .ThenInclude(p => p!.University)
             .Include(p => p.Student)
-                .ThenInclude(p => p.User)
+                .ThenInclude(p => p!.User)
             .Include(p => p.Project)
-                .ThenInclude(p => p.IndExpert)
+                .ThenInclude(p => p!.IndExpert)
             .Where(p => p.StudentId == StudentId)
             .ToListAsync();
 
@@ -413,11 +366,11 @@ public class ProposalsController : ControllerBase
             ProjectId = p.ProjectId,
             StudentId = p.StudentId,
             ExpertId = p.Project?.IndExpert?.Id,
-            StudentName = p?.Student?.User?.FirstName + " " + p?.Student?.User?.LastName ?? string.Empty,
-            Proposal = p?.Proposal != null ? Convert.ToBase64String(p.Proposal) : string.Empty,
-            Status = p.Status,
-            ProjectTitle = p?.Project?.Title ?? string.Empty,
-            ProjectDescription = p?.Project?.Description ?? string.Empty,
+            StudentName = p.Student?.User?.FirstName + " " + p.Student?.User?.LastName,
+            Proposal = p.Proposal != null ? Convert.ToBase64String(p.Proposal) : string.Empty,
+            Status = p!.Status,
+            ProjectTitle = p.Project?.Title ?? string.Empty,
+            ProjectDescription = p.Project?.Description ?? string.Empty,
         }).ToList();
 
         return Ok(proposalsList);

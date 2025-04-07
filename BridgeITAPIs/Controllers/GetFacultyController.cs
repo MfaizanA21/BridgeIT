@@ -1,5 +1,4 @@
 ﻿using BridgeITAPIs.DTOs.FacultyDTOs;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -56,29 +55,29 @@ public class GetFacultyController : ControllerBase
             .Include(f => f.Uni)
             .ToListAsync();
 
-        if (faculties == null)
+        if (!faculties.Any())
         {
             return NotFound("Faculty not found.");
         }
 
-            var dtoList = faculties.Select(f => new GetFacultyDTO
-            {
-                Id = f.Id,
-                UserId = f.UserId,
-                uniId = f.UniId,
-                FirstName = f.User?.FirstName ?? string.Empty,
-                LastName = f.User?.LastName ?? string.Empty,
-                Email = f.User?.Email ?? string.Empty,
-                ImageData = f.User?.ImageData ?? Array.Empty<byte>(),
-                Description = f.User?.description ?? string.Empty,
-                Department = f.Department ?? string.Empty,
-                Interest = f.Interest != null ? new List<string> { f.Interest } : new List<string>(),
-                Post = f.Post ?? string.Empty,
-                UniversityName = f.Uni?.Name ?? string.Empty,
-                Address = f.Uni?.Address ?? string.Empty,
-                UniImage = f.Uni?.uniImage ?? Array.Empty<byte>()
-            })
-            .ToList();
+        var dtoList = faculties.Select(f => new GetFacultyDTO
+        {
+            Id = f.Id,
+            UserId = f.UserId,
+            uniId = f.UniId,
+            FirstName = f.User?.FirstName ?? string.Empty,
+            LastName = f.User?.LastName ?? string.Empty,
+            Email = f.User?.Email ?? string.Empty,
+            ImageData = f.User?.ImageData ?? Array.Empty<byte>(),
+            Description = f.User?.description ?? string.Empty,
+            Department = f.Department ?? string.Empty,
+            Interest = f.Interest != null ? new List<string> { f.Interest } : new List<string>(),
+            Post = f.Post ?? string.Empty,
+            UniversityName = f.Uni?.Name ?? string.Empty,
+            Address = f.Uni?.Address ?? string.Empty,
+            UniImage = f.Uni?.uniImage ?? Array.Empty<byte>()
+        })
+        .ToList();
 
         return Ok(dtoList);
     }
@@ -92,7 +91,7 @@ public class GetFacultyController : ControllerBase
             .Where(f => f.Uni != null && f.Uni.Name.ToLower().Contains(uniName.ToLower()))
             .ToListAsync();
 
-        if (faculties == null)
+        if (!faculties.Any())
         {
             return NotFound("Faculty not found.");
         }
@@ -130,7 +129,7 @@ public class GetFacultyController : ControllerBase
                      f.User.LastName != null && f.User.LastName.ToLower().Contains(name.ToLower())))
             .ToListAsync();
 
-        if (faculty == null || !faculty.Any())
+        if (!faculty.Any())
         {
             return BadRequest("User Not found");
         }

@@ -1,5 +1,4 @@
 ﻿using BridgeITAPIs.DTOs.EventDTOs;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -20,10 +19,6 @@ public class EventsController : ControllerBase
     [HttpPost("add-event")]
     public async Task<IActionResult> AddEvent([FromBody] RegisterEventDTO dto)
     {
-        if (dto == null)
-        {
-            return BadRequest("Event Data is null.");
-        }
 
         if (dto.FacultyId == Guid.Empty)
         {
@@ -53,7 +48,7 @@ public class EventsController : ControllerBase
             .Include(e => e.Faculty)
             .ToListAsync();
 
-        if (events == null)
+        if (!events.Any())
         {
             return NotFound("No events found.");
         }
@@ -80,7 +75,7 @@ public class EventsController : ControllerBase
             .Where(e => e.FacultyId == Id)
             .ToListAsync();
 
-        if (events == null)
+        if (!events.Any())
         {
             return NotFound("No Events Found");
         }

@@ -1,5 +1,4 @@
 ﻿using BridgeITAPIs.DTOs.ResearchPaperDTOs;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -19,17 +18,13 @@ public class ResearchWorkController : ControllerBase
     [HttpPost("add-researchpaper")]
     public async Task<IActionResult> AddResearchPaper([FromBody] RegisterResearchDTO dto)
     {
-        if (dto == null)
-        {
-            return BadRequest("Research Paper Data is null.");
-        }
 
         if (dto.facultyId == Guid.Empty)
         {
             return BadRequest ("Faculty id can never be null");
         }
 
-        if(dto.paperName == null || dto.category == null || dto.publishChannel == null)
+        if(dto.paperName == String.Empty || dto.category == String.Empty || dto.publishChannel == string.Empty)
         {
             return BadRequest("Name, Category or publishChannel is required.");
         }
@@ -56,10 +51,10 @@ public class ResearchWorkController : ControllerBase
     {
         var paper = await _dbContext.ResearchWorks
             .Include(p => p.Faculty)
-            .ThenInclude(f => f.User)
+            .ThenInclude(f => f!.User)
             .ToListAsync();
 
-        if (paper == null)
+        if (!paper.Any())
         {
             return NotFound("No Research Papers Found.");
         }
@@ -74,7 +69,7 @@ public class ResearchWorkController : ControllerBase
             OtherResearchers = p.OtherResearchers ?? string.Empty,
             YearOfPublish = p.YearOfPublish,
             FacultyId = p.FacultyId,
-            FacultyName = p.Faculty?.User.FirstName ?? string.Empty
+            FacultyName = p.Faculty?.User!.FirstName ?? string.Empty
         }).ToList();
 
         return Ok(list);
@@ -89,7 +84,7 @@ public class ResearchWorkController : ControllerBase
             .Where(p => p.FacultyId == Id)
             .ToListAsync();
 
-        if (papers == null)
+        if (!papers.Any())
         {
             return NotFound("No Research Paper for this Faculty");
         }

@@ -1,7 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using BridgeITAPIs.Models;
 using BridgeITAPIs.DTOs.UniversityDTOs;
 
 namespace BridgeITAPIs.Controllers;
@@ -31,8 +29,8 @@ public class UniversitiesController : ControllerBase
         var dto = new GetUniversityDTO
         {
             Id = university.Id,
-            Name = university.Name,
-            Address = university.Address,
+            Name = university.Name!,
+            Address = university.Address!,
             EstYear = university.EstYear,
             uniImage = university.uniImage
         };
@@ -45,7 +43,7 @@ public class UniversitiesController : ControllerBase
     {
         var universities = await _dbContext.Universities.ToListAsync();
 
-        if (universities == null)
+        if (!universities.Any())
         {
             return NotFound("Universities not found.");
         }
@@ -53,8 +51,8 @@ public class UniversitiesController : ControllerBase
         var dtoList = universities.Select(u => new GetUniversityDTO
         {
             Id = u.Id,
-            Name = u.Name,
-            Address = u.Address,
+            Name = u.Name ?? String.Empty,
+            Address = u.Address ?? String.Empty,
             EstYear = u.EstYear,
             uniImage = u.uniImage
         }).ToList();
@@ -66,7 +64,7 @@ public class UniversitiesController : ControllerBase
     public async Task<IActionResult> GetUniversityByName(string name)
     {
         var university = await _dbContext.Universities
-            .FirstOrDefaultAsync(u => u.Name.ToLower().Contains(name.ToLower()));
+            .FirstOrDefaultAsync(u => u.Name!.ToLower().Contains(name.ToLower()));
 
         if (university == null)
         {
@@ -76,8 +74,8 @@ public class UniversitiesController : ControllerBase
         var dto = new GetUniversityDTO
         {
             Id = university.Id,
-            Name = university.Name,
-            Address = university.Address,
+            Name = university.Name ?? String.Empty,
+            Address = university.Address ?? String.Empty,
             EstYear = university.EstYear,
             uniImage = university.uniImage
         };
@@ -88,16 +86,16 @@ public class UniversitiesController : ControllerBase
     [HttpPost("add-university")]
     public async Task<IActionResult> AddUniversity([FromBody] AddUniversityDTO dto)
     {
-        if (dto == null)
+        if (string.IsNullOrEmpty(dto.Name))
         {
-            return BadRequest("University data is required.");
+            return BadRequest("University name is required.");
         }
         
         if(!string.IsNullOrEmpty(dto.uniImage))
         {
             byte[] ImageBytes = Convert.FromBase64String(dto.uniImage);
 
-            if (ImageBytes == null)
+            if (ImageBytes.Length == 0)
             {
                 return BadRequest("Invalid image data.");
             }

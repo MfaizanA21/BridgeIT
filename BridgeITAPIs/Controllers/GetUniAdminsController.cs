@@ -1,7 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using BridgeITAPIs.DTOs.UniAdminDTOs;
-using BridgeITAPIs.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace BridgeITAPIs.Controllers;
@@ -25,7 +23,7 @@ public class GetUniAdminsController : ControllerBase
             .Include(u => u.Uni)
             .ToListAsync();
 
-        if (admins == null)
+        if (admins.Count == 0)
         {
             return NotFound("No Record Of Admins");
         }
@@ -88,7 +86,7 @@ public class GetUniAdminsController : ControllerBase
             .Where(u => u.Uni.Name.ToLower().Contains(name.ToLower()))
             .ToListAsync();
 
-        if (admin == null)
+        if (admin.Count == 0)
         {
             return NotFound("No Record Found");
         }
@@ -120,7 +118,7 @@ public class GetUniAdminsController : ControllerBase
             .Where(u => u.UniId == UniId)
             .ToListAsync();
 
-        if (admin == null)
+        if (admin.Count == 0)
         {
             return NotFound("No Record Found");
         }

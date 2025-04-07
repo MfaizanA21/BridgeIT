@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using BridgeITAPIs.DTOs.MilestoneDTOs;
-using BridgeITAPIs.Models;
 using Microsoft.IdentityModel.Tokens;
 
 namespace BridgeITAPIs.Controllers;

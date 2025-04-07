@@ -2,6 +2,7 @@
 using BridgeITAPIs.DTOs.FacultyDTOs;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 
 namespace BridgeITAPIs.Controllers
 {
@@ -19,7 +20,7 @@ namespace BridgeITAPIs.Controllers
         [HttpPost("post-interest")]
         public async Task<IActionResult> AddInterest([FromBody] string interest)
         {
-            if (interest == null)
+            if (interest.IsNullOrEmpty())
             {
                 return BadRequest("Interest Data is null.");
             }
@@ -40,7 +41,7 @@ namespace BridgeITAPIs.Controllers
         {
             var interests = await _dbContext.FieldOfInterests.ToListAsync();
 
-            if (interests == null)
+            if (interests.IsNullOrEmpty())
             {
                 return NotFound("Interests not found.");
             }

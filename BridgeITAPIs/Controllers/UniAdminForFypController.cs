@@ -26,7 +26,6 @@ public class UniAdminForFypController : Controller
             .Include(u => u.User)
             .FirstOrDefaultAsync(f => f.FypId == fypId);
         
-        Console.WriteLine(student.User.Email);
         
         if (fyp == null || student == null)
         {
@@ -42,7 +41,7 @@ public class UniAdminForFypController : Controller
         
         await _dbContext.SaveChangesAsync();
         
-        await _mailService.SendFypMail(student.User.Email, fyp.Title, "Approved");
+        await _mailService.SendFypMail(student.User.Email!, fyp.Title!, "Approved");
         
         return Ok("FYP approved successfully.");
     }
@@ -56,7 +55,6 @@ public class UniAdminForFypController : Controller
             .Include(u => u.User)
             .FirstOrDefaultAsync(f => f.FypId == fypId);
         
-        Console.WriteLine(student.User.Email);
         
         if (fyp == null || student == null)
         {
@@ -72,7 +70,7 @@ public class UniAdminForFypController : Controller
         
         await _dbContext.SaveChangesAsync();
         
-        await _mailService.SendFypMail(student.User.Email, fyp.Title, "Rejected");
+        await _mailService.SendFypMail(student.User.Email!, fyp.Title!, "Rejected");
         
         return Ok("FYP Rejected successfully.");
     }
@@ -85,7 +83,7 @@ public class UniAdminForFypController : Controller
             .Include(u => u.User)
             .Include(u => u.University)
             .Include(s => s.Fyp)
-            .Where(s => (s.UniversityId == uniId && s.FypId != null) && s.Fyp.Status == "Pending")
+            .Where(s => (s.UniversityId == uniId && s.FypId != null) && s.Fyp!.Status == "Pending")
             .ToListAsync();
 
         if (!students.Any())
@@ -95,20 +93,20 @@ public class UniAdminForFypController : Controller
 
         var dtoList = students.Select(f => new GetFypsRequestsForUniAdminDTO
         {
-            FId = f.Fyp.Id,
-            Title = f.Fyp.Title,
+            FId = f.Fyp!.Id,
+            Title = f.Fyp.Title!,
             FypId = f.Fyp.fyp_id,
             Members = f.Fyp.Members,
-            Batch = f.Fyp.Batch,
-            Technology = f.Fyp.Technology,
-            Description = f.Fyp.Description,
-            Status = f.Fyp.Status,
+            Batch = f.Fyp.Batch!,
+            Technology = f.Fyp.Technology!,
+            Description = f.Fyp.Description!,
+            Status = f.Fyp.Status!,
             StudentId = f.Id,
-            StudentName = f.User.FirstName + " " + f.User.LastName,
-            StudentEmail = f.User.Email,
+            StudentName = f.User!.FirstName + " " + f.User.LastName,
+            StudentEmail = f.User.Email!,
             StudentRollNo = f.RollNumber,
-            UniId = f.University.Id,
-            UniName = f.University.Name,
+            UniId = f.University!.Id,
+            UniName = f.University.Name!,
         }).ToList();
 
         return Ok(dtoList);
