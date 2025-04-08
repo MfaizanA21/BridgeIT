@@ -33,6 +33,8 @@ public partial class Project
 
     public virtual IndustryExpert? IndExpert { get; set; }
 
+    public ICollection<RequestForProjectCompletion> requestForProjectCompletions { get; set; } = new List<RequestForProjectCompletion>();
+
     public virtual ICollection<MileStone> MileStones { get; set; } = new List<MileStone>();
 
     public virtual ICollection<ProjectImage> ProjectImages { get; set; } = new List<ProjectImage>();
