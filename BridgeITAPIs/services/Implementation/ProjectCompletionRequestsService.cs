@@ -65,4 +65,20 @@ public class ProjectCompletionRequestsService: IProjectCompletionRequestsService
         return await _projectCompletionRequestRepository.GetCompletionRequestsAsync(Id);
 
     }
+
+    public async Task<IActionResult> HandleRequestAsync(Guid RequestId, string status)
+    {
+        if (status != ProjectRequestStatus.ACCEPTED.ToString() &&
+            status != ProjectRequestStatus.REJECTED.ToString())
+        {
+            return new BadRequestObjectResult("Invalid status. It should only be ACCEPTED or REJECTED.");
+        }
+
+        var result = await _projectCompletionRequestRepository.HandleRequestAsync(RequestId, status);
+
+        if (result == null)
+            return new BadRequestObjectResult("Request not found or already accepted.");
+
+        return new OkObjectResult($"Request status updated to {status}");
+    }
 }

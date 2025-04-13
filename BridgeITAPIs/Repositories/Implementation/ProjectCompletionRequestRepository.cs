@@ -1,6 +1,7 @@
 using BridgeITAPIs.Repositories.interfaces;
 using Microsoft.AspNetCore.Mvc;
 using BridgeITAPIs.DTOs.ProjectCompletionRequestDTOs;
+using BridgeITAPIs.Enums;
 using Microsoft.EntityFrameworkCore;
 
 namespace BridgeITAPIs.Repositories.Implementation;
@@ -48,5 +49,22 @@ public class ProjectCompletionRequestRepository: IProjectCompletionRequestsRepos
         }).ToList();
 
         return new OkObjectResult(getRequests);
+    }
+
+    public async Task<IActionResult> HandleRequestAsync(Guid requestId, string status)
+    {
+        var request = await _dbContext.RequestForProjectCompletions
+            .FirstOrDefaultAsync(r => r.id == requestId);
+
+        if (request == null || request.RequestStatus != ProjectRequestStatus.PENDING.ToString())
+        {
+            return new BadRequestObjectResult("Request not found or already accepted.");
+        }
+
+        request.RequestStatus = status;
+        _dbContext.RequestForProjectCompletions.Update(request);
+        await _dbContext.SaveChangesAsync();
+
+        return new OkObjectResult($"Request status updated {status}");
     }
 }
