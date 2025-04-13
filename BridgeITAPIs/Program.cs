@@ -9,6 +9,7 @@ using System.Text;
 using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 using AspNetCoreRateLimit;
+using System.Reflection;
 using BridgeITAPIs.services.Implementation;
 using BridgeITAPIs.services.Interface;
 using BridgeITAPIs.SignalRHub;
@@ -64,6 +65,17 @@ builder.Services.AddScoped<ChatService>();
 // Charging Service
 builder.Services.AddScoped<IChargingService, ChargingService>();
 
+var serviceAssembly = typeof(Program).Assembly;
+
+builder.Services.Scan(scan => scan
+    .FromAssemblies(serviceAssembly)
+    .AddClasses(classes => classes.Where(type => type.Name.EndsWith("Service")))
+    .AsImplementedInterfaces()
+    .WithScopedLifetime()
+    .AddClasses(classes => classes.Where(type => type.Name.EndsWith("Repository")))
+    .AsImplementedInterfaces()
+    .WithScopedLifetime()
+);
 // EF Core configuration with SQL Server
 builder.Services.AddDbContext<BridgeItContext>( options => 
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
