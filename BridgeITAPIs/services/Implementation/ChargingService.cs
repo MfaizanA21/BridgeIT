@@ -71,7 +71,7 @@ public class ChargingService: IChargingService
       
     }
     
-    public async Task<string> CreateCheckoutSessionAsync(int amount, string successUrl, string cancelUrl, string projectId)
+    public async Task<string> CreateCheckoutSessionAsync(int amount, string successUrl, string cancelUrl, string projectId, string accountId)
     {
        amount *= 100; // Convert to PKR paisa
 
@@ -97,6 +97,14 @@ public class ChargingService: IChargingService
                 },
                 Quantity = 1
              }
+          },
+          PaymentIntentData = new SessionPaymentIntentDataOptions
+          {
+            TransferData = new SessionPaymentIntentDataTransferDataOptions
+            {
+               Destination = $"{accountId}",
+            },
+            ApplicationFeeAmount = amount / 15,
           },
           Metadata = new Dictionary<string, string>
           {
