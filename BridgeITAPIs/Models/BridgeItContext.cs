@@ -46,6 +46,8 @@ public partial class BridgeItContext : DbContext
     public virtual DbSet<MilestoneComment> MilestoneComments { get; set; }
 
     public virtual DbSet<Otp> Otps { get; set; }
+    
+    public virtual DbSet<PaymentDetail> PaymentDetails { get; set; }
 
     public virtual DbSet<Project> Projects { get; set; }
     
@@ -480,6 +482,36 @@ public partial class BridgeItContext : DbContext
             entity.HasOne(i => i.Commenter).WithMany(i => i.MilestoneComments)
                 .HasForeignKey(i => i.Commenter_id)
                 .HasConstraintName("FK__Milestone__comme__2EA5EC27");
+        });
+        
+        modelBuilder.Entity<PaymentDetail>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__PaymentD__3213E83F79822DA9");
+
+            entity.ToTable("PaymentDetail");
+
+            entity.Property(e => e.Id)
+                .ValueGeneratedNever()
+                .HasColumnName("id");
+
+            entity.Property(e => e.ProjectId)
+                .HasColumnName("project_id");
+
+            entity.Property(e => e.PaidAt)
+                .HasColumnName("paid_at");
+
+            entity.Property(e => e.PaymentSlip)
+                .IsRequired()
+                .HasColumnName("payment_slip");
+
+            entity.HasIndex(e => e.ProjectId)
+                .IsUnique()
+                .HasDatabaseName("UQ_PaymentDetail_ProjectId");
+
+            entity.HasOne(e => e.Project)
+                .WithOne(p => p.PaymentDetail)
+                .HasForeignKey<PaymentDetail>(e => e.ProjectId)
+                .HasConstraintName("FK__PaymentDe__proje__625A9A57");
         });
 
         modelBuilder.Entity<Project>(entity =>

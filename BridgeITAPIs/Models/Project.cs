@@ -48,4 +48,6 @@ public partial class Project
     public virtual Student? Student { get; set; }
 
     public virtual Faculty? Faculty { get; set; }
+    
+    public virtual PaymentDetail? PaymentDetail { get; set; }
 }
