@@ -21,11 +21,18 @@ public class PaymentController : Controller
     public async Task<IActionResult> CreateCheckoutSession(Guid projectId)
     {
         var project = await _dbContext.Projects
+            .Include(s => s.Student)
             .FirstOrDefaultAsync(p => p.Id == projectId);
 
-        if (project == null)
+        if (project == null || project.Student == null)
         {
             return NotFound("Proposal not found.");
+        }
+
+        var stripeconnectId = project.Student.StripeConnectId;
+        if(stripeconnectId == null)
+        {
+            return BadRequest("Student does not have a Stripe Connect account.");
         }
         
         var successUrl = "https://your-frontend.com/payment-success";
@@ -33,7 +40,7 @@ public class PaymentController : Controller
 
         try
         {
-            var checkoutUrl = await _chargingServ.CreateCheckoutSessionAsync(project.Budget ?? 20000, successUrl, cancelUrl, project.Id.ToString());
+            var checkoutUrl = await _chargingServ.CreateCheckoutSessionAsync(project.Budget ?? 20000, successUrl, cancelUrl, project.Id.ToString(), stripeconnectId);
             return Ok(new { CheckoutUrl = checkoutUrl });
         }
         catch (Exception e)
