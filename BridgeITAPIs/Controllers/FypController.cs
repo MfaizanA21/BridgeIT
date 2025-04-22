@@ -24,18 +24,29 @@ public class FypController : Controller
             return BadRequest(ModelState);
         }
         
-        var student = await _dbContext.Students
-            .Include(s => s.Fyp)
-            .FirstOrDefaultAsync(s => s.Id == studentId);
+        string Status;
+        Student? student = null;
         
-        if (student == null)
+        if (studentId != Guid.Empty)
         {
-            return NotFound("Student not founds.");
+            student = await _dbContext.Students
+                .Include(s => s.Fyp)
+                .FirstOrDefaultAsync(s => s.Id == studentId);
+
+            if (student == null)
+            {
+                return NotFound("Student not found.");
+            }
+
+            if (student.FypId != null && student.Fyp!.Status != "Rejected")
+            {
+                return BadRequest("Student has already registered a FYP or requested it.");
+            }
+            Status = "Pending";
         }
-        
-        if (student.FypId != null && student.Fyp!.Status != "Rejected")
+        else
         {
-            return BadRequest("Student has already registered a FYP or request for it.");
+            Status = "Approved";
         }
         
         var fyp = new Fyp
@@ -44,14 +55,17 @@ public class FypController : Controller
             fyp_id = fypDTO.fyp_id,
             Title = fypDTO.Title,
             Members = fypDTO.Members,
-            Status = "Pending",
+            Status = Status,
             Batch = fypDTO.Batch,
             Technology = fypDTO.Technology,
             Description = fypDTO.Description,
             FacultyId = fypDTO.FacultyId
         };
         await _dbContext.Fyps.AddAsync(fyp);
-        student.FypId = fyp.Id;
+        if (student != null)
+        {
+            student.FypId = fyp.Id;
+        }
         await _dbContext.SaveChangesAsync();
         
         return Ok("FYP registered successfully and is awaiting approval.");
