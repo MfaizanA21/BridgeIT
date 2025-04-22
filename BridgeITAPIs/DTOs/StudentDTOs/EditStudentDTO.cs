@@ -8,4 +8,5 @@ public class EditStudentDTO
     public byte[] ImageData { get; set; } = Array.Empty<byte>();
     public Guid? universityId { get; set; }
     public string RollNumber { get; set; } = string.Empty;
+    public string CvLink { get; set; } = String.Empty; 
 }

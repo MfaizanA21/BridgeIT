@@ -88,6 +88,11 @@ public class StudentsController : ControllerBase
             student.RollNumber = int.Parse(dto.RollNumber); // Convert RollNumber to int
         }
 
+        if (!string.IsNullOrEmpty(dto.CvLink))
+        {
+            student.cvLink = dto.CvLink;
+        }
+
         await _dbContext.SaveChangesAsync();
 
         return Ok("Student updated successfully.");
