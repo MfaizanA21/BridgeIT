@@ -40,8 +40,8 @@ public class PaymentController : Controller
             return BadRequest("Student does not have a Stripe Connect account.");
         }
         
-        var successUrl = "https://your-frontend.com/payment-success";
-        var cancelUrl = "https://your-frontend.com/payment-cancel";
+        var successUrl = "https://your-frontend.com/payment-success"; //Will Replace it eventually
+        var cancelUrl = "https://your-frontend.com/payment-cancel"; //Will Replace it eventually
 
         try
         {
@@ -89,17 +89,21 @@ public class PaymentController : Controller
 
         var project = await _dbContext.Projects
             .Include(s => s.Student)
+            .ThenInclude(s => s!.User)
             .Include(c => c.IndExpert)
+            .ThenInclude(s => s!.User)
             .FirstOrDefaultAsync(p => p.Id.ToString() == projectId);
 
         if (project == null) return;
 
+        DateTime date = DateTime.UtcNow;
+
         var paymentSlipDto = new PaymentSlipDto
         {
-            projecteeName = project.Student.User.FirstName,
-            ClientName = project.IndExpert.User.FirstName,
-            ProjectTitle = project.Title,
-            PaymentDate = DateTime.UtcNow,
+            projecteeName = project.Student!.User!.FirstName + " " + project.Student.User.LastName,
+            ClientName = project.IndExpert!.User!.FirstName + " " + project.IndExpert.User.LastName,
+            ProjectTitle = project.Title!,
+            PaymentDate = date,
             PaymentMethod = "Card",
             PaymentStatus = "Completed",
             PaymentAmount = $"{(project.Budget ?? 20000)} PKR",
@@ -107,9 +111,15 @@ public class PaymentController : Controller
         };
 
         var pdfBytes = _paymentSlipService.GeneratePaymentSlip(paymentSlipDto);
-
-        // You can now save this PDF to a database or send via email
-        // await SavePaymentSlipToDatabase(project, pdfBytes);
+        
+        await _dbContext.PaymentDetails.AddAsync(new PaymentDetail
+        {
+            Id = Guid.NewGuid(),
+            ProjectId = project.Id,
+            PaidAt = date,
+            PaymentSlip = pdfBytes,
+        });
+        
+        await _dbContext.SaveChangesAsync();
     }
-
 }
