@@ -22,7 +22,7 @@ public class PaymentController : Controller
         _paymentSlipService = paymentSlipService;
     }
     
-    [HttpPost("create-checkout-session")]
+    [HttpPost("create-checkout-session/{projectId}")]
     public async Task<IActionResult> CreateCheckoutSession(Guid projectId)
     {
         var project = await _dbContext.Projects
