@@ -65,7 +65,7 @@ public class PaymentController : Controller
             stripeEvent = EventUtility.ConstructEvent(
                 json,
                 Request.Headers["Stripe-Signature"],
-                "your_stripe_webhook_secret_here"
+                "whsec_A2LLETbXcJiNJOxzFHEtCSpMzo0PcjSf"
             );
         }
         catch (Exception e)
