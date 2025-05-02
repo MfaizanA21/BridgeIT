@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace BridgeITAPIs.Models;
+﻿namespace BridgeITAPIs.Models;
 
 public partial class Faculty
 {
@@ -32,6 +29,8 @@ public partial class Faculty
     public virtual User? User { get; set; }
 
     public virtual ICollection<Project> Projects { get; set; } = new List<Project>();
+    
+    public virtual ICollection<EductionalResource> EducationalResources { get; set; } = new List<EductionalResource>();
 
     //public virtual ICollection<Department> Departments { get; set; } = new List<Department>();
 
