@@ -21,7 +21,7 @@ public class ProjectsController : ControllerBase
 
         if (dto.StudentId == null)
         {
-            return BadRequest("Either StudentId must be provided");
+            return BadRequest("StudentId must be provided");
         }
 
         var project = new Project
