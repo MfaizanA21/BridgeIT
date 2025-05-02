@@ -5,7 +5,6 @@ using BridgeITAPIs.DTOs.CompanyDTOs;
 
 namespace BridgeITAPIs.Controllers;
 
-[Authorize]
 [Route("api/companies")]
 [ApiController]
 public class CompaniesController : ControllerBase
