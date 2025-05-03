@@ -40,8 +40,8 @@ public class PaymentController : Controller
             return BadRequest("Student does not have a Stripe Connect account.");
         }
         
-        var successUrl = "https://your-frontend.com/payment-success"; //Will Replace it eventually
-        var cancelUrl = "https://your-frontend.com/payment-cancel"; //Will Replace it eventually
+        var successUrl = $"http://localhost:3000/industryexpert/payment-success?session_id={{CHECKOUT_SESSION_ID}}&project_id={projectId}" ; //Will Replace it eventually
+        var cancelUrl = "http://localhost:3000/industryexpert/payment-failure"; //Will Replace it eventually
 
         try
         {
@@ -65,7 +65,7 @@ public class PaymentController : Controller
             stripeEvent = EventUtility.ConstructEvent(
                 json,
                 Request.Headers["Stripe-Signature"],
-                "whsec_A2LLETbXcJiNJOxzFHEtCSpMzo0PcjSf"
+                "whsec_n4KTNsaNNGg7Ut04cvzSbUnRE6ByO3xY"
             );
         }
         catch (Exception e)
