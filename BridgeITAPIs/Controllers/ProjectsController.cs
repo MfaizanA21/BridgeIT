@@ -381,4 +381,23 @@ public class ProjectsController : ControllerBase
         return Ok(projectDto);
     }
 
+    [HttpPatch("deployement/{projectId}")]
+    public async Task<IActionResult> OnProjectCompletion(Guid projectId, [FromBody] string link)
+
+    {
+        var project = await _dbContext.Projects
+            .FirstOrDefaultAsync(p => p.Id == projectId);
+
+        if (project == null)
+        {
+            return BadRequest("Project not found.");
+        }
+
+        project.Link = link;
+        
+        await _dbContext.SaveChangesAsync();
+        
+        return Ok("Project link added.");
+    }
+
 }
