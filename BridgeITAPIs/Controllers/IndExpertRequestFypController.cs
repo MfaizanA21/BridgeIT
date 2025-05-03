@@ -77,6 +77,8 @@ public class IndExpertRequestFypController : ControllerBase
             .Include(r => r.IndustryExpert)
             .ThenInclude(i => i.User)
             .Include(r => r.Fyp)
+            .ThenInclude(f => f.Students)
+            .ThenInclude(s => s.User)
             .FirstOrDefaultAsync(f => f.Id == id);
 
         if (fypRequest == null)
@@ -94,6 +96,13 @@ public class IndExpertRequestFypController : ControllerBase
             true
         );
 
+        foreach (var student in fypRequest.Fyp.Students)
+        {
+            await _mailService.NotifyStudentFypInterest(student.User!.Email!, student.User!.FirstName!,
+                fypRequest.IndustryExpert!.User!.FirstName!, fypRequest.IndustryExpert!.User!.Email!,
+                fypRequest.Fyp!.Title!);
+        }
+
         return Ok("FYP request approved successfully.");
     }
     
@@ -105,7 +114,8 @@ public class IndExpertRequestFypController : ControllerBase
             .ThenInclude(i => i.User)
             .Include(r => r.Fyp)
             .FirstOrDefaultAsync(f => f.Id == id);
-
+        
+        
         if (fypRequest == null)
         {
             return NotFound("FYP request not found.");
@@ -120,7 +130,7 @@ public class IndExpertRequestFypController : ControllerBase
             fypRequest.Fyp!.Title!,
             false
         );
-
+        
         return Ok("FYP request rejected successfully.");
     }
     
