@@ -712,6 +712,14 @@ public partial class BridgeItContext : DbContext
                 .HasColumnType("int")
                 .HasMaxLength(255);
             
+            entity.Property(e => e.IndustryExpertId).HasColumnName("ind_exp_id");
+
+            entity.HasOne(e => e.IndustryExpert)
+                .WithMany(p => p.RequestForFyps)
+                .HasForeignKey(e => e.IndustryExpertId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK__RequestFo__ind_e__0697FACD");
+            
             entity.HasOne(e => e.Student)
                 .WithMany(p => p.RequestForFyps)
                 .HasForeignKey(d => d.StudentId)
