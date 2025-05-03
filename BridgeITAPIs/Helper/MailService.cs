@@ -239,4 +239,34 @@ public class MailService
         await smtp.DisconnectAsync(true);
     }
 
+    public async Task NotifyStudentFypInterest(string to_mail, string studentName, string interestedPersonName, string interestedPersonMail, string fypTitle)
+    {
+        var email = new MimeMessage();
+        email.From.Add(new MailboxAddress("BridgeIT", _configuration["SmtpSettings:SenderEmail"]));
+        email.To.Add(MailboxAddress.Parse(to_mail));
+        email.Subject = "BridgeIT: Interest Shown in Your FYP";
+
+        var bodyBuilder = new BodyBuilder
+        {
+            HtmlBody = $@"
+        <div style='font-family: Arial, sans-serif; padding: 20px; color: #333;'>
+            <h2 style='color: #0066cc;'>BridgeIT: FYP Interest Notification</h2>
+            <p>Hello {studentName},</p>
+            <p><strong>{interestedPersonName}</strong> has shown interest in your FYP titled <strong>{fypTitle}</strong>.</p>
+            <p>Please contact them at <strong>{interestedPersonMail}</strong> to arrange a meeting and discuss further collaboration or guidance.</p>
+            <p>Take this opportunity to align on expectations and next steps.</p>
+            <br></br>
+            <p>Regards,<br/>BridgeIT Team</p>
+        </div>"
+        };
+
+        email.Body = bodyBuilder.ToMessageBody();
+
+        using var smtp = new SmtpClient();
+        await smtp.ConnectAsync(_configuration["SmtpSettings:Server"], int.Parse(_configuration["SmtpSettings:Port"]), MailKit.Security.SecureSocketOptions.StartTls);
+        await smtp.AuthenticateAsync(_configuration["SmtpSettings:Username"], _configuration["SmtpSettings:Password"]);
+        await smtp.SendAsync(email);
+        await smtp.DisconnectAsync(true);
+    }
+
 }
