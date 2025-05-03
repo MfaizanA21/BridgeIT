@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 
 namespace BridgeITAPIs.Models;
@@ -14,6 +15,8 @@ public partial class IndustryExpert
     public string? Post { get; set; }
 
     public Guid? CompanyId { get; set; }
+    
+    public virtual ICollection<RequestForFyp> RequestForFyps { get; set; } = new List<RequestForFyp>();
 
     public virtual ICollection<BoughtFyp> BoughtFyps { get; set; } = new List<BoughtFyp>();
 
