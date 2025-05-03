@@ -98,6 +98,8 @@ public class PaymentController : Controller
 
         DateTime date = DateTime.UtcNow;
 
+        project.CurrentStatus = "Completed";
+
         var paymentSlipDto = new PaymentSlipDto
         {
             projecteeName = project.Student!.User!.FirstName + " " + project.Student.User.LastName,
