@@ -9,10 +9,12 @@ namespace BridgeITAPIs.Controllers;
 public class IndExpertRequestFypController : ControllerBase
 {
     private readonly BridgeItContext _dbContext;
+    private readonly MailService _mailService;
     
-    public IndExpertRequestFypController(BridgeItContext dbContext)
+    public IndExpertRequestFypController(BridgeItContext dbContext, MailService mailService)
     {
         _dbContext = dbContext;
+        _mailService = mailService;
     }
     
     [HttpGet("get-fyp-requests")]
@@ -72,6 +74,9 @@ public class IndExpertRequestFypController : ControllerBase
     public async Task<IActionResult> ApproveFypRequest(Guid id)
     {
         var fypRequest = await _dbContext.RequestForFyps
+            .Include(r => r.IndustryExpert)
+            .ThenInclude(i => i.User)
+            .Include(r => r.Fyp)
             .FirstOrDefaultAsync(f => f.Id == id);
 
         if (fypRequest == null)
@@ -81,6 +86,13 @@ public class IndExpertRequestFypController : ControllerBase
 
         fypRequest.Status = 1; // Approved
         await _dbContext.SaveChangesAsync();
+        
+        await _mailService.SendFypApprovalStatusMail(
+            fypRequest.IndustryExpert!.User!.Email!,
+            fypRequest.IndustryExpert!.User!.FirstName!,
+            fypRequest.Fyp!.Title!,
+            true
+        );
 
         return Ok("FYP request approved successfully.");
     }
@@ -89,6 +101,9 @@ public class IndExpertRequestFypController : ControllerBase
     public async Task<IActionResult> RejectFypRequest(Guid id)
     {
         var fypRequest = await _dbContext.RequestForFyps
+            .Include(r => r.IndustryExpert)
+            .ThenInclude(i => i.User)
+            .Include(r => r.Fyp)
             .FirstOrDefaultAsync(f => f.Id == id);
 
         if (fypRequest == null)
@@ -98,6 +113,13 @@ public class IndExpertRequestFypController : ControllerBase
 
         fypRequest.Status = 0; // Rejected
         await _dbContext.SaveChangesAsync();
+        
+        await _mailService.SendFypApprovalStatusMail(
+            fypRequest.IndustryExpert!.User!.Email!,
+            fypRequest.IndustryExpert!.User!.FirstName!,
+            fypRequest.Fyp!.Title!,
+            false
+        );
 
         return Ok("FYP request rejected successfully.");
     }
