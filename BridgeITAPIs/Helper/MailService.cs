@@ -1,7 +1,5 @@
 ﻿using MailKit.Net.Smtp;
 using MimeKit;
-using Microsoft.Extensions.Configuration;
-using System.Threading.Tasks;
 
 namespace BridgeITAPIs.Helper;
 
@@ -198,6 +196,40 @@ public class MailService
                     <p>Thank you,<br/>BridgeIT Team</p>
                 </div>"
         };
+        email.Body = bodyBuilder.ToMessageBody();
+
+        using var smtp = new SmtpClient();
+        await smtp.ConnectAsync(_configuration["SmtpSettings:Server"], int.Parse(_configuration["SmtpSettings:Port"]), MailKit.Security.SecureSocketOptions.StartTls);
+        await smtp.AuthenticateAsync(_configuration["SmtpSettings:Username"], _configuration["SmtpSettings:Password"]);
+        await smtp.SendAsync(email);
+        await smtp.DisconnectAsync(true);
+    }
+
+    public async Task SendFypApprovalStatusMail(string to_mail, string Name, string fypTitle, bool isApproved)
+    {
+        var statusText = isApproved ? "approved" : "rejected";
+        var suggestionText = isApproved 
+            ? "Congratulations! You can now proceed further with the FYP. Arrange a meeting with University admin or concerned student to discuss the next steps." 
+            : "For some internal reasons the university would not like to move further with your request.";
+
+        var email = new MimeMessage();
+        email.From.Add(new MailboxAddress("BridgeIT", _configuration["SmtpSettings:SenderEmail"]));
+        email.To.Add(MailboxAddress.Parse(to_mail));
+        email.Subject = $"BridgeIT FYP {statusText.First().ToString().ToUpper() + statusText.Substring(1)}";
+
+        var bodyBuilder = new BodyBuilder
+        {
+            HtmlBody = $@"
+            <div style='font-family: Arial, sans-serif; padding: 20px; color: #333;'>
+                <h2 style='color: #0066cc;'>BridgeIT: FYP {statusText.First().ToString().ToUpper() + statusText.Substring(1)}</h2>
+                <p>Hello {Name},</p>
+                <p>Your Interested FYP titled <strong>{fypTitle}</strong>'s request has been <strong>{statusText}</strong> by the university admin.</p>
+                <p>{suggestionText}</p>
+                <br></br>
+                <p>Regards,<br/>BridgeIT Team</p>
+            </div>"
+        };
+
         email.Body = bodyBuilder.ToMessageBody();
 
         using var smtp = new SmtpClient();
