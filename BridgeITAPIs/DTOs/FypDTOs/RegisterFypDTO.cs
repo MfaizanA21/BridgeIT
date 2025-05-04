@@ -22,5 +22,7 @@ public class RegisterFypDTO
     [Required]
     public string Description { get; set; } = string.Empty;
     
+    public int? YearOfCompletion { get; set; }
+    
     public Guid FacultyId { get; set; } = Guid.Empty;
 }

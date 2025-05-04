@@ -21,6 +21,48 @@ public class PaymentController : Controller
         _dbContext = dbContext;
         _paymentSlipService = paymentSlipService;
     }
+
+    [HttpPost("create-checkout-session/fyp/{FypId}")]
+    public async Task<IActionResult> CreateFypCheckoutSession(Guid FypId, [FromBody] FypPaymentDto fypPaymentDto)
+    {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest("Invalid request data.");
+        }
+        
+        var fyp = await _dbContext.Fyps
+            .Include(f => f.Students)
+            .FirstOrDefaultAsync(f => f.Id == FypId);
+        if (fyp == null)
+        {
+            return NotFound("FYP not found.");
+        }
+        var stripeconnectId = fyp.Students.FirstOrDefault()?.StripeConnectId;
+        
+        if(stripeconnectId == null)
+        {
+            return BadRequest("Student does not have a Stripe Connect account.");
+        }
+        var metadata = new Dictionary<string, string>
+        {
+            { "fyp_id", fyp.Id.ToString() },
+            { "payment_type", "fyp_marketplace" },
+            {"indexpert_id", fypPaymentDto.IndExpertId.ToString()}
+        };
+        
+        var successUrl = $"http://localhost:3000/industryexpert/payment-success?session_id={{CHECKOUT_SESSION_ID}}&project_id={FypId}" ; //Will Replace it eventually
+        var cancelUrl = "http://localhost:3000/industryexpert/payment-failure"; //Will Replace it eventually
+
+        try
+        {
+            var checkoutUrl = await _chargingServ.CreateCheckoutSessionAsync(fypPaymentDto.price, successUrl, cancelUrl, metadata, stripeconnectId);
+            return Ok(new { CheckoutUrl = checkoutUrl });
+        }
+        catch (Exception e)
+        {
+            return BadRequest(new { Error = "Failed to create checkout session", Details = e.Message });
+        }
+    }
     
     [HttpPost("create-checkout-session/{projectId}")]
     public async Task<IActionResult> CreateCheckoutSession(Guid projectId)
@@ -40,12 +82,18 @@ public class PaymentController : Controller
             return BadRequest("Student does not have a Stripe Connect account.");
         }
         
+        var metadata = new Dictionary<string, string>
+        {
+            { "project_id", project.Id.ToString() },
+            { "payment_type", "industry_project" }
+        };
+        
         var successUrl = $"http://localhost:3000/industryexpert/payment-success?session_id={{CHECKOUT_SESSION_ID}}&project_id={projectId}" ; //Will Replace it eventually
         var cancelUrl = "http://localhost:3000/industryexpert/payment-failure"; //Will Replace it eventually
 
         try
         {
-            var checkoutUrl = await _chargingServ.CreateCheckoutSessionAsync(project.Budget ?? 20000, successUrl, cancelUrl, project.Id.ToString(), stripeconnectId);
+            var checkoutUrl = await _chargingServ.CreateCheckoutSessionAsync(project.Budget ?? 20000, successUrl, cancelUrl, metadata, stripeconnectId);
             return Ok(new { CheckoutUrl = checkoutUrl });
         }
         catch (Exception e)
@@ -76,14 +124,57 @@ public class PaymentController : Controller
         if (stripeEvent.Type == "checkout.session.completed")
         {
             var session = stripeEvent.Data.Object as Session;
-            
-            await HandlePaymentSuccess(session);
+            var paymentType = session?.Metadata["payment_type"];
+
+            switch (paymentType)
+            {
+                case "industry_project":
+                    await HandleIndustryProjectPayment(session);
+                    break;
+                case "fyp_marketplace":
+                    await HandleFypPayment(session);
+                    break;
+                default:
+                    // Optionally log unknown payment types
+                    break;
+            }
         }
 
         return Ok();
     }
 
-    private async Task HandlePaymentSuccess(Session session)
+    private async Task HandleFypPayment(Session session)
+    {
+        var fypId = session.Metadata["fyp_id"];
+        var indExpertId = Guid.Parse(session.Metadata["indexpert_id"]);
+        
+        var fyp = await _dbContext.Fyps
+            .Include(f => f.Students)
+            .ThenInclude(s => s!.User)
+            .Include(f => f.Faculty)
+            .FirstOrDefaultAsync(f => f.Id.ToString() == fypId);
+        
+        if (fyp == null) return;
+        
+        var date = DateOnly.FromDateTime(DateTime.UtcNow);
+        
+        var uniAdmin = await _dbContext.UniversityAdmins
+            .Include(u => u.User)
+            .FirstOrDefaultAsync(u => u.UniId == fyp.Faculty!.UniId);
+
+        await _dbContext.BoughtFyps.AddAsync(new BoughtFyp
+        {
+            Id = Guid.NewGuid(),
+            FypId = fyp.Id,
+            IndExpertId = indExpertId,
+            UniversityAdminId = uniAdmin!.Id,
+            // Agreement = agreementDoc,
+            Price = long.Parse(session.AmountTotal.ToString()),
+            PurchaseDate = date
+        });
+        
+    }
+    private async Task HandleIndustryProjectPayment(Session session)
     {
         var projectId = session.Metadata["project_id"];
 

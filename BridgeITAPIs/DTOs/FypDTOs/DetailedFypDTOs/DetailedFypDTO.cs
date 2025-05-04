@@ -9,6 +9,7 @@ public class DetailedFypDTO
     public string? Technology { get; set; }
     public string? Description { get; set; }
     public string? Status { get; set; }
+    public int ? YearOfCompletion { get; set; }
 
     public FacultyDTO? Faculty { get; set; }
     public List<StudentDTO> Students { get; set; } = new List<StudentDTO>();

@@ -355,10 +355,9 @@ public partial class BridgeItContext : DbContext
             entity.Property(e => e.Title)
                 .HasMaxLength(255)
                 .HasColumnName("title");
-            // entity.HasOne(u => u.University).WithMany(f => f.Fyps)
-            //     .HasForeignKey(u => u.UniId)
-            //     .HasConstraintName("FK__FYP__UNIVERSITY");
-
+            entity.Property(f => f.YearOfCompletion)
+                .HasColumnName("year_of_completion")
+                .HasColumnType("int");
             entity.HasOne(d => d.Faculty).WithMany(p => p.Fyps)
                 .HasForeignKey(d => d.FacultyId)
                 .HasConstraintName("FK__FYP__faculty_id__65F62111");

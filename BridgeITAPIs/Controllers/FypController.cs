@@ -59,7 +59,8 @@ public class FypController : Controller
             Batch = fypDTO.Batch,
             Technology = fypDTO.Technology,
             Description = fypDTO.Description,
-            FacultyId = fypDTO.FacultyId
+            FacultyId = fypDTO.FacultyId,
+            YearOfCompletion = fypDTO.YearOfCompletion ?? int.Parse(fypDTO.Batch) + 4
         };
         await _dbContext.Fyps.AddAsync(fyp);
         if (student != null)
@@ -91,7 +92,8 @@ public class FypController : Controller
             Status = fyp.Status ?? string.Empty,
             Batch = fyp.Batch ?? string.Empty,
             Technology = fyp.Technology ?? string.Empty,
-            Description = fyp.Description ?? string.Empty
+            Description = fyp.Description ?? string.Empty,
+            YearOfCompletion = fyp.YearOfCompletion
         };
         
         return Ok(dto);
@@ -175,6 +177,7 @@ public class FypController : Controller
             Technology = fyp.Technology,
             Description = fyp.Description,
             Status = fyp.Status,
+            YearOfCompletion = fyp.YearOfCompletion,
             Faculty = fyp.Faculty != null ? new FacultyDTO
             {
                 Id = fyp.Faculty.Id,//
@@ -197,5 +200,31 @@ public class FypController : Controller
         return Ok(detailedFypDTO);
     }
 
-    
+    [HttpGet("for-marketplace")]
+    public async Task<IActionResult> GetFypsForMarketPlace()
+    {
+        var fyps = await _dbContext.Fyps
+            .Include(f => f.Faculty)
+            .ThenInclude(f => f.User)
+            .Where(f => f.Status == "Approved" && f.YearOfCompletion <= DateTime.Now.Year)
+            .ToListAsync();
+
+        if (!fyps.Any())
+        {
+            return BadRequest("No FYPs available for the marketplace.");
+        }
+        
+        var fypDtos = fyps.Select(f => new GetFypForMarketplaceDTO
+        {
+            Id = f.Id,
+            Title = f.Title ?? string.Empty,
+            FypId = f.fyp_id,
+            Description = f.Description ?? string.Empty,
+            Members = f.Members,
+            FacultyName = $"{f.Faculty?.User?.FirstName} {f.Faculty?.User?.LastName}",
+            Technology = f.Technology ?? string.Empty
+        }).ToList();
+        
+        return Ok(fypDtos);
+    }
 }
