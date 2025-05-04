@@ -16,6 +16,8 @@ public partial class IndustryExpert
 
     public Guid? CompanyId { get; set; }
     
+    public virtual ICollection<FypMeeting> FypMeetings { get; set; } = new List<FypMeeting>();
+
     public virtual ICollection<RequestForFyp> RequestForFyps { get; set; } = new List<RequestForFyp>();
 
     public virtual ICollection<BoughtFyp> BoughtFyps { get; set; } = new List<BoughtFyp>();

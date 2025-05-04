@@ -13,7 +13,7 @@ public partial class BoughtFyp
 
     public Guid? UniversityAdminId { get; set; }
 
-    public string? Agreement { get; set; }
+    public byte[]? Agreement { get; set; }
 
     public long? Price { get; set; }
 

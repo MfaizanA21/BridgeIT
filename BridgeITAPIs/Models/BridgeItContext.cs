@@ -34,6 +34,8 @@ public partial class BridgeItContext : DbContext
     public virtual DbSet<ForgotPasswordOtp> ForgotPasswordOtps { get; set; }
 
     public virtual DbSet<Fyp> Fyps { get; set; }
+    
+    public virtual DbSet<FypMeeting> FypMeetings { get; set; }
 
     public virtual DbSet<Idea> Ideas { get; set; }
 
@@ -96,7 +98,7 @@ public partial class BridgeItContext : DbContext
                 .ValueGeneratedNever()
                 .HasColumnName("id");
             entity.Property(e => e.Agreement)
-                .HasMaxLength(255)
+                .HasColumnType("varbinary(max)")
                 .HasColumnName("agreement");
             entity.Property(e => e.FypId).HasColumnName("fyp_id");
             entity.Property(e => e.IndExpertId).HasColumnName("ind_expert_id");
@@ -361,6 +363,49 @@ public partial class BridgeItContext : DbContext
             entity.HasOne(d => d.Faculty).WithMany(p => p.Fyps)
                 .HasForeignKey(d => d.FacultyId)
                 .HasConstraintName("FK__FYP__faculty_id__65F62111");
+        });
+
+        modelBuilder.Entity<FypMeeting>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__FypMeeti__3213E83F1DF49EAE");
+
+            entity.ToTable("FypMeeting");
+
+            entity.Property(e => e.Id)
+                .ValueGeneratedNever()
+                .HasColumnName("id");
+
+            entity.Property(e => e.ChosenSlot)
+                .HasColumnName("chosen_slot");
+
+            entity.Property(e => e.Status)
+                .HasMaxLength(255)
+                .HasColumnName("status");
+
+            entity.Property(e => e.MeetLink)
+                .HasColumnName("meet_link");
+
+            entity.Property(e => e.Feedback)
+                .HasColumnName("feedback");
+
+            entity.Property(e => e.IsMeetDone)
+                .HasColumnName("is_meet_done");
+
+            entity.Property(e => e.FypId)
+                .HasColumnName("fyp_id");
+
+            entity.Property(e => e.IndExpId)
+                .HasColumnName("ind_exp_id");
+
+            entity.HasOne(d => d.Fyp)
+                .WithMany(p => p.FypMeetings)
+                .HasForeignKey(d => d.FypId)
+                .HasConstraintName("FK__FypMeetin__fyp_i__1B9317B3");
+
+            entity.HasOne(d => d.IndustryExpert)
+                .WithMany(p => p.FypMeetings)
+                .HasForeignKey(d => d.IndExpId)
+                .HasConstraintName("FK__FypMeetin__ind_e__1C873BEC");
         });
 
         modelBuilder.Entity<Idea>(entity =>
@@ -807,7 +852,7 @@ public partial class BridgeItContext : DbContext
                 .ValueGeneratedNever()
                 .HasColumnName("id");
             entity.Property(e => e.Agreement)
-                .HasMaxLength(255)
+                .HasColumnType("varbinary(max)")
                 .HasColumnName("agreement");
             entity.Property(e => e.FypId).HasColumnName("fyp_id");
             entity.Property(e => e.SponsoredById).HasColumnName("sponsored_by_id");
