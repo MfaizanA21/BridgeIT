@@ -168,4 +168,36 @@ public class IndExpertRequestFypController : ControllerBase
 
         return Ok(dtoList);
     }
+    
+    [HttpGet("get-by-id/{id}")]
+    public async Task<IActionResult> GetFypRequestById(Guid id)
+    {
+        var fypRequest = await _dbContext.RequestForFyps
+            .Include(r => r.IndustryExpert)
+            .ThenInclude(i => i.User)
+            .Include(r => r.Fyp)
+            .ThenInclude(f => f.Students)
+            .ThenInclude(s => s.User)
+            .FirstOrDefaultAsync(f => f.Id == id || f.IndustryExpertId == id || f.FypId == id);
+
+        if (fypRequest == null)
+        {
+            return NotFound("FYP request not found.");
+        }
+
+        var dto = new GetFypRequestDTO
+        {
+            Id = fypRequest.Id,
+            Status = fypRequest.Status,
+            StudentIds = fypRequest.Fyp!.Students.Select(s => s.Id).ToArray(),
+            FypId = fypRequest.FypId,
+            IndustryExpertId = fypRequest.IndustryExpertId,
+            IndustryExpertName = $"{fypRequest.IndustryExpert!.User.FirstName} {fypRequest.IndustryExpert.User.LastName}",
+            FypTitle = fypRequest.Fyp.Title ?? string.Empty,
+            FypDescription = fypRequest.Fyp.Description ?? string.Empty,
+            Fyp_fypId = fypRequest.Fyp.fyp_id
+        };
+
+        return Ok(dto);
+    }
 }
