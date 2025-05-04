@@ -71,7 +71,7 @@ public class ChargingService: IChargingService
       
     }
     
-    public async Task<string> CreateCheckoutSessionAsync(int amount, string successUrl, string cancelUrl, string projectId, string accountId)
+    public async Task<string> CreateCheckoutSessionAsync(int amount, string successUrl, string cancelUrl, Dictionary<string, string> metadata, string accountId)
     {
        amount *= 100; // Convert to PKR paisa
 
@@ -92,7 +92,9 @@ public class ChargingService: IChargingService
                    ProductData = new SessionLineItemPriceDataProductDataOptions
                    {
                       Name = "Project Payment",
-                      Description = $"Payment for project {projectId}",
+                      Description = metadata.ContainsKey("project_id")
+                         ? $"Payment for project {metadata["project_id"]}"
+                         : "FYP Purchase"
                    }
                 },
                 Quantity = 1
@@ -106,10 +108,7 @@ public class ChargingService: IChargingService
             },
             ApplicationFeeAmount = amount / 15,
           },
-          Metadata = new Dictionary<string, string>
-          {
-             { "project_id", projectId }
-          }
+          Metadata = metadata
        };
 
        var service = new SessionService();

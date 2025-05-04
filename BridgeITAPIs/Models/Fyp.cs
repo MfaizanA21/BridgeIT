@@ -23,6 +23,8 @@ public partial class Fyp
 
     public Guid? FacultyId { get; set; }
     
+    public int? YearOfCompletion { get; set; }
+    
     // public Guid? UniId { get; set; }
 
     public virtual ICollection<BoughtFyp> BoughtFyps { get; set; } = new List<BoughtFyp>();
