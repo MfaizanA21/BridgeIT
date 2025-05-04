@@ -172,7 +172,9 @@ public class PaymentController : Controller
             Price = long.Parse(session.AmountTotal.ToString()),
             PurchaseDate = date
         });
-        
+
+        await _dbContext.SaveChangesAsync();
+
     }
     private async Task HandleIndustryProjectPayment(Session session)
     {

@@ -200,7 +200,7 @@ public class FypController : Controller
         return Ok(detailedFypDTO);
     }
 
-    [HttpGet("for-marketplace")]
+    [HttpGet("for-marketplace/buy")]
     public async Task<IActionResult> GetFypsForMarketPlace()
     {
         var fyps = await _dbContext.Fyps
@@ -212,6 +212,34 @@ public class FypController : Controller
         if (!fyps.Any())
         {
             return BadRequest("No FYPs available for the marketplace.");
+        }
+        
+        var fypDtos = fyps.Select(f => new GetFypForMarketplaceDTO
+        {
+            Id = f.Id,
+            Title = f.Title ?? string.Empty,
+            FypId = f.fyp_id,
+            Description = f.Description ?? string.Empty,
+            Members = f.Members,
+            FacultyName = $"{f.Faculty?.User?.FirstName} {f.Faculty?.User?.LastName}",
+            Technology = f.Technology ?? string.Empty
+        }).ToList();
+        
+        return Ok(fypDtos);
+    }
+    
+    [HttpGet("for-marketplace/sponsor")]
+    public async Task<IActionResult> GetFypsForSponsor()
+    {
+        var fyps = await _dbContext.Fyps
+            .Include(f => f.Faculty)
+            .ThenInclude(f => f.User)
+            .Where(f => f.Status == "Approved" && f.YearOfCompletion > DateTime.Now.Year)
+            .ToListAsync();
+
+        if (!fyps.Any())
+        {
+            return BadRequest("No FYPs available for sponsorship.");
         }
         
         var fypDtos = fyps.Select(f => new GetFypForMarketplaceDTO
