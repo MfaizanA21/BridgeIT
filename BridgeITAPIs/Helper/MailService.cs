@@ -38,7 +38,6 @@ public class MailService
         await smtp.SendAsync(email);
         await smtp.DisconnectAsync(true);
     }
-
     
     public async Task SendInterestAcceptanceMailToStudent(string to_mail, string ideaName, string facultyName,
         string time)
@@ -269,4 +268,32 @@ public class MailService
         await smtp.DisconnectAsync(true);
     }
 
+    public async Task NotifyStudentAboutMeetingTime(string to_mail, string interestedPersonName, string fypTitle, DateTime time)
+    {
+        var email = new MimeMessage();
+        email.From.Add(new MailboxAddress("BridgeIT", _configuration["SmtpSettings:SenderEmail"]));
+        email.To.Add(MailboxAddress.Parse(to_mail));
+        email.Subject = "BridgeIT: Meeting Scheduled";
+
+        var bodyBuilder = new BodyBuilder
+        {
+            HtmlBody = $@"
+        <div style='font-family: Arial, sans-serif; padding: 20px; color: #333;'>
+            <h2 style='color: #0066cc;'>BridgeIT: Meeting Scheduled</h2>
+            <p>Hello,</p>
+            <p>Your FYP titled <strong>{fypTitle}</strong> has a meeting scheduled with <strong>{interestedPersonName}</strong> at/on <strong>{time}</strong>.</p>
+            <p>Please be prepared for the discussion.</p>
+            <br></br>
+            <p>Regards,<br/>BridgeIT Team</p>
+        </div>"
+        };
+
+        email.Body = bodyBuilder.ToMessageBody();
+
+        using var smtp = new SmtpClient();
+        await smtp.ConnectAsync(_configuration["SmtpSettings:Server"], int.Parse(_configuration["SmtpSettings:Port"]), MailKit.Security.SecureSocketOptions.StartTls);
+        await smtp.AuthenticateAsync(_configuration["SmtpSettings:Username"], _configuration["SmtpSettings:Password"]);
+        await smtp.SendAsync(email);
+        await smtp.DisconnectAsync(true);
+    }
 }

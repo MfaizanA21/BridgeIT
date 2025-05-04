@@ -11,7 +11,7 @@ public partial class SponsoredFyp
 
     public Guid? SponsoredById { get; set; }
 
-    public string? Agreement { get; set; }
+    public byte[]? Agreement { get; set; }
 
     public virtual Fyp? Fyp { get; set; }
 

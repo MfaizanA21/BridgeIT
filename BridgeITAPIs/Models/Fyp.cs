@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 
 namespace BridgeITAPIs.Models;
@@ -27,6 +28,7 @@ public partial class Fyp
     
     // public Guid? UniId { get; set; }
 
+    public virtual ICollection<FypMeeting> FypMeetings { get; set; } = new List<FypMeeting>();
     public virtual ICollection<BoughtFyp> BoughtFyps { get; set; } = new List<BoughtFyp>();
 
     public virtual Faculty? Faculty { get; set; }
