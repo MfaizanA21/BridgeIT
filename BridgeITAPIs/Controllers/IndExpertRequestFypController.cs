@@ -173,31 +173,30 @@ public class IndExpertRequestFypController : ControllerBase
     public async Task<IActionResult> GetFypRequestById(Guid id)
     {
         var fypRequest = await _dbContext.RequestForFyps
-            .Include(r => r.IndustryExpert)
-            .ThenInclude(i => i.User)
-            .Include(r => r.Fyp)
-            .ThenInclude(f => f.Students)
-            .ThenInclude(s => s.User)
-            .FirstOrDefaultAsync(f => f.Id == id || f.IndustryExpertId == id || f.FypId == id);
+            .Include(r => r.IndustryExpert).ThenInclude(i => i.User)
+            .Include(r => r.Fyp).ThenInclude(f => f.Students).ThenInclude(s => s.User)
+            .Where(f => f.Id == id || f.IndustryExpertId == id || f.FypId == id)
+            .ToListAsync();
 
-        if (fypRequest == null)
+        if (!fypRequest.Any())
         {
             return NotFound("FYP request not found.");
         }
 
-        var dto = new GetFypRequestDTO
+        var dto = fypRequest.Select(f => new GetFypRequestDTO
         {
-            Id = fypRequest.Id,
-            Status = fypRequest.Status,
-            StudentIds = fypRequest.Fyp!.Students.Select(s => s.Id).ToArray(),
-            FypId = fypRequest.FypId,
-            IndustryExpertId = fypRequest.IndustryExpertId,
-            IndustryExpertName = $"{fypRequest.IndustryExpert!.User.FirstName} {fypRequest.IndustryExpert.User.LastName}",
-            FypTitle = fypRequest.Fyp.Title ?? string.Empty,
-            FypDescription = fypRequest.Fyp.Description ?? string.Empty,
-            Fyp_fypId = fypRequest.Fyp.fyp_id
-        };
+            Id = f.Id,
+            Status = f.Status,
+            StudentIds = f.Fyp!.Students.Select(s => s.Id).ToArray(),
+            FypId = f.FypId,
+            IndustryExpertId = f.IndustryExpertId,
+            IndustryExpertName = $"{f.IndustryExpert!.User.FirstName} {f.IndustryExpert.User.LastName}",
+            FypTitle = f.Fyp.Title ?? string.Empty,
+            FypDescription = f.Fyp.Description ?? string.Empty,
+            Fyp_fypId = f.Fyp.fyp_id
+        }).ToList();
 
         return Ok(dto);
     }
+
 }
