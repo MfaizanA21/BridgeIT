@@ -75,7 +75,7 @@ public class FypMeetingController : ControllerBase
     public async Task<IActionResult> AddMeetingLink(Guid id, [FromBody] string meetLink)
     {
         var fypMeeting = await _dbContext.FypMeetings
-            .FirstOrDefaultAsync(f => f.Id == id);
+            .FirstOrDefaultAsync(f => f.Id == id || f.FypId == id);
 
         if (fypMeeting == null)
         {
@@ -121,7 +121,7 @@ public class FypMeetingController : ControllerBase
     [HttpPatch("after-meeting/{id}")]
     public async Task<IActionResult> AfterMeetingFeedback(Guid id, [FromBody] AfterMeetingFeedbackDto meetingdto)
     {
-        var meeting = await _dbContext.FypMeetings.FirstOrDefaultAsync(f => f.Id == id);
+        var meeting = await _dbContext.FypMeetings.FirstOrDefaultAsync(f => f.Id == id || f.FypId == id);
 
         if (meeting == null)
         {
