@@ -35,12 +35,12 @@ builder.Services.AddCors(options =>
     options.AddPolicy("AllowSpecificOrigin",
         policy =>
         {
-            policy.WithOrigins("http://localhost:3000", "https://bridgeit-cyan.vercel.app")
+            policy.WithOrigins("http://localhost:3000", "http://bridgeit-cyan.vercel.app")
                   .AllowAnyHeader()
                   .AllowAnyMethod();
         });
 });
-
+//hello
 // Rate Limiting
 builder.Services.AddMemoryCache();
 builder.Services.Configure<IpRateLimitOptions>(builder.Configuration.GetSection("IpRateLimiting"));
