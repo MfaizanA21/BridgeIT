@@ -49,10 +49,9 @@ public class PaymentController : Controller
             { "payment_type", "fyp_marketplace" },
             {"indexpert_id", fypPaymentDto.IndExpertId.ToString()}
         };
-        
-        var successUrl = $"http://localhost:3000/industryexpert/payment-success?session_id={{CHECKOUT_SESSION_ID}}&project_id={FypId}" ; //Will Replace it eventually
-        var cancelUrl = "http://localhost:3000/industryexpert/payment-failure"; //Will Replace it eventually
 
+        var successUrl = $"http://localhost:3000/industryexpert/payment-complete?session_id={{CHECKOUT_SESSION_ID}}&project_id={FypId}";
+        var cancelUrl = "http://localhost:3000/industryexpert/payment-fail";
         try
         {
             var checkoutUrl = await _chargingServ.CreateCheckoutSessionAsync(fypPaymentDto.price, successUrl, cancelUrl, metadata, stripeconnectId);
