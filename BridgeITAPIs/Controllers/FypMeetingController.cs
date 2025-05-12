@@ -195,7 +195,7 @@ public class FypMeetingController : ControllerBase
         {
             return NotFound("No sponsored FYP found.");
         }
-
+        
         var dto = new GetSponsoredFypDto
         {
             Id = sponsoredFyp.Id,

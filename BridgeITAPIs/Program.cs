@@ -35,11 +35,9 @@ builder.Services.AddCors(options =>
     options.AddPolicy("AllowSpecificOrigin",
         policy =>
         {
-            policy.WithOrigins("http://localhost:3000") 
+            policy.WithOrigins("http://localhost:3000", "https://bridgeit-cyan.vercel.app")
                   .AllowAnyHeader()
                   .AllowAnyMethod();
-                  // .SetIsOriginAllowed(_ => true);
-            // .AllowCredentials();
         });
 });
 
