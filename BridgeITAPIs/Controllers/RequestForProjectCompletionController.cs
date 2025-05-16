@@ -32,6 +32,18 @@ public class RequestForProjectCompletionController : ControllerBase
         return await _projectCompletionRequestsService.GetCompletionRequestsAsync(Id);
     }
     
+    
+    /// <summary>
+    /// Retrieves the project completion request associated with the given project. 
+    /// </summary>
+    /// <param name="Id">The GUID of the project related to the project request</param>
+    /// <returns>An <see cref="IActionResult"/> containing the project completion request or an appropriate error message.</returns>
+    [HttpGet("completion-request-for-project/{Id}")]
+    public async Task<IActionResult> GetCompletionRequestForProject(Guid Id)
+    {
+        return await _projectCompletionRequestsService.GetCompletionRequestForProjectAsync(Id);
+    }
+    
     /// <summary>
     /// Changes the Project status to either "Accepted" or "Rejected" based on the body.
     /// </summary>
