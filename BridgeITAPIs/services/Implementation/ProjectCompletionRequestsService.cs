@@ -66,6 +66,31 @@ public class ProjectCompletionRequestsService: IProjectCompletionRequestsService
 
     }
 
+    public async Task<IActionResult> GetCompletionRequestForProjectAsync(Guid Id)
+    {
+        var user = await _dbContext.Users
+            .Include(u => u.Students)
+            .Include(u => u.IndustryExperts)
+            .Where(u => (u.Students.Any(s => s.Id == Id) || u.IndustryExperts.Any(i => i.Id == Id) || u.Students.Any(s => s.Projects.Any(p => p.Id == Id)) || u.IndustryExperts.Any(i => i.Projects.Any(p => p.Id == Id))))
+            .FirstOrDefaultAsync();
+        
+        var project = await _dbContext.Projects
+            .Include(r => r.requestForProjectCompletions)
+            .Where(p => p.Id == Id).FirstOrDefaultAsync();
+        
+        if (user == null)
+        {
+            return new NotFoundObjectResult("User does not exist with this id");
+        }
+
+        if (project == null)
+        {
+            return new NotFoundObjectResult("No Projects Found for this user.");
+        }
+
+        return await _projectCompletionRequestRepository.GetCompletionRequestForProjectAsync(Id);
+    }
+
     public async Task<IActionResult> HandleRequestAsync(Guid RequestId, string status)
     {
         if (status != ProjectRequestStatus.ACCEPTED.ToString() &&

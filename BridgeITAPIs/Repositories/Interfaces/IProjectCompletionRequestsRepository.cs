@@ -9,5 +9,7 @@ public interface IProjectCompletionRequestsRepository
     
     public Task<IActionResult> GetCompletionRequestsAsync(Guid Id);
     
+    public Task<IActionResult> GetCompletionRequestForProjectAsync(Guid Id);
+    
     public Task<IActionResult> HandleRequestAsync(Guid RequestId, string status);
 }
