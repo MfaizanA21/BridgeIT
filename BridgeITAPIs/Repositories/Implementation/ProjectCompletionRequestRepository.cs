@@ -51,6 +51,31 @@ public class ProjectCompletionRequestRepository: IProjectCompletionRequestsRepos
         return new OkObjectResult(getRequests);
     }
 
+    public async Task<IActionResult> GetCompletionRequestForProjectAsync(Guid Id)
+    {
+        var request = await _dbContext.RequestForProjectCompletions
+            .Include(r => r.project)
+            .ThenInclude(s => s.Student)
+            .ThenInclude(u => u.User)
+            .Include(p => p.project.IndExpert)
+            .ThenInclude(i => i.User)
+            .FirstOrDefaultAsync();
+        
+        var getRequest = new GetProjectCompletionRequestDto
+        {
+            Id = request.id,
+            ProjectId = request.ProjectId,
+            ProjectName = request.project.Title,
+            ProjectDescription = request.project.Description,
+            IndExpertId = request.project.IndExpertId,
+            StudentId = request.project.StudentId,
+            StudentName = request.project.Student?.User?.FirstName + " " + request.project.Student?.User?.LastName ?? "Unknown",
+        };
+
+        
+        return new OkObjectResult(getRequest);
+    }
+
     public async Task<IActionResult> HandleRequestAsync(Guid requestId, string status)
     {
         var request = await _dbContext.RequestForProjectCompletions
