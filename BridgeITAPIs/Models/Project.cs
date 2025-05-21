@@ -50,4 +50,6 @@ public partial class Project
     public virtual Faculty? Faculty { get; set; }
     
     public virtual PaymentDetail? PaymentDetail { get; set; }
+    
+    public virtual ICollection<ProjectModule> Modules { get; set; } = new List<ProjectModule>();
 }
