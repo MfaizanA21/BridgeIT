@@ -470,6 +470,8 @@ public partial class BridgeItContext : DbContext
 
             entity.Property(e => e.Id).ValueGeneratedNever().HasColumnName("id");
             entity.Property(e => e.Status).HasColumnName("status");
+            entity.Property(e => e.MeetPlace).HasColumnName("meet_place");
+            entity.Property(e => e.MeetTime).HasColumnName("MeetTime");
             entity.Property(e => e.StudentId).HasColumnName("student_id");
             entity.Property(e => e.IdeaId).HasColumnName("idea_id");
 

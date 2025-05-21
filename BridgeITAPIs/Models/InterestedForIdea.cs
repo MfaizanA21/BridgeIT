@@ -6,7 +6,8 @@ public class InterestedForIdea
     public Guid StudentId { get; set; }
     public Guid IdeaId { get; set; }
     public int? Status { get; set; } = null;
-    
+    public string? MeetPlace { get; set; } = string.Empty;
+    public DateTime? MeetTime { get; set; }
     public virtual Student? Student { get; set; }
     public virtual Idea? Idea { get; set; }
 }
