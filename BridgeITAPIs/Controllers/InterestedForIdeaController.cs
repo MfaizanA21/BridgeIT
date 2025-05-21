@@ -51,15 +51,19 @@ public class InterestedForIdeaController : Controller
     }
 
     [HttpGet("get-interested-students-requests/{facultyId}")]
-    public async Task<IActionResult> GetInterestedStudents(Guid facultyId)
+    public async Task<IActionResult> GetInterestedStudents(Guid facultyId, [FromQuery] int? status)
     {
-        var requests = await _dbContext.InterestedForIdeas
-            .Include(r => r.Student)
-            .ThenInclude(r => r!.User)
-            .Include(r => r.Idea)
-            .ThenInclude(r => r!.Faculty)
-            .Where(r => r.Idea!.FacultyId == facultyId || r.Status != 1)
-            .ToListAsync();
+        var query = _dbContext.InterestedForIdeas
+            .Include(r => r.Student).ThenInclude(r => r!.User)
+            .Include(r => r.Idea).ThenInclude(r => r!.Faculty)
+            .Where(r => r.Idea!.FacultyId == facultyId);
+
+        if (status.HasValue)
+        {
+            query = query.Where(r => r.Status == status);
+        }
+
+        var requests = await query.ToListAsync();
 
         if (!requests.Any())
         {
@@ -124,7 +128,7 @@ public class InterestedForIdeaController : Controller
     }
 
     [HttpPut("accept-request/{RequestId}")]
-    public async Task<IActionResult> AcceptRequest(Guid RequestId, [FromBody] string time)
+    public async Task<IActionResult> AcceptRequest(Guid RequestId, [FromBody] AddMeetingDetailDTO dto)
     {
         var request = await _dbContext.InterestedForIdeas
             .Include(r => r.Student)
@@ -140,10 +144,12 @@ public class InterestedForIdeaController : Controller
         }
         
         request.Status = 1;
+        request.MeetPlace = dto.MeetPlace;
+        request.MeetTime = dto.MeetTime;
         
         await _dbContext.SaveChangesAsync();
 
-        await _mailService.SendInterestAcceptanceMailToStudent(request.Student.User.Email, request.Idea.Name,request.Idea.Faculty.User.Email, time);
+        await _mailService.SendInterestAcceptanceMailToStudent(request.Student.User.Email, request.Idea.Name,request.Idea.Faculty.User.Email, dto.MeetTime.ToString(), dto.MeetPlace);
 
         return Ok("Request have been accepted");
     }

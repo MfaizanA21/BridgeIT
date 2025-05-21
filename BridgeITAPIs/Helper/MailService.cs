@@ -40,7 +40,7 @@ public class MailService
     }
     
     public async Task SendInterestAcceptanceMailToStudent(string to_mail, string ideaName, string facultyName,
-        string time)
+        string time, string place)
     {
         var email = new MimeMessage();
         email.From.Add(new MailboxAddress("BridgeIT", _configuration["SmtpSettings:SenderEmail"]));
@@ -53,7 +53,7 @@ public class MailService
                 <div style='font-family: Arial, sans-serif; padding: 20px; color: #333;'>
                     <h2 style='color: #0066cc;'>BridgeIT: Meeting Scheduled for Idea Discussion</h2>
                     <p>Hello,</p>
-                    <p><strong>{facultyName}</strong> have scheduled a meeting at/on <strong>{time}</strong> for discussion of <strong>{ideaName}</strong> idea.</p>
+                    <p><strong>{facultyName}</strong> have scheduled a meeting at/on <strong>{time}</strong> at <strong>{place}</strong> for discussion of <strong>{ideaName}</strong> idea.</p>
                     <p>Good luck for the Meeting. </p>
                     <br></br>
                     <p>Regards,<br/>BridgeIT Team</p>
