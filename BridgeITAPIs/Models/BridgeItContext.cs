@@ -55,6 +55,8 @@ public partial class BridgeItContext : DbContext
 
     public virtual DbSet<Project> Projects { get; set; }
     
+    public virtual DbSet<ProjectModule> ProjectModules { get; set; }
+    
     public virtual DbSet<ProjectProgress> ProjectProgresses { get; set; }
 
     public virtual DbSet<ProjectProposal> Proposals { get; set; }
@@ -635,6 +637,37 @@ public partial class BridgeItContext : DbContext
             entity.HasOne(d => d.Faculty).WithMany(p => p.Projects)
                 .HasForeignKey(d => d.FacultyId)
                 .HasConstraintName("FK_Project_Faculty");
+        });
+        
+        modelBuilder.Entity<ProjectModule>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__ProjectM__3213E83F17D82272");
+
+            entity.ToTable("ProjectModule");
+
+            entity.Property(e => e.Id)
+                .ValueGeneratedNever()
+                .HasColumnName("id");
+
+            entity.Property(e => e.Name)
+                .IsRequired()
+                .HasColumnName("name");
+
+            entity.Property(e => e.Description)
+                .IsRequired()
+                .HasColumnName("description");
+
+            entity.Property(e => e.Status)
+                .HasColumnType("BIT")
+                .HasColumnName("status");
+
+            entity.Property(e => e.ProjectId)
+                .HasColumnName("project_id");
+
+            entity.HasOne(d => d.Project)
+                .WithMany(p => p.Modules)
+                .HasForeignKey(d => d.ProjectId)
+                .HasConstraintName("FK__ProjectMo__proje__2EA5EC27");
         });
 
         modelBuilder.Entity<ProjectProgress>(entity =>
