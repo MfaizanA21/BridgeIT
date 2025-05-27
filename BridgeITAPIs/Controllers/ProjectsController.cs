@@ -399,28 +399,23 @@ public class ProjectsController : ControllerBase
         
         return Ok("Project link added.");
     }
-    
     [HttpGet("get-link/{projectId}")]
     public async Task<IActionResult> GetProjectLink(Guid projectId)
     {
         var project = await _dbContext.Projects
             .FirstOrDefaultAsync(p => p.Id == projectId);
-        
+
         if (project == null)
         {
             return BadRequest("Project not found.");
         }
 
-        if (project.CurrentStatus != "Completed")
-        {
-            return BadRequest("project is not completed yet or payment is not made");
-        }
+        // Status check ko completely remove kar diya
+        string? link = project.Link;
 
-        string? link = project.Link ?? String.Empty;
-
-        if (link == String.Empty)
+        if (string.IsNullOrEmpty(link))
         {
-            return BadRequest("link is not found yet");
+            return BadRequest("Deployment link is not found yet");
         }
 
         return Ok(link);
