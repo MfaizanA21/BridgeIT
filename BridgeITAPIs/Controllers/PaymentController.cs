@@ -50,8 +50,8 @@ public class PaymentController : Controller
             {"indexpert_id", fypPaymentDto.IndExpertId.ToString()}
         };
 
-        var successUrl = $"http://localhost:3000/industryexpert/payment-complete?session_id={{CHECKOUT_SESSION_ID}}&project_id={FypId}";
-        var cancelUrl = "http://localhost:3000/industryexpert/payment-fail";
+        var successUrl = $"https://bridgeit-cyan.vercel.app/industryexpert/payment-complete?session_id={{CHECKOUT_SESSION_ID}}&project_id={FypId}";
+        var cancelUrl = "https://bridgeit-cyan.vercel.app/industryexpert/payment-fail";
         try
         {
             var checkoutUrl = await _chargingServ.CreateCheckoutSessionAsync(fypPaymentDto.price, successUrl, cancelUrl, metadata, stripeconnectId);
@@ -87,8 +87,8 @@ public class PaymentController : Controller
             { "payment_type", "industry_project" }
         };
         
-        var successUrl = $"http://localhost:3000/industryexpert/payment-success?session_id={{CHECKOUT_SESSION_ID}}&project_id={projectId}" ; //Will Replace it eventually
-        var cancelUrl = "http://localhost:3000/industryexpert/payment-failure"; //Will Replace it eventually
+        var successUrl = $"https://bridgeit-cyan.vercel.app/industryexpert/payment-success?session_id={{CHECKOUT_SESSION_ID}}&project_id={projectId}" ; //Will Replace it eventually
+        var cancelUrl = "https://bridgeit-cyan.vercel.app/industryexpert/payment-failure"; //Will Replace it eventually
 
         try
         {
