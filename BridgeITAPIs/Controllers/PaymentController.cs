@@ -66,7 +66,7 @@ public class PaymentController : Controller
     [HttpPost("create-checkout-session/{projectId}")]
     public async Task<IActionResult> CreateCheckoutSession(Guid projectId)
     {
-        var project = await _dbContext.Projects
+        var project = await _dbContext.Projects//
             .Include(s => s.Student)
             .FirstOrDefaultAsync(p => p.Id == projectId);
 
