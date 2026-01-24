@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using BridgeITAPIs.DTOs.OtpDTOs;
+using BridgeITAPIs.services.Implementation;
 
 namespace BridgeITAPIs.Controllers;
 

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using BridgeITAPIs.DTOs.AuthDTOs;
+using BridgeITAPIs.services.Implementation;
 namespace BridgeITAPIs.Controllers;
 
 [Route("api/auth")]

@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 
-namespace BridgeITAPIs.Middlewares;
+namespace BridgeITAPIs.services.Implementation;
 
 public class UserService
 {
@@ -15,7 +15,7 @@ public class UserService
 
     public ClaimsPrincipal GetCurrentUser()
     {
-        return _httpContextAccessor.HttpContext?.User;
+        return _httpContextAccessor.HttpContext.User;
     }
 
     public string GetCurrentUserId()

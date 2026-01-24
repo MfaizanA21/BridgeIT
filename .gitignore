@@ -364,3 +364,11 @@ FodyWeavers.xsd
 
 # DB Migrations
 BridgeITAPIs/Identity/
+
+# Environment-specific configuration and launch settings
+# Avoid checking in application settings that may contain secrets
+appsettings.json
+appsettings.*.json
+# Visual Studio launchSettings (contains environment variables / profiles)
+Properties/launchSettings.json
+**/Properties/launchSettings.json

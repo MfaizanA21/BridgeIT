@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using BridgeITAPIs.DTOs.ProjectProposalDTOs;
 using BridgeITAPIs.Models;
 using BridgeITAPIs.services.Interface;
+using BridgeITAPIs.services.Implementation;
 
 namespace BridgeITAPIs.Controllers;
 

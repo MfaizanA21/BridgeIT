@@ -7,7 +7,7 @@ using System.Text;
 using BridgeITAPIs.DTOs.AuthDTOs;
 
 
-namespace BridgeITAPIs.Auth;
+namespace BridgeITAPIs.services.Implementation;
 
 public class AuthService: IAuthService
 {

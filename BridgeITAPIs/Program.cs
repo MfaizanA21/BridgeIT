@@ -1,6 +1,5 @@
 global using BridgeITAPIs.Models;
 global using BridgeITAPIs.Helper;
-global using BridgeITAPIs.Middlewares;
 global using BridgeITAPIs.Auth;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -9,7 +8,6 @@ using System.Text;
 using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 using AspNetCoreRateLimit;
-using System.Reflection;
 using BridgeITAPIs.services.Implementation;
 using BridgeITAPIs.services.Interface;
 using BridgeITAPIs.SignalRHub;
@@ -40,7 +38,6 @@ builder.Services.AddCors(options =>
                   .AllowAnyMethod();
         });
 });
-//hello
 // Rate Limiting
 builder.Services.AddMemoryCache();
 builder.Services.Configure<IpRateLimitOptions>(builder.Configuration.GetSection("IpRateLimiting"));
@@ -176,5 +173,24 @@ app.UseAuthorization();
 app.MapControllers();
 app.MapRazorPages();
 app.MapHub<ChatHub>("/chathub");
+
+// Log the connection string EF Core will use so it's easy to verify at startup
+using (var scope = app.Services.CreateScope())
+{
+    var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
+    var configConn = builder.Configuration.GetConnectionString("DefaultConnection");
+    logger.LogInformation("Connection string from configuration: {ConnectionString}", configConn);
+
+    try
+    {
+        var dbContext = scope.ServiceProvider.GetRequiredService<BridgeItContext>();
+        var efConn = dbContext.Database.GetDbConnection().ConnectionString;
+        logger.LogInformation("EF Core will use connection string: {EfConnectionString}", efConn);
+    }
+    catch (Exception ex)
+    {
+        logger.LogError(ex, "Could not resolve BridgeItContext to read the EF Core connection string.");
+    }
+}
 
 app.Run();
