@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BridgeITAPIs.Enums;
+using System;
 using System.Collections.Generic;
 
 namespace BridgeITAPIs.Models;
@@ -22,6 +23,14 @@ public partial class User
     public byte[]? ImageData { get; set; }
 
     public string? description { get; set; }
+    
+    public string? otpCode { get; set; }
+
+    public OtpType? otpType { get; set; }
+
+    public DateTime? otpCreatedAt { get; set; }
+    
+    public DateTime? otpExpiresAt { get; set; }
 
     public virtual ICollection<Faculty> Faculties { get; set; } = new List<Faculty>();
 

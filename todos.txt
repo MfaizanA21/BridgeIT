@@ -1,0 +1,8 @@
+OTP entity removed.
+ -> Removed OTP as a seperate enitity. Now part of User entity. 
+ -> TODO: Move OTP related logic to UserService and remove OTP entity.
+
+Move to Clean Architecture
+
+
+Dockerize the application for consistent deployment.

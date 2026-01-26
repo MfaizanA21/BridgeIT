@@ -1050,6 +1050,17 @@ public partial class BridgeItContext : DbContext
             entity.Property(e => e.description)
                 .HasColumnType("nvarchar(max)")
                 .HasColumnName("description");
+            entity.Property(e => e.otpCode)
+                .HasMaxLength(6)
+                .HasColumnName("otpCcode");
+            entity.Property(e => e.otpType)
+                .HasColumnName("otpType");
+            entity.Property(e => e.otpCreatedAt)
+                .HasColumnType("datetime")
+                .HasColumnName("otpCreatedAt");
+            entity.Property(e => e.otpExpiresAt)
+                .HasColumnType("datetime")
+                .HasColumnName("otpExpiresAt");
         });
 
         OnModelCreatingPartial(modelBuilder);
