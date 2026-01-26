@@ -1,29 +1,76 @@
-**These are APIs for BridgeIT project** <br>
-    <h1> Our Final Year Project </h1>
+# .NET Web API – Local Development Setup
+
+This repository contains a .NET Web API project. Follow the steps below to set up and run the project locally for development.
+
+## Prerequisites
+Ensure the following tools are installed on your machine:
+
+- .NET 8 SDK
+- SQL Server (SQL Server Express)
+- SQL Server Management Studio (SSMS) – recommended
 
 
-<h2> Instructions to run the project</h2>
+## Database Setup (SQL Server)
 
--> Clone the repo <br>
--> Open in Visual Studio <br>
--> Install required packages if not installed already (contact for acquiring Nuget Packages names) <br>
--> Create a Database in SQL SERVER with query file i attached earlier <br>
--> Get the connection string for that Database <br>
--> Replace the connection string in appsettings.json file with yours <br> <br>
+### 1. Install SQL Server
+Install SQL Server locally. SQL Server Express is sufficient for local development.
 
-**Checking Nuget Packages** <br>
--> Inside the Solution Explorer expand Dependencies <br>
--> Expand Packages, there you will find installed packages <br><br>
+### 2. Enable TCP/IP
+TCP/IP must be enabled for SQL Server.
 
-**Installing packages(if not already installed)**<br>
-   FROM NUGET PACKAGE MANAGER INSTALL<br>
--> Microsoft.AspNetCore.Cryptography.KeyDerivation v8.0.7<br>
--> Microsoft.EntityFrameworkCore.SqlServer v8.0.7<br>
--> Microsoft.EntityFrameworkCore.Tools v8.0.7<br>
--> Microsoft.EntityFrameworkCore.Design v8.0.7<br>
--> Swashbuckle.AspNetCore v6.4.0<br><br>
+Steps:
+1. Open **SQL Server Configuration Manager**
+2. Go to  
+   `SQL Server Network Configuration → Protocols for SQLEXPRESS`
+3. Enable **TCP/IP**
+4. Restart the SQL Server service
 
 
+## Application Configuration
 
+### 1. Create `appsettings.Development.json`
 
-<h2> Run the project and happy integrating :) </h2>
+In the root directory (../BridgeITAPIs/BridgeITAPIs) of the project, create the following file:
+`appsettings.Development.json`
+
+### 2. Configure Connection String
+
+Add the following configuration and update it if required to match your local SQL Server setup:
+
+```
+{
+  "ConnectionStrings": {
+    "DefaultConnection": "Server=localhost\\SQLEXPRESS;Database=BridgeITDB;Trusted_Connection=True;TrustServerCertificate=True;"
+  }
+}
+```
+### 3. Database Migration
+
+This project uses Entity Framework Core for database management.
+
+Run the following command from the project directory:
+
+`dotnet ef migrations add InitialCreate`
+
+`dotnet ef database update`
+
+This command will:
+
+- Create the database if it does not exist
+- Automatically create all required tables
+
+Ensure the correct startup project is selected if running this command from an IDE.
+
+## Running the Application
+Start the application using one of the following methods:
+- `dotnet build`
+- `dotnet watch run`
+
+Or run the project directly from your IDE (Visual Studio, Rider, or VS Code).
+
+### Notes
+
+- Containerization of the database setup and automatic population of some tables for easier development is planned for a future phase.
+- Until then, please follow the steps above for local development.
+
+### Happy coding:)
