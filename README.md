@@ -30,7 +30,7 @@ Steps:
 
 ### 1. Create `appsettings.Development.json`
 
-In the root directory (../BridgeITAPIs/BridgeITAPIs) of the project, create the following file:
+In the root directory (../BridgeIT/BridgeIT.API) of the project, create the following file:
 `appsettings.Development.json`
 
 ### 2. Configure Connection String
