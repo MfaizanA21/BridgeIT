@@ -1,4 +1,4 @@
-﻿namespace BridgeITAPIs.DTOs.OtpDTOs
+﻿namespace BridgeIT.API.DTOs.OtpDTOs
 {
     public class VerifyOtpDTO
     {

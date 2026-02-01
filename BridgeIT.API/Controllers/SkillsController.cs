@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using BridgeITAPIs.DTOs.SkillsDTOs;
+using BridgeIT.API.DTOs.SkillsDTOs;
+using BridgeIT.Infrastructure;
+using BridgeIT.Domain.Models;
 
-namespace BridgeITAPIs.Controllers;
+namespace BridgeIT.API.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]

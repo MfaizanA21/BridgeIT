@@ -1,6 +1,6 @@
 ﻿using Microsoft.OpenApi.Models;
 
-namespace BridgeITAPIs.DTOs.IndustryExpertDTOs;
+namespace BridgeIT.API.DTOs.IndustryExpertDTOs;
 
 public class GetIndustryExpertDTO
 {

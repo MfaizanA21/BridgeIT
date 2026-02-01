@@ -1,4 +1,4 @@
-namespace BridgeITAPIs.DTOs.ProjectCompletionRequestDTOs;
+namespace BridgeIT.API.DTOs.ProjectCompletionRequestDTOs;
 
 public class GetProjectCompletionRequestDto
 {

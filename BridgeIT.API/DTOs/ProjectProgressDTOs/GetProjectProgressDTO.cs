@@ -1,5 +1,5 @@
 
-namespace BridgeITAPIs.DTOs.ProjectProgressDTOs;
+namespace BridgeIT.API.DTOs.ProjectProgressDTOs;
 
 public class GetProjectProgressDTO
 {

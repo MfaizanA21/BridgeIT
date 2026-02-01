@@ -1,7 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using BridgeITAPIs.DTOs.IndustryExpertDTOs;
+using BridgeIT.API.DTOs.IndustryExpertDTOs;
 using Microsoft.EntityFrameworkCore;
-namespace BridgeITAPIs.Controllers;
+using BridgeIT.Infrastructure;
+
+namespace BridgeIT.API.Controllers;
+
 
 [Route("api/get-industry-expert")]
 [ApiController]

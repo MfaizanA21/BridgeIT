@@ -1,9 +1,11 @@
 using Microsoft.AspNetCore.Mvc;
-using BridgeITAPIs.DTOs.FypDTOs;
-using BridgeITAPIs.DTOs.FypDTOs.DetailedFypDTOs;
+using BridgeIT.API.DTOs.FypDTOs;
+using BridgeIT.API.DTOs.FypDTOs.DetailedFypDTOs;
 using Microsoft.EntityFrameworkCore;
+using BridgeIT.Domain.Models;
+using BridgeIT.Infrastructure;
 
-namespace BridgeITAPIs.Controllers;
+namespace BridgeIT.API.Controllers;
 
 [Route("api/fyp")]
 [ApiController]

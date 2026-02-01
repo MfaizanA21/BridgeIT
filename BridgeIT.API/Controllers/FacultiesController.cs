@@ -1,8 +1,9 @@
-﻿using BridgeITAPIs.DTOs.FacultyDTOs;
+﻿using BridgeIT.API.DTOs.FacultyDTOs;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using BridgeIT.Infrastructure;
 
-namespace BridgeITAPIs.Controllers;
+namespace BridgeIT.API.Controllers;
 
 [Route("api/faculties")]
 [ApiController]

@@ -1,8 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using BridgeITAPIs.DTOs.StudentDTOs;
+using BridgeIT.API.DTOs.StudentDTOs;
 using Microsoft.EntityFrameworkCore;
+using BridgeIT.Infrastructure;
 
-namespace BridgeITAPIs.Controllers;
+namespace BridgeIT.API.Controllers;
 
 [Route("api/get-student")]
 [ApiController]

@@ -1,6 +1,6 @@
-global using BridgeITAPIs.Models;
-global using BridgeITAPIs.Helper;
-global using BridgeITAPIs.Auth;
+//global using BridgeIT.API.Models;
+global using BridgeIT.API.Helper;
+global using BridgeIT.API.Auth;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
@@ -8,10 +8,11 @@ using System.Text;
 using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 using AspNetCoreRateLimit;
-using BridgeITAPIs.services.Implementation;
-using BridgeITAPIs.services.Interface;
-using BridgeITAPIs.SignalRHub;
+using BridgeIT.API.services.Implementation;
+using BridgeIT.API.services.Interface;
+using BridgeIT.API.SignalRHub;
 using Stripe;
+using BridgeIT.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 

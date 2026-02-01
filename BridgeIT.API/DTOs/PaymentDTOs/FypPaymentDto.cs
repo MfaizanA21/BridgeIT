@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace BridgeITAPIs.DTOs.PaymentDTOs;
+namespace BridgeIT.API.DTOs.PaymentDTOs;
 
 public class FypPaymentDto
 {

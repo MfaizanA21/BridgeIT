@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using BridgeITAPIs.DTOs.UniversityDTOs;
+using BridgeIT.API.DTOs.UniversityDTOs;
+using BridgeIT.Infrastructure;
+using BridgeIT.Domain.Models;
 
-namespace BridgeITAPIs.Controllers;
+namespace BridgeIT.API.Controllers;
 
 [Route("api/universities")]
 [ApiController]

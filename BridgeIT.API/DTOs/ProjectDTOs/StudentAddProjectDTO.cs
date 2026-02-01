@@ -1,4 +1,4 @@
-﻿namespace BridgeITAPIs.DTOs.ProjectDTOs;
+﻿namespace BridgeIT.API.DTOs.ProjectDTOs;
 
 public class StudentAddProjectDTO
 {

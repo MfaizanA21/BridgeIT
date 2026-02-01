@@ -1,8 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using BridgeITAPIs.DTOs.UniAdminDTOs;
+using BridgeIT.API.DTOs.UniAdminDTOs;
 using Microsoft.EntityFrameworkCore;
+using BridgeIT.Infrastructure;
 
-namespace BridgeITAPIs.Controllers;
+namespace BridgeIT.API.Controllers;
 
 [Route("api/get-uni-admins")]
 [ApiController]

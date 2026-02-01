@@ -1,4 +1,4 @@
-namespace BridgeITAPIs.Enums;
+namespace BridgeIT.API.Enums;
 
 public enum ProjectProgressStatus
 {

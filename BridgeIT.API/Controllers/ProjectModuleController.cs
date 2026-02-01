@@ -1,8 +1,10 @@
-using BridgeITAPIs.DTOs.ProjectModuleDTOs;
+using BridgeIT.API.DTOs.ProjectModuleDTOs;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using BridgeIT.Domain.Models;
+using BridgeIT.Infrastructure;
 
-namespace BridgeITAPIs.Controllers;
+namespace BridgeIT.API.Controllers;
 
 [ApiController]
 [Route("api/project-module")]

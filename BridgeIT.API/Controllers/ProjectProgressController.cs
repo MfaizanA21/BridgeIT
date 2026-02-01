@@ -1,9 +1,11 @@
-using BridgeITAPIs.DTOs.ProjectProgressDTOs;
-using BridgeITAPIs.Enums;
+using BridgeIT.API.DTOs.ProjectProgressDTOs;
+using BridgeIT.API.Enums;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using BridgeIT.Domain.Models;
+using BridgeIT.Infrastructure;
 
-namespace BridgeITAPIs.Controllers;
+namespace BridgeIT.API.Controllers;
 
 [ApiController]
 [Route("api/project-progress")]

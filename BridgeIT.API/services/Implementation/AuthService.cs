@@ -1,13 +1,13 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using BridgeITAPIs.Helper;
 using System.IdentityModel.Tokens.Jwt;
 using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
 using System.Text;
-using BridgeITAPIs.DTOs.AuthDTOs;
+using BridgeIT.API.DTOs.AuthDTOs;
+using BridgeIT.Infrastructure;
 
 
-namespace BridgeITAPIs.services.Implementation;
+namespace BridgeIT.API.services.Implementation;
 
 public class AuthService: IAuthService
 {

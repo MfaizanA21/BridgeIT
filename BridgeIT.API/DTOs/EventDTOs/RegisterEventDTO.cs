@@ -1,4 +1,4 @@
-﻿namespace BridgeITAPIs.DTOs.EventDTOs
+﻿namespace BridgeIT.API.DTOs.EventDTOs
 {
     public class RegisterEventDTO
     {

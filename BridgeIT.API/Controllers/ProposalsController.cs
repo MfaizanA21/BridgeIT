@@ -1,12 +1,12 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using BridgeITAPIs.DTOs.ProjectProposalDTOs;
-using BridgeITAPIs.Models;
-using BridgeITAPIs.services.Interface;
-using BridgeITAPIs.services.Implementation;
+using BridgeIT.API.DTOs.ProjectProposalDTOs;
+using BridgeIT.API.services.Interface;
+using BridgeIT.API.services.Implementation;
+using BridgeIT.Domain.Models;
+using BridgeIT.Infrastructure;
 
-namespace BridgeITAPIs.Controllers;
+namespace BridgeIT.API.Controllers;
 
 [Route("api/project-proposals")]
 [ApiController]

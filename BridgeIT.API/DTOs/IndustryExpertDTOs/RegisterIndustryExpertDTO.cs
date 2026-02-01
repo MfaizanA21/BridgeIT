@@ -1,4 +1,4 @@
-﻿namespace BridgeITAPIs.DTOs.IndustryExpertDTOs
+﻿namespace BridgeIT.API.DTOs.IndustryExpertDTOs
 {
     public class RegisterIndustryExpertDTO
     {

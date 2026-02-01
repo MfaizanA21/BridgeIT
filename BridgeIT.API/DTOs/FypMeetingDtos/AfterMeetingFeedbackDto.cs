@@ -1,4 +1,4 @@
-namespace BridgeITAPIs.DTOs.FypMeetingDtos;
+namespace BridgeIT.API.DTOs.FypMeetingDtos;
 
 public class AfterMeetingFeedbackDto
 {

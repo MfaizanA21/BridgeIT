@@ -1,9 +1,10 @@
-﻿using BridgeITAPIs.DTOs.EventDTOs;
+﻿using BridgeIT.API.DTOs.EventDTOs;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using BridgeIT.Domain.Models;
+using BridgeIT.Infrastructure;
 
-
-namespace BridgeITAPIs.Controllers;
+namespace BridgeIT.API.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]

@@ -1,4 +1,4 @@
-﻿namespace BridgeITAPIs.DTOs.ProjectProposalDTOs
+﻿namespace BridgeIT.API.DTOs.ProjectProposalDTOs
 {
     public class SendProposalDTO
     {

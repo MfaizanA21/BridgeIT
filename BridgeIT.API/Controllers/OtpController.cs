@@ -1,9 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using BridgeITAPIs.DTOs.OtpDTOs;
-using BridgeITAPIs.services.Implementation;
+using BridgeIT.API.DTOs.OtpDTOs;
+using BridgeIT.API.services.Implementation;
+using BridgeIT.Domain.Models;
+using BridgeIT.Infrastructure;
 
-namespace BridgeITAPIs.Controllers;
+namespace BridgeIT.API.Controllers;
 
 [Route("api/otp")]
 [ApiController]

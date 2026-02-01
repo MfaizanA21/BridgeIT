@@ -1,7 +1,7 @@
-using BridgeITAPIs.Enums;
+using BridgeIT.API.Enums;
 using Microsoft.AspNetCore.Mvc;
 
-namespace BridgeITAPIs.Repositories.interfaces;
+namespace BridgeIT.API.Repositories.interfaces;
 
 public interface IProjectCompletionRequestsRepository
 {

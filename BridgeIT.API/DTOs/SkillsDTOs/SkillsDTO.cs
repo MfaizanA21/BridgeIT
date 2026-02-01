@@ -1,4 +1,4 @@
-﻿namespace BridgeITAPIs.DTOs.SkillsDTOs
+﻿namespace BridgeIT.API.DTOs.SkillsDTOs
 {
     public class SkillsDTO
     {

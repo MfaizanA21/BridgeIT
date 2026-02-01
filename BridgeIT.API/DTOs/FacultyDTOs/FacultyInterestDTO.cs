@@ -1,4 +1,4 @@
-﻿namespace BridgeITAPIs.DTOs.FacultyDTOs
+﻿namespace BridgeIT.API.DTOs.FacultyDTOs
 {
     public class FacultyInterestDTO
     {

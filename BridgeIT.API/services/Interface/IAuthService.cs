@@ -1,6 +1,6 @@
-﻿using BridgeITAPIs.DTOs.AuthDTOs;
+﻿using BridgeIT.API.DTOs.AuthDTOs;
 
-namespace BridgeITAPIs.Auth;
+namespace BridgeIT.API.Auth;
 
 public interface IAuthService
 {

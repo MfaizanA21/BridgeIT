@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 18
 VisualStudioVersion = 18.2.11415.280 d18.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BridgeIT.API", "BridgeITAPIs\BridgeIT.API.csproj", "{FFFB17ED-A907-4CEB-886F-A472C650160D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BridgeIT.API", "BridgeIT.API\BridgeIT.API.csproj", "{FFFB17ED-A907-4CEB-886F-A472C650160D}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{607B8740-DD5D-4B23-BE21-D1309AB00905}"
 	ProjectSection(SolutionItems) = preProject

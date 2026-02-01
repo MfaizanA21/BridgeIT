@@ -1,4 +1,4 @@
-namespace BridgeITAPIs.DTOs.ReviewDTOs;
+namespace BridgeIT.API.DTOs.ReviewDTOs;
 
 public class AddReviewDto
 {

@@ -1,8 +1,10 @@
-using BridgeITAPIs.DTOs.ChatDTOs;
+using BridgeIT.API.DTOs.ChatDTOs;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using BridgeIT.Domain.Models;
+using BridgeIT.Infrastructure;
 
-namespace BridgeITAPIs.Controllers;
+namespace BridgeIT.API.Controllers;
 
 [Route("api/chats")]
 [ApiController]

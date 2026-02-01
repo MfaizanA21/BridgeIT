@@ -1,11 +1,11 @@
-using BridgeITAPIs.DTOs.PaymentDTOs;
-using BridgeITAPIs.services.Interface;
+using BridgeIT.API.DTOs.PaymentDTOs;
+using BridgeIT.API.services.Interface;
 using Syncfusion.Pdf;
 using Syncfusion.Pdf.Graphics;
 using Syncfusion.Drawing;
 using System.IO;
 
-namespace BridgeITAPIs.services.Implementation;
+namespace BridgeIT.API.services.Implementation;
 
 public class PaymentSlipService : IPaymentSlipService
 {

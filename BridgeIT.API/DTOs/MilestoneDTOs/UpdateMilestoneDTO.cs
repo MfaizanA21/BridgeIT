@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace BridgeITAPIs.DTOs.MilestoneDTOs;
+namespace BridgeIT.API.DTOs.MilestoneDTOs;
 
 public class UpdateMilestoneDTO
 {

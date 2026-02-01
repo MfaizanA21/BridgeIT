@@ -1,9 +1,10 @@
-using BridgeITAPIs.DTOs.FypDTOs;
-using BridgeITAPIs.services.Implementation;
+using BridgeIT.API.DTOs.FypDTOs;
+using BridgeIT.API.services.Implementation;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using BridgeIT.Infrastructure;
 
-namespace BridgeITAPIs.Controllers;
+namespace BridgeIT.API.Controllers;
 
 [Route("api/uni-admin-for-fyp")]
 [ApiController]
@@ -18,7 +19,7 @@ public class UniAdminForFypController : Controller
         _mailService = mailService;
     }
 
-    [HttpPut("approve-fyp")]//
+    [HttpPut("approve-fyp")]
     public async Task<IActionResult> ApproveFyp([FromQuery] Guid fypId)
     {
         var fyp = await _dbContext.Fyps

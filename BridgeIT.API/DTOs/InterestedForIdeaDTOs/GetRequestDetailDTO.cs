@@ -1,4 +1,4 @@
-namespace BridgeITAPIs.DTOs.InterestedForIdeaDTOs;
+namespace BridgeIT.API.DTOs.InterestedForIdeaDTOs;
 
 public class GetRequestDetailDTO
 {

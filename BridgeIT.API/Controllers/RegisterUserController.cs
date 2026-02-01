@@ -1,12 +1,14 @@
-﻿using BridgeITAPIs.DTOs.FacultyDTOs;
-using BridgeITAPIs.DTOs.IndustryExpertDTOs;
-using BridgeITAPIs.DTOs.StudentDTOs;
-using BridgeITAPIs.DTOs.UniAdminDTOs;
-using BridgeITAPIs.services.Interface;
+﻿using BridgeIT.API.DTOs.FacultyDTOs;
+using BridgeIT.API.DTOs.IndustryExpertDTOs;
+using BridgeIT.API.DTOs.StudentDTOs;
+using BridgeIT.API.DTOs.UniAdminDTOs;
+using BridgeIT.API.services.Interface;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using BridgeIT.Domain.Models;
+using BridgeIT.Infrastructure;
 
-namespace BridgeITAPIs.Controllers;
+namespace BridgeIT.API.Controllers;
 
 [Route("api/register-user")]
 [ApiController]

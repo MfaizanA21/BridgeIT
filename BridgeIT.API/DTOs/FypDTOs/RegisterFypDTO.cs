@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace BridgeITAPIs.DTOs.FypDTOs;
+namespace BridgeIT.API.DTOs.FypDTOs;
 
 public class RegisterFypDTO
 {

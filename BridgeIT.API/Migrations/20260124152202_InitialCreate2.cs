@@ -2,7 +2,7 @@
 
 #nullable disable
 
-namespace BridgeITAPIs.Migrations
+namespace BridgeIT.API.Migrations
 {
     /// <inheritdoc />
     public partial class InitialCreate2 : Migration

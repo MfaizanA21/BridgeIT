@@ -1,4 +1,4 @@
-namespace BridgeITAPIs.DTOs.ProjectModuleDTOs;
+namespace BridgeIT.API.DTOs.ProjectModuleDTOs;
 
 public class GetProjectModuleDTO
 {

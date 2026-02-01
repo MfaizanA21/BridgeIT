@@ -1,4 +1,4 @@
-﻿namespace BridgeITAPIs.DTOs.ResearchPaperDTOs
+﻿namespace BridgeIT.API.DTOs.ResearchPaperDTOs
 {
     public class GetResearchPaperDTO
     {

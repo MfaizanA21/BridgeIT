@@ -1,8 +1,9 @@
-﻿using BridgeITAPIs.DTOs.UserDTOs;
+﻿using BridgeIT.API.DTOs.UserDTOs;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using BridgeIT.Infrastructure;
 
-namespace BridgeITAPIs.Controllers;
+namespace BridgeIT.API.Controllers;
 
 [Route("api/edit-user-profile")]
 [ApiController]

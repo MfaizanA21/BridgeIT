@@ -1,4 +1,4 @@
-namespace BridgeITAPIs.DTOs.ChatDTOs;
+namespace BridgeIT.API.DTOs.ChatDTOs;
 
 public class SendMessageDTO
 {

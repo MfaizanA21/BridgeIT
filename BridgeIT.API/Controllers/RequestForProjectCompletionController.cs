@@ -1,8 +1,8 @@
-using BridgeITAPIs.Enums;
-using BridgeITAPIs.services.Interface;
+using BridgeIT.API.services.Interface;
 using Microsoft.AspNetCore.Mvc;
 
-namespace BridgeITAPIs.Controllers;
+
+namespace BridgeIT.API.Controllers;
 
 [ApiController]
 [Route("api/request-for-project-completion")]

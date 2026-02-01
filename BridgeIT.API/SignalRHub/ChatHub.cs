@@ -1,7 +1,9 @@
 using Microsoft.AspNetCore.SignalR;
 using System.Collections.Concurrent;
+using BridgeIT.Infrastructure;
+using BridgeIT.Domain.Models;
 
-namespace BridgeITAPIs.SignalRHub;
+namespace BridgeIT.API.SignalRHub;
 
 public class ChatHub: Hub
 {

@@ -1,4 +1,4 @@
-﻿namespace BridgeITAPIs.DTOs.UniversityDTOs;
+﻿namespace BridgeIT.API.DTOs.UniversityDTOs;
 
 public class GetUniversityDTO
 {

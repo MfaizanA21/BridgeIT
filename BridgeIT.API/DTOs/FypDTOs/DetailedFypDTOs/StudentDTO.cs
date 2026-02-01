@@ -1,4 +1,4 @@
-namespace BridgeITAPIs.DTOs.FypDTOs.DetailedFypDTOs;
+namespace BridgeIT.API.DTOs.FypDTOs.DetailedFypDTOs;
 
 public class StudentDTO
 {

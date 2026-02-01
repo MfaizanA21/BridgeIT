@@ -1,9 +1,11 @@
 using Microsoft.AspNetCore.Mvc;
-using BridgeITAPIs.DTOs.IdeaDTOs;
+using BridgeIT.API.DTOs.IdeaDTOs;
 using Microsoft.EntityFrameworkCore;
-using BridgeITAPIs.services.Implementation;
+using BridgeIT.API.services.Implementation;
+using BridgeIT.Domain.Models;
+using BridgeIT.Infrastructure;
 
-namespace BridgeITAPIs.Controllers;
+namespace BridgeIT.API.Controllers;
 
 [Route("api/ideas")]
 [ApiController]

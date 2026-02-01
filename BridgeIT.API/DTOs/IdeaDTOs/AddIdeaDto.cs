@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace BridgeITAPIs.DTOs.IdeaDTOs;
+namespace BridgeIT.API.DTOs.IdeaDTOs;
 
 
 public class AddIdeaDto

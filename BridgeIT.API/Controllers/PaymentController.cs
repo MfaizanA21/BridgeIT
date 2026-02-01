@@ -1,11 +1,13 @@
-﻿using BridgeITAPIs.DTOs.PaymentDTOs;
-using BridgeITAPIs.services.Interface;
+﻿using BridgeIT.API.DTOs.PaymentDTOs;
+using BridgeIT.API.services.Interface;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Stripe;
 using Stripe.Checkout;
+using BridgeIT.Domain.Models;
+using BridgeIT.Infrastructure;
 
-namespace BridgeITAPIs.Controllers;
+namespace BridgeIT.API.Controllers;
 
 [ApiController]
 [Route("api/payments")]

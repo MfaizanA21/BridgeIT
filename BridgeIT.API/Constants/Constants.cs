@@ -1,4 +1,4 @@
-﻿namespace BridgeITAPIs.Constants
+﻿namespace BridgeIT.API.Constants
 {
     public class Constants
     {

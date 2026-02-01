@@ -1,4 +1,4 @@
-﻿namespace BridgeITAPIs.DTOs.StudentDTOs
+﻿namespace BridgeIT.API.DTOs.StudentDTOs
 {
     public class EditStudentNameRollnumberDTO
     {

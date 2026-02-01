@@ -1,6 +1,6 @@
-using BridgeITAPIs.Enums;
+using BridgeIT.API.Enums;
 
-namespace BridgeITAPIs.DTOs.ProjectCompletionRequestDTOs;
+namespace BridgeIT.API.DTOs.ProjectCompletionRequestDTOs;
 
 public class ChangeRequestStatusDto
 {

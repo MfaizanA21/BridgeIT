@@ -1,4 +1,4 @@
-﻿namespace BridgeITAPIs.DTOs.UniAdminDTOs
+﻿namespace BridgeIT.API.DTOs.UniAdminDTOs
 {
     public class GetUniAdminDTO
     {

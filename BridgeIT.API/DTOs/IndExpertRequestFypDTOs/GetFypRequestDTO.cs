@@ -1,4 +1,4 @@
-namespace BridgeITAPIs.DTOs.IndExpertRequestFypDTOs;
+namespace BridgeIT.API.DTOs.IndExpertRequestFypDTOs;
 
 public class GetFypRequestDTO
 {

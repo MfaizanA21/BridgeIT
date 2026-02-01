@@ -1,4 +1,4 @@
-namespace BridgeITAPIs.DTOs.UserDTOs;
+namespace BridgeIT.API.DTOs.UserDTOs;
 
 public class EditUserProfileInfoDTO
 {

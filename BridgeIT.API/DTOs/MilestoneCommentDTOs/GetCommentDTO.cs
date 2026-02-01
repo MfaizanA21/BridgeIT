@@ -1,4 +1,4 @@
-namespace BridgeITAPIs.DTOs.MilestoneCommentDTOs;
+namespace BridgeIT.API.DTOs.MilestoneCommentDTOs;
 using System.ComponentModel.DataAnnotations;
 
 public class GetCommentDTO

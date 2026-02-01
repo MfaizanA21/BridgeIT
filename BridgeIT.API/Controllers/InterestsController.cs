@@ -1,10 +1,11 @@
-﻿using Microsoft.AspNetCore.Http;
-using BridgeITAPIs.DTOs.FacultyDTOs;
+﻿using BridgeIT.API.DTOs.FacultyDTOs;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using BridgeIT.Domain.Models;
+using BridgeIT.Infrastructure;
 
-namespace BridgeITAPIs.Controllers
+namespace BridgeIT.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]

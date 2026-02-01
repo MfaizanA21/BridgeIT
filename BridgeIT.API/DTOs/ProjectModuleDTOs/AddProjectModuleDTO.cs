@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace BridgeITAPIs.DTOs.ProjectModuleDTOs;
+namespace BridgeIT.API.DTOs.ProjectModuleDTOs;
 
 public class AddProjectModuleDTO
 {

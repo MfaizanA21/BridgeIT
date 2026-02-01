@@ -1,8 +1,10 @@
-using BridgeITAPIs.DTOs.MilestoneCommentDTOs;
+using BridgeIT.API.DTOs.MilestoneCommentDTOs;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using BridgeIT.Domain.Models;
+using BridgeIT.Infrastructure;
 
-namespace BridgeITAPIs.Controllers;
+namespace BridgeIT.API.Controllers;
 
 [Route("api/milestone-comment")]
 [ApiController]

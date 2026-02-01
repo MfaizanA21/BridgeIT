@@ -1,10 +1,12 @@
 using System.Security.Claims;
-using BridgeITAPIs.DTOs.ReviewDTOs;
+using BridgeIT.API.DTOs.ReviewDTOs;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using BridgeIT.Infrastructure;
+using BridgeIT.Domain.Models;
 
-namespace BridgeITAPIs.Controllers;
+namespace BridgeIT.API.Controllers;
 
 [Route("api/reviews")]
 [ApiController]

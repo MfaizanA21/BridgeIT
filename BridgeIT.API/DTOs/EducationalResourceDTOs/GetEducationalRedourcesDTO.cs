@@ -1,4 +1,4 @@
-namespace BridgeITAPIs.DTOs.EducationalResourceDTOs;
+namespace BridgeIT.API.DTOs.EducationalResourceDTOs;
 
 public class GetEducationalRedourcesDTO
 {

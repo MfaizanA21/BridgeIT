@@ -1,8 +1,10 @@
-using BridgeITAPIs.DTOs.EducationalResourceDTOs;
+using BridgeIT.API.DTOs.EducationalResourceDTOs;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using BridgeIT.Domain.Models;
+using BridgeIT.Infrastructure;
 
-namespace BridgeITAPIs.Controllers;
+namespace BridgeIT.API.Controllers;
 
 [Route("api/educational-resources")]
 [ApiController]

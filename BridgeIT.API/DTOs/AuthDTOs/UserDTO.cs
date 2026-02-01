@@ -1,4 +1,4 @@
-﻿namespace BridgeITAPIs.DTOs.AuthDTOs;
+﻿namespace BridgeIT.API.DTOs.AuthDTOs;
 
 public class UserDTO
 {

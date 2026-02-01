@@ -1,4 +1,4 @@
-﻿namespace BridgeITAPIs.DTOs.CompanyDTOs
+﻿namespace BridgeIT.API.DTOs.CompanyDTOs
 {
     public class AddCompanyDTO
     {

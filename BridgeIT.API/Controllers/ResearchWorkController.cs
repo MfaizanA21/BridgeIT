@@ -1,8 +1,10 @@
-﻿using BridgeITAPIs.DTOs.ResearchPaperDTOs;
+﻿using BridgeIT.API.DTOs.ResearchPaperDTOs;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using BridgeIT.Domain.Models;
+using BridgeIT.Infrastructure;
 
-namespace BridgeITAPIs.Controllers;
+namespace BridgeIT.API.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]

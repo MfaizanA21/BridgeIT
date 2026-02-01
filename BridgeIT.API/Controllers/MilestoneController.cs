@@ -1,9 +1,11 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using BridgeITAPIs.DTOs.MilestoneDTOs;
+using BridgeIT.API.DTOs.MilestoneDTOs;
 using Microsoft.IdentityModel.Tokens;
+using BridgeIT.Domain.Models;
+using BridgeIT.Infrastructure;
 
-namespace BridgeITAPIs.Controllers;
+namespace BridgeIT.API.Controllers;
 
 [Route("api/milestone")]
 [ApiController]
