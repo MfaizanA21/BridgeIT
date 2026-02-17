@@ -4,10 +4,10 @@ using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
 using System.Text;
 using BridgeIT.API.DTOs.AuthDTOs;
-using BridgeIT.Infrastructure;
+using BridgeIT.Infrastructure.Persistance;
 
 
-namespace BridgeIT.API.services.Implementation;
+namespace BridgeIT.Application.Services.Implementation;
 
 public class AuthService: IAuthService
 {

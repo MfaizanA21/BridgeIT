@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using BridgeIT.API.DTOs.OtpDTOs;
 using BridgeIT.API.services.Implementation;
 using BridgeIT.Domain.Models;
-using BridgeIT.Infrastructure;
+using BridgeIT.Infrastructure.Persistance;
 
 namespace BridgeIT.API.Controllers;
 

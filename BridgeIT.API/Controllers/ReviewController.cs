@@ -3,8 +3,8 @@ using BridgeIT.API.DTOs.ReviewDTOs;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using BridgeIT.Infrastructure;
 using BridgeIT.Domain.Models;
+using BridgeIT.Infrastructure.Persistance;
 
 namespace BridgeIT.API.Controllers;
 

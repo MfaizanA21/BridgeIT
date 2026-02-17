@@ -1,7 +1,7 @@
 using BridgeIT.API.SignalRHub;
 using Microsoft.AspNetCore.SignalR;
 
-namespace BridgeIT.API.Helper;
+namespace BridgeIT.Application.Services.Implementation;
 
 public class ChatService
 {

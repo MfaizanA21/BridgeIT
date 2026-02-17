@@ -3,9 +3,9 @@ using BridgeIT.API.Repositories.interfaces;
 using BridgeIT.API.services.Interface;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using BridgeIT.Infrastructure;
+using BridgeIT.Infrastructure.Persistance;
 
-namespace BridgeIT.API.services.Implementation;
+namespace BridgeIT.Application.Services.Implementation;
 
 public class ProjectCompletionRequestsService: IProjectCompletionRequestsService
 {

@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 
-namespace BridgeIT.API.services.Implementation;
+namespace BridgeIT.Application.Services.Implementation;
 
 public class UserService
 {

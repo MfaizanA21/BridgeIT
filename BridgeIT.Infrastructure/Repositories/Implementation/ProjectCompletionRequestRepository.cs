@@ -1,12 +1,12 @@
-using BridgeIT.API.Repositories.interfaces;
+using BridgeIT.Infrastructure.Repositories.Interface;
 using Microsoft.AspNetCore.Mvc;
 using BridgeIT.API.DTOs.ProjectCompletionRequestDTOs;
-using BridgeIT.API.Enums;
+using BridgeIT.Domain.Enums;
 using Microsoft.EntityFrameworkCore;
-using BridgeIT.Infrastructure;
 using BridgeIT.Domain.Models;
+using BridgeIT.Infrastructure.Persistance;
 
-namespace BridgeIT.API.Repositories.Implementation;
+namespace BridgeIT.Infrastructure.Repositories.Implementation;
 
 public class ProjectCompletionRequestRepository: IProjectCompletionRequestsRepository
 {

@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using BridgeIT.API.DTOs.UniversityDTOs;
-using BridgeIT.Infrastructure;
 using BridgeIT.Domain.Models;
+using BridgeIT.Infrastructure.Persistance;
 
 namespace BridgeIT.API.Controllers;
 

@@ -2,7 +2,7 @@ using BridgeIT.API.DTOs.ChatDTOs;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using BridgeIT.Domain.Models;
-using BridgeIT.Infrastructure;
+using BridgeIT.Infrastructure.Persistance;
 
 namespace BridgeIT.API.Controllers;
 

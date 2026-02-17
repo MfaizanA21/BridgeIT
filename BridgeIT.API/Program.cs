@@ -12,7 +12,7 @@ using BridgeIT.API.services.Implementation;
 using BridgeIT.API.services.Interface;
 using BridgeIT.API.SignalRHub;
 using Stripe;
-using BridgeIT.Infrastructure;
+using BridgeIT.Infrastructure.Persistance;
 
 var builder = WebApplication.CreateBuilder(args);
 

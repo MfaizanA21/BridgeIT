@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using BridgeIT.Domain.Models;
 
-namespace BridgeIT.Infrastructure;
+namespace BridgeIT.Infrastructure.Persistance;
 
 public partial class BridgeItContext : DbContext
 {

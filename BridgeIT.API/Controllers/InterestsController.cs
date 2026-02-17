@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using BridgeIT.Domain.Models;
-using BridgeIT.Infrastructure;
+using BridgeIT.Infrastructure.Persistance;
 
 namespace BridgeIT.API.Controllers
 {

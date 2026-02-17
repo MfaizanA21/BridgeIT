@@ -1,7 +1,7 @@
 using BridgeIT.API.Enums;
 using Microsoft.AspNetCore.Mvc;
 
-namespace BridgeIT.API.services.Interface;
+namespace BridgeIT.Application.Interface;
 
 public interface IProjectCompletionRequestsService
 {

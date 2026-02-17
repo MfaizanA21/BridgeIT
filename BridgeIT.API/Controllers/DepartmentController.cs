@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using BridgeIT.API.DTOs.UniversityDTOs;
 using BridgeIT.Domain.Models;
-using BridgeIT.Infrastructure;
+using BridgeIT.Infrastructure.Persistance;
 
 namespace BridgeIT.API.Controllers;
 

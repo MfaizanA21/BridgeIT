@@ -2,7 +2,7 @@ using BridgeIT.API.services.Interface;
 using Stripe;
 using Stripe.Checkout;
 
-namespace BridgeIT.API.services.Implementation;
+namespace BridgeIT.Application.Services.Implementation;
 
 public class ChargingService: IChargingService
 {

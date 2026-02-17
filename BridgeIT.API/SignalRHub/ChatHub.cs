@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.SignalR;
 using System.Collections.Concurrent;
-using BridgeIT.Infrastructure;
 using BridgeIT.Domain.Models;
+using BridgeIT.Infrastructure.Persistance;
 
 namespace BridgeIT.API.SignalRHub;
 

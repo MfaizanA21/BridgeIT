@@ -1,7 +1,7 @@
 ﻿using MailKit.Net.Smtp;
 using MimeKit;
 
-namespace BridgeIT.API.services.Implementation;
+namespace BridgeIT.Application.Services.Implementation;
 
 public class MailService
 {
