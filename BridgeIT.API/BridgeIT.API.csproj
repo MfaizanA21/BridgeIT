@@ -22,6 +22,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <ProjectReference Include="..\BridgeIT.Application\BridgeIT.Application.csproj" />
 	<ProjectReference Include="..\BridgeIT.Infrastructure\BridgeIT.Infrastructure.csproj" />
     <PackageReference Include="Scrutor" Version="6.0.1" />
     <PackageReference Include="Stripe.net" Version="47.2.0" />

@@ -4,6 +4,8 @@ using BridgeIT.API.services.Interface;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using BridgeIT.Infrastructure.Persistance;
+using BridgeIT.Application.Services.Interface;
+using BridgeIT.Infrastructure.Repositories.Interface;
 
 namespace BridgeIT.Application.Services.Implementation;
 

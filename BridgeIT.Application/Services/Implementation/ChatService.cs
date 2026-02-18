@@ -1,4 +1,4 @@
-using BridgeIT.API.SignalRHub;
+using BridgeIT.Application.Services.Interface;
 using Microsoft.AspNetCore.SignalR;
 
 namespace BridgeIT.Application.Services.Implementation;

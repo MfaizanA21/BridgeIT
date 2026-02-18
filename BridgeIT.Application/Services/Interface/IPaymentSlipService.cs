@@ -1,6 +1,6 @@
 using BridgeIT.API.DTOs.PaymentDTOs;
 
-namespace BridgeIT.Application.Interface;
+namespace BridgeIT.Application.Services.Interface;
 
 public interface IPaymentSlipService
 {

@@ -1,6 +1,5 @@
 //global using BridgeIT.API.Models;
 global using BridgeIT.API.Helper;
-global using BridgeIT.API.Auth;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
@@ -8,8 +7,8 @@ using System.Text;
 using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 using AspNetCoreRateLimit;
-using BridgeIT.API.services.Implementation;
-using BridgeIT.API.services.Interface;
+using BridgeIT.Application.Services.Implementation;
+using BridgeIT.Application.Services.Interface;
 using BridgeIT.API.SignalRHub;
 using Stripe;
 using BridgeIT.Infrastructure.Persistance;

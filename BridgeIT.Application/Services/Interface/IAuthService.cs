@@ -1,6 +1,6 @@
 ﻿using BridgeIT.API.DTOs.AuthDTOs;
 
-namespace BridgeIT.Application.Interface;
+namespace BridgeIT.Application.Services.Interface;
 
 public interface IAuthService
 {

@@ -1,9 +1,8 @@
 using BridgeIT.API.DTOs.PaymentDTOs;
-using BridgeIT.API.services.Interface;
 using Syncfusion.Pdf;
 using Syncfusion.Pdf.Graphics;
 using Syncfusion.Drawing;
-using System.IO;
+using BridgeIT.Application.Services.Interface;
 
 namespace BridgeIT.Application.Services.Implementation;
 

@@ -3,8 +3,8 @@ using System.IdentityModel.Tokens.Jwt;
 using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
 using System.Text;
-using BridgeIT.API.DTOs.AuthDTOs;
 using BridgeIT.Infrastructure.Persistance;
+using BridgeIT.Application.Services.Interface;
 
 
 namespace BridgeIT.Application.Services.Implementation;

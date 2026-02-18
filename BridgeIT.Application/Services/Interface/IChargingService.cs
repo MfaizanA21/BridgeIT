@@ -1,4 +1,4 @@
-namespace BridgeIT.Application.Interface;
+namespace BridgeIT.Application.Services.Interface;
 
 public interface IChargingService
 {
