@@ -1,6 +1,5 @@
+using BridgeIT.Application.Abstractions.Service.Interface;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using BridgeIT.Infrastructure.Persistance;
 
 namespace BridgeIT.API.Controllers;
 
@@ -8,74 +7,40 @@ namespace BridgeIT.API.Controllers;
 [Route("api/bought-fyp")]
 public class BoughtFypController : ControllerBase
 {
-    private readonly BridgeItContext _dbContext;
-    
-    public BoughtFypController(BridgeItContext dbContext)
+    private readonly IBoughtFypService _service;
+
+    public BoughtFypController(IBoughtFypService service)
     {
-        _dbContext = dbContext;
+        _service = service;
     }
-    
-    [HttpGet("get-all")]
+
+    [HttpGet()]
     public async Task<IActionResult> GetAllBoughtFyps()
     {
-        var boughtFyps = await _dbContext.BoughtFyps
-            .Include(b => b.Fyp)
-            .Include(b => b.IndExpert)
-            .ToListAsync();
-
-        if (!boughtFyps.Any())
+        var bfypl = await _service.GetAllBoughtFypsAsync();
+        if (!bfypl.Any())
         {
             return NotFound("No bought Fyps found.");
-        }
-        
-        var bfypl = new List<string>();
-
-        foreach (var boughtFyp in boughtFyps)
-        {
-            bfypl.Add(boughtFyp.Id.ToString());
         }
 
         return Ok(bfypl);
     }
 
-    [HttpGet("by-id/{id}")]
+    [HttpGet("{id}")]
     public async Task<IActionResult> BoughtFypById(Guid id)
     {
-        var boughtFyp = await _dbContext.BoughtFyps
-            .Include(b => b.Fyp)
-            .Include(b => b.IndExpert)
-            .ThenInclude(i => i.User)
-            .FirstOrDefaultAsync(b => b.Id == id || b.FypId == id || b.IndExpertId == id);
-
-        if (boughtFyp == null)
+        var dto = await _service.GetBoughtFypByIdAsync(id);
+        if (dto == null)
         {
             return NotFound("Bought FYP not found.");
         }
-        
-        var dto = new
-        {
-            boughtFyp.Id,
-            boughtFyp.FypId,
-            boughtFyp.IndExpertId,
-            boughtFyp.Price,
-            FypTitle = boughtFyp.Fyp.Title,
-            IndExpertName = $"{boughtFyp.IndExpert.User.FirstName} {boughtFyp.IndExpert.User.LastName}",
-        };
-        
+
         return Ok(dto);
     }
-    
-    [HttpPatch("add-agreement/{id}")]
+
+    [HttpPatch("{id}")]
     public async Task<IActionResult> AddAgreement(Guid id, [FromBody] string agreementDoc)
     {
-        var boughtFyp = await _dbContext.BoughtFyps
-            .FirstOrDefaultAsync(b => b.Id == id);
-
-        if (boughtFyp == null)
-        {
-            return NotFound("Bought FYP not found.");
-        }
-        
         byte[] agreementBytes;
         try
         {
@@ -86,10 +51,12 @@ public class BoughtFypController : ControllerBase
             return BadRequest("Invalid base64 PDF data.");
         }
 
-        boughtFyp.Agreement = agreementBytes;
-        
-        await _dbContext.SaveChangesAsync();
-        
+        var success = await _service.AddAgreementAsync(id, agreementBytes);
+        if (!success)
+        {
+            return NotFound("Bought FYP not found.");
+        }
+
         return Ok("Agreement added successfully.");
     }
 }

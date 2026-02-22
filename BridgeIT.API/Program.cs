@@ -8,10 +8,10 @@ using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 using AspNetCoreRateLimit;
 using BridgeIT.Application.Services.Implementation;
-using BridgeIT.Application.Services.Interface;
 using BridgeIT.API.SignalRHub;
 using Stripe;
 using BridgeIT.Infrastructure.Persistance;
+using BridgeIT.Application.Abstractions.Service.Interface;
 
 var builder = WebApplication.CreateBuilder(args);
 

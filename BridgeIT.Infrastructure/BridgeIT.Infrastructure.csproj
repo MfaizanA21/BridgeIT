@@ -17,5 +17,6 @@
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
 		<ProjectReference Include="..\BridgeIT.Domain\BridgeIT.Domain.csproj" />
+		<ProjectReference Include="..\BridgeIT.Application\BridgeIT.Application.csproj"/>
 	</ItemGroup>
 </Project>

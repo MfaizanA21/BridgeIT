@@ -4,7 +4,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
 using System.Text;
 using BridgeIT.Infrastructure.Persistance;
-using BridgeIT.Application.Services.Interface;
+using BridgeIT.Application.Abstractions.Service.Interface;
 
 
 namespace BridgeIT.Application.Services.Implementation;

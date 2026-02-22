@@ -1,58 +1,96 @@
-using BridgeIT.API.services.Interface;
+﻿using BridgeIT.Application.Abstractions.Service.Interface;
+using BridgeIT.Application.Common.Result;
+using BridgeIT.Application.DTOs;
 using Microsoft.AspNetCore.Mvc;
-
 
 namespace BridgeIT.API.Controllers;
 
 [ApiController]
-[Route("api/request-for-project-completion")]
-public class RequestForProjectCompletionController : ControllerBase
+[Route("api/project-completion-requests")]  // ← more RESTful plural resource name
+public class ProjectCompletionRequestsController : ControllerBase
 {
-    private readonly IProjectCompletionRequestsService _projectCompletionRequestsService;
-    
-    public RequestForProjectCompletionController(IProjectCompletionRequestsService projectCompletionRequestsService)
+    private readonly IProjectCompletionRequestsService _service;
+
+    public ProjectCompletionRequestsController(IProjectCompletionRequestsService service)
     {
-        _projectCompletionRequestsService = projectCompletionRequestsService;
+        _service = service;
     }
 
-    [HttpPost("put-completion-request")]
-    public async Task<IActionResult> PutCompletionRequest([FromBody] Guid projectId)
-    {
-        return await _projectCompletionRequestsService.PutCompletionRequestsAsync(projectId);
-    }
-    
     /// <summary>
-    /// Retrieves the project completion request associated with the given industry-expert or student.
+    /// Creates a new project completion request for a given project.
     /// </summary>
-    /// <param name="Id">The GUID of the student or industry-expert related to the project request.</param>
-    /// <returns>An <see cref="IActionResult"/> containing the list of project completion requests or an appropriate error message.</returns>
-    [HttpGet("get-completion-request/{Id}")]
-    public async Task<IActionResult> GetCompletionRequest(Guid Id)
+    [HttpPost]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status409Conflict)]
+    public async Task<IActionResult> Create([FromBody] Guid projectId)
     {
-        return await _projectCompletionRequestsService.GetCompletionRequestsAsync(Id);
+        var result = await _service.CreateRequestAsync(projectId);
+        return ToActionResult(result);
     }
-    
-    
+
     /// <summary>
-    /// Retrieves the project completion request associated with the given project. 
+    /// Retrieves all project completion requests related to a student or industry expert.
     /// </summary>
-    /// <param name="Id">The GUID of the project related to the project request</param>
-    /// <returns>An <see cref="IActionResult"/> containing the project completion request or an appropriate error message.</returns>
-    [HttpGet("completion-request-for-project/{Id}")]
-    public async Task<IActionResult> GetCompletionRequestForProject(Guid Id)
+    /// <param name="userId">The GUID of the student or industry expert</param>
+    [HttpGet("user/{userId}")]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<ProjectCompletionRequestDto>))]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> GetForUser(Guid userId)
     {
-        return await _projectCompletionRequestsService.GetCompletionRequestForProjectAsync(Id);
+        var result = await _service.GetRequestsForUserAsync(userId);
+        return ToActionResult(result);
     }
-    
+
     /// <summary>
-    /// Changes the Project status to either "Accepted" or "Rejected" based on the body.
+    /// Retrieves the project completion request for a specific project.
     /// </summary>
-    /// <param name="RequestId">The GUID of the request</param>
-    /// <param name="status"> status it should strictly be either ACCEPTED or REJECTED no other will be accepted. </param>
-    /// <returns>An <see cref="IActionResult"/> containing the list of project completion requests or an appropriate error message.</returns>
-    [HttpPatch("handle-request/{RequestId}")]
-    public async Task<IActionResult> HandleRequest([FromRoute] Guid RequestId, [FromBody] string status)
+    /// <param name="projectId">The GUID of the project</param>
+    [HttpGet("project/{projectId}")]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ProjectCompletionRequestDto))]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> GetForProject(Guid projectId)
     {
-        return await _projectCompletionRequestsService.HandleRequestAsync(RequestId, status);
+        var result = await _service.GetRequestForProjectAsync(projectId);
+        return ToActionResult(result);
+    }
+
+    /// <summary>
+    /// Updates the status of a project completion request (ACCEPTED or REJECTED only).
+    /// </summary>
+    /// <param name="requestId">The GUID of the completion request</param>
+    /// <param name="status">Must be exactly "ACCEPTED" or "REJECTED"</param>
+    [HttpPatch("{requestId}/status")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status409Conflict)]
+    public async Task<IActionResult> UpdateStatus(Guid requestId, [FromBody] string status)
+    {
+        var result = await _service.HandleRequestAsync(requestId, status);
+        return ToActionResult(result);
+    }
+
+    // For queries (returning data)
+    private IActionResult ToActionResult<T>(Result<T> result)
+    {
+        if (result.IsSuccess)
+        {
+            if (result.Value is null)
+                return NoContent();
+
+            return Ok(result.Value);
+        }
+
+        var statusCode = result.StatusCode ?? 500;
+        var message = result.ErrorMessage ?? "An unexpected error occurred.";
+
+        return statusCode switch
+        {
+            400 => BadRequest(message),
+            404 => NotFound(message),
+            409 => Conflict(message),
+            _ => StatusCode(statusCode, message)
+        };
     }
 }

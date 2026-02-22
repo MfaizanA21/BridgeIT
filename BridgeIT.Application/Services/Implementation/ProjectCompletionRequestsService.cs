@@ -1,112 +1,105 @@
-using BridgeIT.API.Enums;
-using BridgeIT.API.Repositories.interfaces;
-using BridgeIT.API.services.Interface;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using BridgeIT.Infrastructure.Persistance;
-using BridgeIT.Application.Services.Interface;
-using BridgeIT.Infrastructure.Repositories.Interface;
+using BridgeIT.Application.Abstractions.Repository.Interface;
+using BridgeIT.Application.Abstractions.Service.Interface;
+using BridgeIT.Application.Common.Result;
+using BridgeIT.Application.Common.Unit;
+using BridgeIT.Application.DTOs;
+using BridgeIT.Domain.Enums;
 
 namespace BridgeIT.Application.Services.Implementation;
 
-public class ProjectCompletionRequestsService: IProjectCompletionRequestsService
+public class ProjectCompletionRequestsService : IProjectCompletionRequestsService
 {
-    private readonly BridgeItContext _dbContext;
-    private readonly IProjectCompletionRequestsRepository _projectCompletionRequestRepository;
-    
-    public ProjectCompletionRequestsService(BridgeItContext dbContext, IProjectCompletionRequestsRepository projectCompletionRequestRepository)
+    private readonly IProjectCompletionRequestsRepository _repository;
+
+    public ProjectCompletionRequestsService(IProjectCompletionRequestsRepository repository)
     {
-        _dbContext = dbContext;
-        _projectCompletionRequestRepository = projectCompletionRequestRepository;
+        _repository = repository;
     }
 
-    public async Task<IActionResult> PutCompletionRequestsAsync(Guid projectId)
+    public async Task<Result<Guid>> CreateRequestAsync(Guid projectId)
     {
-        var project = await _dbContext.Projects
-            .Where(p => p.Id == projectId).FirstOrDefaultAsync();
-        if (project == null)
+        var existing = await _repository.GetByProjectIdAsync(projectId);
+        if (existing != null && existing.RequestStatus != ProjectRequestStatus.REJECTED.ToString())
         {
-            return new NotFoundObjectResult("Project not found.");
-        }
-        
-        var completionRequests = await _dbContext.RequestForProjectCompletions
-            .Where(r => r.ProjectId == projectId).FirstOrDefaultAsync();
-        
-        if (completionRequests != null && completionRequests.RequestStatus != ProjectRequestStatus.REJECTED.ToString())
-        {
-            return new BadRequestObjectResult("Request for project completion already exists.");
+            return Result<Guid>.Conflict("A completion request already exists and is not rejected.");
         }
 
-        var request = await _projectCompletionRequestRepository.PutCompletionRequestsAsync(projectId);
-
-        return request;
-
+        var request = await _repository.CreateAsync(projectId);
+        return Result<Guid>.Success(request.Id);
     }
 
-    public async Task<IActionResult> GetCompletionRequestsAsync(Guid Id)
+    public async Task<Result<List<ProjectCompletionRequestDto>>> GetRequestsForUserAsync(Guid userRelatedId)
     {
-        var user = await _dbContext.Users
-            .Include(u => u.Students)
-            .Include(u => u.IndustryExperts)
-            .Where(u => (u.Students.Any(s => s.Id == Id) || u.IndustryExperts.Any(i => i.Id == Id)))
-            .FirstOrDefaultAsync();
+        var requests = await _repository.GetByUserIdAsync(userRelatedId);
 
-        var project = await _dbContext.Projects
-            .Include(r => r.requestForProjectCompletions)
-            .Where(p => (p.StudentId == Id || p.IndExpertId == Id) && (!p.requestForProjectCompletions.Any())).FirstOrDefaultAsync();
-        
-        if (user == null)
+        if (!requests.Any())
         {
-            return new NotFoundObjectResult("User does not exist with this id");
+            return Result<List<ProjectCompletionRequestDto>>.NotFound("No completion requests found for this user.");
         }
 
-        if (project == null)
+        var dtos = requests.Select(r => new ProjectCompletionRequestDto
         {
-            return new NotFoundObjectResult("No Projects Found for this user.");
-        }
+            Id = r.Id,
+            ProjectId = r.ProjectId,
+            ProjectName = r.Project?.Title ?? "N/A",
+            ProjectDescription = r.Project?.Description ?? "N/A",
+            IndExpertId = r.Project?.IndExpertId ?? Guid.Empty,
+            StudentId = r.Project?.StudentId ?? Guid.Empty,
+            StudentName = r.Project?.Student?.User != null
+                ? $"{r.Project.Student.User.FirstName} {r.Project.Student.User.LastName}"
+                : "Unknown"
+        }).ToList();
 
-        return await _projectCompletionRequestRepository.GetCompletionRequestsAsync(Id);
-
+        return Result<List<ProjectCompletionRequestDto>>.Success(dtos);
     }
 
-    public async Task<IActionResult> GetCompletionRequestForProjectAsync(Guid Id)
+    public async Task<Result<ProjectCompletionRequestDto>> GetRequestForProjectAsync(Guid projectId)
     {
-        var user = await _dbContext.Users
-            .Include(u => u.Students)
-            .Include(u => u.IndustryExperts)
-            .Where(u => (u.Students.Any(s => s.Id == Id) || u.IndustryExperts.Any(i => i.Id == Id) || u.Students.Any(s => s.Projects.Any(p => p.Id == Id)) || u.IndustryExperts.Any(i => i.Projects.Any(p => p.Id == Id))))
-            .FirstOrDefaultAsync();
-        
-        var project = await _dbContext.Projects
-            .Include(r => r.requestForProjectCompletions)
-            .Where(p => p.Id == Id).FirstOrDefaultAsync();
-        
-        if (user == null)
+        var request = await _repository.GetByProjectIdAsync(projectId);
+
+        if (request == null)
         {
-            return new NotFoundObjectResult("User does not exist with this id");
+            return Result<ProjectCompletionRequestDto>.NotFound("No completion request found for this project.");
         }
 
-        if (project == null)
+        var dto = new ProjectCompletionRequestDto
         {
-            return new NotFoundObjectResult("No Projects Found for this user.");
-        }
+            Id = request.Id,
+            ProjectId = request.ProjectId,
+            ProjectName = request.Project?.Title ?? "N/A",
+            ProjectDescription = request.Project?.Description ?? "N/A",
+            IndExpertId = request.Project?.IndExpertId ?? Guid.Empty,
+            StudentId = request.Project?.StudentId ?? Guid.Empty,
+            StudentName = request.Project?.Student?.User != null
+                ? $"{request.Project.Student.User.FirstName} {request.Project.Student.User.LastName}"
+                : "Unknown"
+        };
 
-        return await _projectCompletionRequestRepository.GetCompletionRequestForProjectAsync(Id);
+        return Result<ProjectCompletionRequestDto>.Success(dto);
     }
 
-    public async Task<IActionResult> HandleRequestAsync(Guid RequestId, string status)
+    public async Task<Result<Unit>> HandleRequestAsync(Guid requestId, string status)
     {
         if (status != ProjectRequestStatus.ACCEPTED.ToString() &&
             status != ProjectRequestStatus.REJECTED.ToString())
         {
-            return new BadRequestObjectResult("Invalid status. It should only be ACCEPTED or REJECTED.");
+            return Result<Unit>.BadRequest("Invalid status. Must be ACCEPTED or REJECTED.");
         }
 
-        var result = await _projectCompletionRequestRepository.HandleRequestAsync(RequestId, status);
+        var request = await _repository.GetByIdAsync(requestId);
+        if (request == null)
+        {
+            return Result<Unit>.NotFound("Request not found.");
+        }
 
-        if (result == null)
-            return new BadRequestObjectResult("Request not found or already accepted.");
+        if (request.RequestStatus != ProjectRequestStatus.PENDING.ToString())
+        {
+            return Result<Unit>.Conflict("Request is no longer pending.");
+        }
 
-        return new OkObjectResult($"Request status updated to {status}");
+        request.RequestStatus = status;
+        await _repository.UpdateStatusAsync(request);
+
+        return Result<Unit>.Success(Unit.Value);
     }
 }

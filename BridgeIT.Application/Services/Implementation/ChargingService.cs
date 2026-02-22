@@ -1,4 +1,4 @@
-using BridgeIT.Application.Services.Interface;
+using BridgeIT.Application.Abstractions.Service.Interface;
 using Stripe;
 using Stripe.Checkout;
 

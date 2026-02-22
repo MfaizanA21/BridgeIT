@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using BridgeIT.API.DTOs.AuthDTOs;
-using BridgeIT.API.services.Implementation;
+using BridgeIT.Application.Services.Implementation;
+using BridgeIT.Application.Abstractions.Service.Interface;
+
 namespace BridgeIT.API.Controllers;
 
 [Route("api/auth")]
