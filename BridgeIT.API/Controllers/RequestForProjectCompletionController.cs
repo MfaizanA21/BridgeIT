@@ -1,4 +1,5 @@
-﻿using BridgeIT.Application.Abstractions.Service.Interface;
+﻿using BridgeIT.API.Extension;
+using BridgeIT.Application.Abstractions.Service.Interface;
 using BridgeIT.Application.Common.Result;
 using BridgeIT.Application.DTOs;
 using Microsoft.AspNetCore.Mvc;
@@ -26,7 +27,7 @@ public class ProjectCompletionRequestsController : ControllerBase
     public async Task<IActionResult> Create([FromBody] Guid projectId)
     {
         var result = await _service.CreateRequestAsync(projectId);
-        return ToActionResult(result);
+        return result.ToActionResult(this);
     }
 
     /// <summary>
@@ -39,7 +40,7 @@ public class ProjectCompletionRequestsController : ControllerBase
     public async Task<IActionResult> GetForUser(Guid userId)
     {
         var result = await _service.GetRequestsForUserAsync(userId);
-        return ToActionResult(result);
+        return result.ToActionResult(this);
     }
 
     /// <summary>
@@ -52,7 +53,7 @@ public class ProjectCompletionRequestsController : ControllerBase
     public async Task<IActionResult> GetForProject(Guid projectId)
     {
         var result = await _service.GetRequestForProjectAsync(projectId);
-        return ToActionResult(result);
+        return result.ToActionResult(this);
     }
 
     /// <summary>
@@ -68,29 +69,7 @@ public class ProjectCompletionRequestsController : ControllerBase
     public async Task<IActionResult> UpdateStatus(Guid requestId, [FromBody] string status)
     {
         var result = await _service.HandleRequestAsync(requestId, status);
-        return ToActionResult(result);
+        return result.ToActionResult(this);
     }
-
-    // For queries (returning data)
-    private IActionResult ToActionResult<T>(Result<T> result)
-    {
-        if (result.IsSuccess)
-        {
-            if (result.Value is null)
-                return NoContent();
-
-            return Ok(result.Value);
-        }
-
-        var statusCode = result.StatusCode ?? 500;
-        var message = result.ErrorMessage ?? "An unexpected error occurred.";
-
-        return statusCode switch
-        {
-            400 => BadRequest(message),
-            404 => NotFound(message),
-            409 => Conflict(message),
-            _ => StatusCode(statusCode, message)
-        };
-    }
+    
 }

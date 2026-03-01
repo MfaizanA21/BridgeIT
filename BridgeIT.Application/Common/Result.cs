@@ -27,7 +27,5 @@ namespace BridgeIT.Application.Common.Result
         public static Result<T> NotFound(string message = "Not found") => Failure(message, 404);
         public static Result<T> BadRequest(string message) => Failure(message, 400);
         public static Result<T> Conflict(string message) => Failure(message, 409);
-
-        public readonly struct Unit { };
     }
 }

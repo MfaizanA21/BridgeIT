@@ -46,7 +46,6 @@ public class ChatHub: Hub
             TimeSent = timeStamp
         });
         await _dbContext.SaveChangesAsync();
-      //  await _userRepository.InsertMessage(messageId, senderUserId, recipientUserId, encryptedMessage);
 
         var recipientConnectionId = _userConnections.FirstOrDefault(x => x.Value == recipientUserId).Key;
         if (recipientConnectionId != null)
